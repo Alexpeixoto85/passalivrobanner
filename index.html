@@ -70,6 +70,24 @@
   .stat .n{font-family:"Fraunces",serif;font-weight:600;font-size:26px;color:var(--ink)}
   .stat .l{font-size:12.5px;color:var(--ink-soft);font-weight:500}
 
+  /* abas */
+  .tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .tabbtn{background:none;border:none;padding:10px 2px 12px;font-weight:600;font-size:14.5px;color:var(--ink-soft);
+    border-bottom:3px solid transparent;cursor:pointer;font-family:inherit}
+  .tabbtn:hover{color:var(--ink)}
+  .tabbtn.active{color:var(--ink);border-bottom-color:var(--marigold)}
+
+  /* gráfico de acessos */
+  .chartcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px 14px;box-shadow:var(--shadow)}
+  .chartcard h3{font-size:13.5px;margin-bottom:16px;color:var(--ink-soft);font-family:"DM Sans",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+  .bars{display:flex;align-items:stretch;gap:8px;height:130px;overflow-x:auto;padding-bottom:2px}
+  .bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;min-width:26px;flex:1}
+  .bar{width:100%;max-width:22px;background:var(--marigold);border-radius:5px 5px 2px 2px;align-self:center;min-height:4px}
+  .bar-l{font-size:9.5px;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+
+  /* configurações */
+  .cfgcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;box-shadow:var(--shadow);max-width:520px}
+
   .list{display:flex;flex-direction:column;gap:14px}
   .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:16px;
     align-items:center;box-shadow:var(--shadow)}
@@ -194,24 +212,77 @@
 
 <!-- DASHBOARD -->
 <main class="wrap hide" id="dash">
-  <div class="head">
-    <div>
-      <h1>Anúncios do portal</h1>
-      <p>Cadastre banners que aparecem para as famílias. Eles entram no ar assim que ficam <b>ativos</b>.</p>
-    </div>
-    <button class="btn btn-primary" onclick="Panel.openForm()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-      Novo banner
-    </button>
+  <div class="tabs" id="panelTabs">
+    <button class="tabbtn active" data-tab="overview" onclick="Panel.switchTab('overview')">Visão geral</button>
+    <button class="tabbtn" data-tab="settings" onclick="Panel.switchTab('settings')">Configurações</button>
+    <button class="tabbtn" data-tab="banners" onclick="Panel.switchTab('banners')">Banners</button>
   </div>
 
-  <div class="stats" id="stats"></div>
-  <div class="list" id="list"></div>
+  <!-- ABA: VISÃO GERAL -->
+  <section id="tabOverview" class="tabpanel">
+    <div class="head">
+      <div>
+        <h1>Visão geral</h1>
+        <p>Usuários e acessos ao portal PassaLivro.</p>
+      </div>
+    </div>
+    <div class="stats" id="overviewStats"></div>
+    <p class="help-txt" style="margin-bottom:18px">Cada visitante é identificado de forma anônima pelo navegador. "Usuários cadastrados" é o total de visitantes únicos já registrados; "acessos" conta visitantes únicos por dia.</p>
+    <div class="chartcard">
+      <h3>Acessos nos últimos 14 dias</h3>
+      <div class="bars" id="accessBars"></div>
+    </div>
+  </section>
 
-  <section class="empty hide" id="emptyState">
-    <h3>Nenhum anúncio cadastrado</h3>
-    <p>Crie o primeiro banner para começar a veicular publicidade no portal.</p>
-    <button class="btn btn-primary" onclick="Panel.openForm()" style="margin-top:8px">Criar primeiro banner</button>
+  <!-- ABA: CONFIGURAÇÕES -->
+  <section id="tabSettings" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Configurações de anúncios</h1>
+        <p>Regras que valem para todos os anúncios criados pelos usuários no portal.</p>
+      </div>
+    </div>
+    <div class="cfgcard">
+      <form id="cfgForm" onsubmit="Panel.saveConfig(event)">
+        <div class="field">
+          <label class="lab" for="cfgPrazo">Prazo de validade dos anúncios (dias)</label>
+          <input class="inp" id="cfgPrazo" type="number" min="0" step="1" value="0">
+          <div class="help-txt">Anúncios mais antigos que esse número de dias saem da listagem pública automaticamente. Use <b>0</b> para não aplicar prazo.</div>
+        </div>
+        <div class="field">
+          <label class="lab" for="cfgLimite">Limite de anúncios ativos por usuário</label>
+          <input class="inp" id="cfgLimite" type="number" min="0" step="1" value="0">
+          <div class="help-txt">Cada família poderá ter no máximo esse número de anúncios ativos ao mesmo tempo. Use <b>0</b> para não aplicar limite.</div>
+        </div>
+        <div class="msg" id="cfgMsg"></div>
+        <div class="form-foot">
+          <button type="submit" class="btn btn-primary" id="cfgSaveBtn">Salvar configurações</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ABA: BANNERS -->
+  <section id="tabBanners" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Anúncios do portal</h1>
+        <p>Cadastre banners que aparecem para as famílias. Eles entram no ar assim que ficam <b>ativos</b>.</p>
+      </div>
+      <button class="btn btn-primary" onclick="Panel.openForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        Novo banner
+      </button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="list" id="list"></div>
+
+    <section class="empty hide" id="emptyState">
+      <h3>Nenhum anúncio cadastrado</h3>
+      <p>Crie o primeiro banner para começar a veicular publicidade no portal.</p>
+      <button class="btn btn-primary" onclick="Panel.openForm()" style="margin-top:8px">Criar primeiro banner</button>
+    </section>
   </section>
 </main>
 
@@ -305,10 +376,12 @@ const isConfigured = !String(firebaseConfig.apiKey).startsWith("COLE_AQUI");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp }
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp,
+         getDoc, setDoc, where, getDocs, getCountFromServer }
   from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
+let usuariosRef=null, acessosRef=null, configRef=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -334,6 +407,13 @@ function compress(file){
     r.onerror=rej;r.readAsDataURL(file);
   });
 }
+
+/* ---------------- util de data (acessos) ---------------- */
+function dateStr(d=new Date()){
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 
 const Panel={
   toggleMode(){
@@ -362,6 +442,93 @@ const Panel={
     }finally{$("loginBtn").disabled=false;}
   },
   logout(){signOut(auth);},
+
+  /* ---------- abas ---------- */
+  switchTab(name){
+    const map={overview:"tabOverview",settings:"tabSettings",banners:"tabBanners"};
+    Object.entries(map).forEach(([k,id])=>$(id).classList.toggle("hide",k!==name));
+    document.querySelectorAll("#panelTabs .tabbtn").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+    if(name==="overview")this.loadOverview();
+    if(name==="settings")this.loadConfigForm();
+  },
+
+  /* ---------- visão geral: usuários e acessos ---------- */
+  async loadOverview(){
+    const box=$("overviewStats");
+    box.innerHTML=[["…","Usuários cadastrados"],["…","Acessos hoje"],["…","Acessos no mês"]]
+      .map(([n,l])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+    try{
+      const today=dateStr();
+      const now=new Date();
+      const monthStart=dateStr(new Date(now.getFullYear(),now.getMonth(),1));
+      const monthEnd=dateStr(new Date(now.getFullYear(),now.getMonth()+1,0));
+      const [uTotal,aHoje,aMes]=await Promise.all([
+        getCountFromServer(usuariosRef),
+        getCountFromServer(query(acessosRef,where("data","==",today))),
+        getCountFromServer(query(acessosRef,where("data",">=",monthStart),where("data","<=",monthEnd)))
+      ]);
+      box.innerHTML=[
+        [uTotal.data().count,"Usuários cadastrados"],
+        [aHoje.data().count,"Acessos hoje"],
+        [aMes.data().count,"Acessos no mês"],
+      ].map(([n,l])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+    }catch(err){
+      console.error(err);
+      const code=err.code||err.message||"desconhecido";
+      box.innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+        <h3 style="color:var(--danger)">Não consegui carregar os números</h3>
+        <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+        <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> e <code>acessos</code> para o seu e-mail de administrador.</p></div>`;
+    }
+    this.loadAccessChart();
+  },
+  async loadAccessChart(){
+    const wrap=$("accessBars");
+    wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
+    try{
+      const days=[];for(let i=13;i>=0;i--)days.push(dateStr(addDays(new Date(),-i)));
+      const snap=await getDocs(query(acessosRef,where("data",">=",days[0])));
+      const counts={};days.forEach(d=>counts[d]=0);
+      snap.forEach(d=>{const v=d.data().data;if(v in counts)counts[v]++;});
+      const max=Math.max(1,...days.map(d=>counts[d]));
+      wrap.innerHTML=days.map(d=>{
+        const v=counts[d],h=Math.max(4,Math.round((v/max)*100));
+        const label=d.slice(8,10)+"/"+d.slice(5,7);
+        return `<div class="bar-col" title="${d}: ${v} acesso(s)">
+                   <div class="bar" style="height:${h}px"></div>
+                   <span class="bar-l">${label}</span>
+                 </div>`;
+      }).join("");
+    }catch(err){
+      console.error(err);
+      wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Não foi possível carregar o gráfico de acessos.</p>`;
+    }
+  },
+
+  /* ---------- configurações: prazo e limite ---------- */
+  async loadConfigForm(){
+    clearMsg($("cfgMsg"));
+    try{
+      const snap=await getDoc(configRef);
+      const d=snap.exists()?snap.data():{};
+      $("cfgPrazo").value=d.prazoDias??0;
+      $("cfgLimite").value=d.limiteAnuncios??0;
+    }catch(err){console.error(err);}
+  },
+  async saveConfig(e){
+    e.preventDefault();
+    const prazoDias=Math.max(0,parseInt($("cfgPrazo").value||"0",10));
+    const limiteAnuncios=Math.max(0,parseInt($("cfgLimite").value||"0",10));
+    $("cfgSaveBtn").disabled=true;
+    try{
+      await setDoc(configRef,{prazoDias,limiteAnuncios,updatedAt:serverTimestamp()},{merge:true});
+      msg($("cfgMsg"),"Configurações salvas. Já valem para todos os anúncios.","ok");
+      toast("Configurações atualizadas.","ok");
+    }catch(err){
+      console.error(err);
+      msg($("cfgMsg"),err.code==="permission-denied"?"Sem permissão. Confira se seu e-mail está nas regras do Firestore para 'config'.":"Erro ao salvar: "+(err.code||err.message),"err");
+    }finally{$("cfgSaveBtn").disabled=false;}
+  },
 
   /* ---- form ---- */
   openForm(ad=null){
@@ -467,12 +634,14 @@ function showLogin(){$("loginCard").classList.remove("hide");$("dash").classList
 function showDash(email){
   $("loginCard").classList.add("hide");$("dash").classList.remove("hide");
   $("whoami").textContent=email;$("whoami").classList.remove("hide");$("logoutBtn").classList.remove("hide");
+  Panel.switchTab("overview");
 }
 
 if(!isConfigured){$("setupCard").classList.remove("hide");}
 else{
   const app=initializeApp(firebaseConfig);
   auth=getAuth(app);db=getFirestore(app);ref=collection(db,"banners");
+  usuariosRef=collection(db,"usuarios");acessosRef=collection(db,"acessos");configRef=doc(db,"config","geral");
   onAuthStateChanged(auth,user=>{
     if(user){
       showDash(user.email);
