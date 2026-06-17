@@ -128,10 +128,8 @@
   .drop b{color:var(--ink)}
   .prev{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--surface)}
   .prev .ad-sponsor{position:absolute;top:8px;right:8px;background:rgba(20,40,37,.62);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
-  .prev img{width:100%;display:block;object-fit:cover}
-  .prev.topo img{aspect-ratio:1100/300}
-  .prev.grade img{aspect-ratio:5/4;max-width:260px}
-  .prev.rodape img{aspect-ratio:1100/300}
+  .prev img{width:100%;display:block;height:auto}
+  .prev.grade img{aspect-ratio:5/4;max-width:260px;object-fit:contain;background:var(--surface-2)}
   .prev .ph{padding:30px;text-align:center;color:var(--ink-soft);font-size:13px}
   .toggle-row{display:flex;align-items:center;gap:12px;margin-top:4px}
   .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--line);margin-top:8px}
@@ -266,7 +264,7 @@
           <label class="lab">Imagem do banner</label>
           <div class="drop" onclick="document.getElementById('imgInput').click()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
-            <div><b>Toque para enviar a imagem</b></div>
+            <div><b id="dropLbl">Toque para enviar a imagem</b></div>
             <div class="help-txt" style="margin-top:2px">Compactada automaticamente • JPG/PNG</div>
           </div>
           <input type="file" id="imgInput" accept="image/*" class="hide" onchange="Panel.pickImage(event)">
@@ -385,6 +383,7 @@ const Panel={
   syncPreview(){
     const pos=document.querySelector('#posSeg input:checked').value;
     const p=$("preview");p.className="prev "+pos;
+    const lbl=$("dropLbl");if(lbl)lbl.textContent=pendingImg?"Imagem carregada — toque para trocar":"Toque para enviar a imagem";
     if(pendingImg)p.innerHTML=`<span class="ad-sponsor">Anúncio</span><img src="${pendingImg}" alt="prévia">`;
     else p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}</div>`;
   },
