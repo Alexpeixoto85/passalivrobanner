@@ -481,7 +481,21 @@ else{
         ADS=snap.docs.map(d=>({id:d.id,...d.data()}));
         ADS.sort((a,b)=>(a.ordem??0)-(b.ordem??0));
         Panel.render();
-      },err=>{console.error(err);toast("Erro ao ler banners. Confira as regras do Firestore.","bad");});
+      },err=>{
+        console.error(err);
+        const code=err.code||err.message||"desconhecido";
+        const dica=code.includes("permission-denied")
+          ? "As regras do Firestore não estão liberando a leitura de 'banners'. Publique o bloco de regras completo (livros + banners)."
+          : code.includes("failed-precondition")
+          ? "Falta um índice no Firestore. Abra o link que aparece no Console (F12) para criá-lo."
+          : "Erro de conexão com o Firestore. Recarregue a página.";
+        $("list").innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+          <h3 style="color:var(--danger)">Não consegui ler os banners</h3>
+          <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+          <p>${esc(dica)}</p></div>`;
+        $("emptyState").classList.add("hide");
+        toast("Erro ao ler banners: "+code,"bad");
+      });
     }else{showLogin();}
   });
 }
