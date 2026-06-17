@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PassaLivro — Painel de anúncios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F2E9;--surface:#fff;--surface-2:#FBF8F1;--ink:#173F3B;--ink-soft:#46615C;
+    --line:#E7DFCE;--line-strong:#D8CDB4;--marigold:#DD942F;--marigold-soft:#F7E6C6;
+    --trade:#2F8F6B;--trade-soft:#DBEFE4;--doa:#7A5AA6;--doa-soft:#EAE2F4;--danger:#BE4527;--danger-soft:#F6E0D8;
+    --text:#1A2421;--shadow:0 1px 2px rgba(23,63,59,.06),0 8px 24px rgba(23,63,59,.07);
+    --shadow-lg:0 12px 40px rgba(23,63,59,.18);--r:16px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--text);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;margin:0;color:var(--ink);line-height:1.1}
+  button{font-family:inherit;cursor:pointer}
+  a{color:var(--marigold)}
+  :focus-visible{outline:3px solid var(--marigold);outline-offset:2px;border-radius:6px}
+
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(246,242,233,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar-inner{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+  .mark{width:38px;height:38px;border-radius:11px;background:var(--ink);display:grid;place-items:center;flex:none}
+  .mark svg{width:22px;height:22px}
+  .brand-name{font-family:"Fraunces",serif;font-weight:600;font-size:20px;color:var(--ink)}
+  .brand-name b{color:var(--marigold)}
+  .brand-sub{font-size:11px;color:var(--ink-soft);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+  .who{font-size:13px;color:var(--ink-soft);font-weight:500}
+  .btn{border:1px solid transparent;border-radius:11px;padding:11px 18px;font-size:14.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;white-space:nowrap;transition:transform .08s,background .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn svg{width:17px;height:17px}
+  .btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow)}
+  .btn-primary:hover{background:#10302d}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+  .btn-ghost:hover{background:var(--surface-2)}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 70px}
+
+  /* login */
+  .login{max-width:430px;margin:8vh auto;background:var(--surface);border:1px solid var(--line);border-radius:22px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .login-top{padding:28px 30px 6px}
+  .login-top h1{font-size:26px}
+  .login-top p{color:var(--ink-soft);font-size:14.5px;margin:8px 0 0}
+  .login-body{padding:20px 30px 30px}
+  .field{margin-bottom:15px}
+  label.lab{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:7px}
+  .inp{width:100%;padding:12px 14px;border-radius:11px;border:1px solid var(--line-strong);background:var(--surface);
+    font-family:inherit;font-size:15px;color:var(--text)}
+  .inp:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px rgba(23,63,59,.1)}
+  .login .btn{width:100%;justify-content:center;padding:14px;margin-top:4px}
+  .swap{text-align:center;font-size:13.5px;margin-top:16px;color:var(--ink-soft)}
+  .swap a{cursor:pointer;font-weight:600}
+  .msg{font-size:13px;font-weight:600;margin-top:12px;padding:10px 12px;border-radius:10px;display:none}
+  .msg.show{display:block}
+  .msg.err{background:var(--danger-soft);color:var(--danger)}
+  .msg.ok{background:var(--trade-soft);color:var(--trade)}
+
+  /* dashboard */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .head h1{font-size:30px}
+  .head p{color:var(--ink-soft);margin:6px 0 0;font-size:14.5px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-width:120px;box-shadow:var(--shadow)}
+  .stat .n{font-family:"Fraunces",serif;font-weight:600;font-size:26px;color:var(--ink)}
+  .stat .l{font-size:12.5px;color:var(--ink-soft);font-weight:500}
+
+  .list{display:flex;flex-direction:column;gap:14px}
+  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:16px;
+    align-items:center;box-shadow:var(--shadow)}
+  .row .thumb{width:150px;height:64px;border-radius:10px;overflow:hidden;background:var(--surface-2);flex:none;
+    border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-soft);font-size:12px;font-weight:600;text-align:center}
+  .row .thumb img{width:100%;height:100%;object-fit:cover}
+  .row .info{flex:1;min-width:0}
+  .row .info h3{font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .sub{font-size:13px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .pos{display:inline-flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.2px}
+  .badge.topo{background:var(--marigold-soft);color:#9a6512}
+  .badge.grade{background:var(--trade-soft);color:var(--trade)}
+  .badge.rodape{background:var(--doa-soft);color:var(--doa)}
+  .badge.on{background:var(--trade);color:#fff}
+  .badge.off{background:#ECE6D8;color:var(--ink-soft)}
+  .row .acts{display:flex;gap:8px;flex:none}
+  .iconbtn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);
+    display:grid;place-items:center;color:var(--ink)}
+  .iconbtn:hover{background:var(--surface-2)}
+  .iconbtn.del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+  .iconbtn svg{width:18px;height:18px}
+  .switch{position:relative;width:46px;height:26px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:#D8CDB4;border-radius:30px;transition:.2s;cursor:pointer}
+  .slider::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked + .slider{background:var(--trade)}
+  .switch input:checked + .slider::before{transform:translateX(20px)}
+
+  .empty{text-align:center;padding:50px 24px;background:var(--surface);border:1px dashed var(--line-strong);border-radius:20px;color:var(--ink-soft)}
+  .empty h3{font-size:21px;margin-bottom:6px}
+
+  /* modal */
+  .scrim{position:fixed;inset:0;background:rgba(16,32,30,.5);backdrop-filter:blur(3px);z-index:60;
+    display:none;align-items:flex-start;justify-content:center;padding:24px;overflow:auto}
+  .scrim.open{display:flex}
+  .modal{background:var(--paper);border-radius:22px;width:100%;max-width:620px;margin:auto;box-shadow:var(--shadow-lg);overflow:hidden}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--paper);z-index:2}
+  .modal-head h2{font-size:22px}
+  .xclose{width:36px;height:36px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);display:grid;place-items:center}
+  .xclose svg{width:18px;height:18px}
+  .modal-body{padding:22px 24px}
+  .field.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  textarea.inp{resize:vertical;min-height:64px}
+  .seg{display:flex;gap:8px}
+  .seg label{flex:1}
+  .seg input{position:absolute;opacity:0}
+  .seg .opt-b{display:flex;flex-direction:column;gap:2px;align-items:center;padding:11px 6px;border:1px solid var(--line-strong);
+    border-radius:11px;background:var(--surface);font-weight:600;font-size:13px;text-align:center;color:var(--ink-soft)}
+  .seg .opt-b small{font-weight:500;font-size:10.5px}
+  .seg input:checked + .opt-b{border-color:var(--ink);background:var(--ink);color:#fff}
+  .drop{border:2px dashed var(--line-strong);border-radius:13px;padding:18px;text-align:center;background:var(--surface);color:var(--ink-soft);cursor:pointer}
+  .drop:hover{border-color:var(--marigold);background:var(--surface-2)}
+  .drop svg{width:24px;height:24px;color:var(--marigold);margin-bottom:4px}
+  .drop b{color:var(--ink)}
+  .prev{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--surface)}
+  .prev .ad-sponsor{position:absolute;top:8px;right:8px;background:rgba(20,40,37,.62);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
+  .prev img{width:100%;display:block;object-fit:cover}
+  .prev.topo img{aspect-ratio:1100/300}
+  .prev.grade img{aspect-ratio:5/4;max-width:260px}
+  .prev.rodape img{aspect-ratio:1100/300}
+  .prev .ph{padding:30px;text-align:center;color:var(--ink-soft);font-size:13px}
+  .toggle-row{display:flex;align-items:center;gap:12px;margin-top:4px}
+  .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--line);margin-top:8px}
+  .help-txt{font-size:12px;color:var(--ink-soft);margin-top:6px}
+
+  .toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:10px;width:calc(100% - 32px);max-width:420px}
+  .toast{background:var(--ink);color:#fff;padding:14px 18px;border-radius:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:11px;font-size:14px;font-weight:500}
+  .toast.ok{background:var(--trade)}.toast.bad{background:var(--danger)}
+  .toast svg{width:19px;height:19px;flex:none}
+
+  .setup{max-width:620px;margin:8vh auto;background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+  .setup-top{background:var(--ink);color:#fff;padding:24px 26px}.setup-top h2{color:#fff}
+  .setup-body{padding:22px 26px}.setup-body code{font-family:ui-monospace,monospace;font-size:12.5px;background:var(--surface-2);padding:2px 5px;border-radius:5px}
+  .hide{display:none!important}
+  @media(max-width:560px){
+    .field.row2{grid-template-columns:1fr}
+    .row{flex-wrap:wrap}.row .thumb{width:100%;height:120px}.row .acts{margin-left:auto}
+    .head h1{font-size:24px}
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M3 4.5C3 4.5 6 3.2 9 4.2C11 4.9 12 6 12 6V20C12 20 11 18.9 9 18.2C6 17.2 3 18.5 3 18.5V4.5Z" fill="#DD942F"/><path d="M21 4.5C21 4.5 18 3.2 15 4.2C13 4.9 12 6 12 6V20C12 20 13 18.9 15 18.2C18 17.2 21 18.5 21 18.5V4.5Z" fill="#fff"/></svg></span>
+      <div><div class="brand-name">Passa<b>Livro</b></div><div class="brand-sub">Painel de anúncios</div></div>
+    </div>
+    <span class="who hide" id="whoami"></span>
+    <button class="btn btn-ghost hide" id="logoutBtn" onclick="Panel.logout()">Sair</button>
+  </div>
+</header>
+
+<!-- SETUP -->
+<section class="setup hide" id="setupCard">
+  <div class="setup-top"><h2>Configure o Firebase</h2><p style="opacity:.85;margin:8px 0 0">Cole o <code>firebaseConfig</code> no topo deste arquivo, igual fez no portal.</p></div>
+  <div class="setup-body">
+    <p>Este painel precisa, além do que o portal já usa:</p>
+    <ol>
+      <li>Ativar o provedor <b>E-mail/senha</b> em <b>Authentication → Sign-in method</b>.</li>
+      <li>Criar o seu usuário administrador (na primeira vez, use o botão <b>Criar conta de administrador</b> nesta tela).</li>
+      <li>Publicar as regras do Firestore para a coleção <code>banners</code> (veja abaixo), trocando pelo <b>seu e-mail</b>.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- LOGIN -->
+<section class="login hide" id="loginCard">
+  <div class="login-top">
+    <h1 id="loginTitle">Acesso do administrador</h1>
+    <p id="loginSub">Entre para gerenciar os anúncios exibidos no portal.</p>
+  </div>
+  <div class="login-body">
+    <div class="field"><label class="lab" for="email">E-mail</label><input class="inp" id="email" type="email" autocomplete="username" placeholder="voce@exemplo.com"></div>
+    <div class="field"><label class="lab" for="senha">Senha</label><input class="inp" id="senha" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" id="loginBtn" onclick="Panel.auth()">Entrar</button>
+    <div class="msg" id="loginMsg"></div>
+    <div class="swap" id="swapLine">Primeiro acesso? <a onclick="Panel.toggleMode()">Criar conta de administrador</a></div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<main class="wrap hide" id="dash">
+  <div class="head">
+    <div>
+      <h1>Anúncios do portal</h1>
+      <p>Cadastre banners que aparecem para as famílias. Eles entram no ar assim que ficam <b>ativos</b>.</p>
+    </div>
+    <button class="btn btn-primary" onclick="Panel.openForm()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+      Novo banner
+    </button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+  <div class="list" id="list"></div>
+
+  <section class="empty hide" id="emptyState">
+    <h3>Nenhum anúncio cadastrado</h3>
+    <p>Crie o primeiro banner para começar a veicular publicidade no portal.</p>
+    <button class="btn btn-primary" onclick="Panel.openForm()" style="margin-top:8px">Criar primeiro banner</button>
+  </section>
+</main>
+
+<!-- MODAL FORM -->
+<div class="scrim" id="formScrim">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2 id="formTitle">Novo banner</h2>
+      <button class="xclose" onclick="Panel.closeForm()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="adForm" onsubmit="Panel.save(event)">
+        <input type="hidden" id="editId">
+        <div class="field">
+          <label class="lab" for="titulo">Nome / título do anúncio</label>
+          <input class="inp" id="titulo" placeholder="Ex.: Papelaria do Bairro — 20% off" required>
+        </div>
+        <div class="field">
+          <label class="lab" for="descricao">Chamada <span style="font-weight:500;color:var(--ink-soft)">(aparece quando não há imagem ou no cartão)</span></label>
+          <input class="inp" id="descricao" placeholder="Ex.: Material escolar com desconto para a comunidade">
+        </div>
+        <div class="field">
+          <label class="lab" for="link">Link de destino</label>
+          <input class="inp" id="link" type="url" placeholder="https://...">
+          <div class="help-txt">Para onde a pessoa vai ao tocar no anúncio. Dica: adicione <code>?utm_source=passalivro</code> para medir no seu site.</div>
+        </div>
+        <div class="field">
+          <label class="lab">Posição no portal</label>
+          <div class="seg" id="posSeg">
+            <label><input type="radio" name="pos" value="topo" checked onchange="Panel.syncPreview()"><span class="opt-b">Topo da lista<small>faixa 1100×300</small></span></label>
+            <label><input type="radio" name="pos" value="grade" onchange="Panel.syncPreview()"><span class="opt-b">Na grade<small>cartão 600×480</small></span></label>
+            <label><input type="radio" name="pos" value="rodape" onchange="Panel.syncPreview()"><span class="opt-b">Rodapé<small>faixa 1100×300</small></span></label>
+          </div>
+        </div>
+        <div class="field row2">
+          <div>
+            <label class="lab" for="ordem">Ordem de exibição</label>
+            <input class="inp" id="ordem" type="number" value="0" min="0" step="1">
+            <div class="help-txt">Menor número aparece primeiro.</div>
+          </div>
+          <div>
+            <label class="lab">Status</label>
+            <div class="toggle-row">
+              <span class="switch"><input type="checkbox" id="ativo" checked><span class="slider"></span></span>
+              <span id="ativoLbl" style="font-weight:600">Ativo (no ar)</span>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="lab">Imagem do banner</label>
+          <div class="drop" onclick="document.getElementById('imgInput').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
+            <div><b>Toque para enviar a imagem</b></div>
+            <div class="help-txt" style="margin-top:2px">Compactada automaticamente • JPG/PNG</div>
+          </div>
+          <input type="file" id="imgInput" accept="image/*" class="hide" onchange="Panel.pickImage(event)">
+          <div class="prev topo" id="preview"><div class="ph">A pré-visualização aparece aqui</div></div>
+        </div>
+        <div class="msg" id="formMsg"></div>
+        <div class="form-foot">
+          <button type="button" class="btn btn-ghost" onclick="Panel.closeForm()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">Publicar banner</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script type="module">
+/* ============================================================
+   CONFIGURAÇÃO DO FIREBASE — use a MESMA do portal
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyB-vYs_Pld4DccL2TdiaIdRzFaF3aUxSSI",
+  authDomain: "passalivros.firebaseapp.com",
+  projectId: "passalivros",
+  storageBucket: "passalivros.firebasestorage.app",
+  messagingSenderId: "1070393055617",
+  appId: "1:1070393055617:web:504874c5cfef1582a07080",
+  measurementId: "G-BVG34858XJ"
+};
+/* (Opcional) restringe o painel a um e-mail. Deixe "" para não restringir no cliente
+   — a segurança real fica nas regras do Firestore de qualquer forma. */
+const ADMIN_EMAIL = "";
+/* ============================================================ */
+
+const isConfigured = !String(firebaseConfig.apiKey).startsWith("COLE_AQUI");
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function toast(msg,kind=""){
+  const t=document.createElement("div");t.className="toast "+kind;
+  t.innerHTML=(kind==="ok"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>':kind==="bad"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>':'')+"<span>"+esc(msg)+"</span>";
+  $("toasts").appendChild(t);setTimeout(()=>t.remove(),3200);
+}
+function msg(el,text,kind){el.className="msg show "+kind;el.textContent=text;}
+function clearMsg(el){el.className="msg";}
+
+function compress(file){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>{const img=new Image();img.onload=()=>{
+      const max=1280;let{width:w,height:h}=img;
+      if(w>h&&w>max){h=h*max/w;w=max;}else if(h>=w&&h>max){w=w*max/h;h=max;}
+      const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);
+      let q=0.7,out=c.toDataURL("image/jpeg",q);
+      while(out.length>230000&&q>0.35){q-=0.08;out=c.toDataURL("image/jpeg",q);}
+      res(out);
+    };img.onerror=rej;img.src=e.target.result;};
+    r.onerror=rej;r.readAsDataURL(file);
+  });
+}
+
+const Panel={
+  toggleMode(){
+    signupMode=!signupMode;
+    $("loginTitle").textContent=signupMode?"Criar conta de administrador":"Acesso do administrador";
+    $("loginSub").textContent=signupMode?"Crie a conta que vai gerenciar os anúncios. Use o mesmo e-mail definido nas regras.":"Entre para gerenciar os anúncios exibidos no portal.";
+    $("loginBtn").textContent=signupMode?"Criar conta":"Entrar";
+    $("swapLine").innerHTML=signupMode?'Já tem conta? <a onclick="Panel.toggleMode()">Entrar</a>':'Primeiro acesso? <a onclick="Panel.toggleMode()">Criar conta de administrador</a>';
+    clearMsg($("loginMsg"));
+  },
+  async auth(){
+    const email=$("email").value.trim(),senha=$("senha").value;
+    if(!email||!senha)return msg($("loginMsg"),"Preencha e-mail e senha.","err");
+    if(ADMIN_EMAIL&&email.toLowerCase()!==ADMIN_EMAIL.toLowerCase())
+      return msg($("loginMsg"),"Este e-mail não é o administrador configurado.","err");
+    $("loginBtn").disabled=true;
+    try{
+      if(signupMode)await createUserWithEmailAndPassword(auth,email,senha);
+      else await signInWithEmailAndPassword(auth,email,senha);
+    }catch(e){
+      const m={"auth/invalid-credential":"E-mail ou senha incorretos.","auth/wrong-password":"Senha incorreta.",
+        "auth/user-not-found":"Conta não encontrada. Use \"Criar conta\".","auth/email-already-in-use":"Já existe conta com esse e-mail. Use \"Entrar\".",
+        "auth/weak-password":"A senha precisa de ao menos 6 caracteres.","auth/invalid-email":"E-mail inválido.",
+        "auth/operation-not-allowed":"Ative o provedor E-mail/senha no Firebase (Authentication)."}[e.code];
+      msg($("loginMsg"),m||("Erro: "+e.code),"err");
+    }finally{$("loginBtn").disabled=false;}
+  },
+  logout(){signOut(auth);},
+
+  /* ---- form ---- */
+  openForm(ad=null){
+    editing=ad?ad.id:null;pendingImg=ad?ad.imagem||null:null;
+    $("formTitle").textContent=ad?"Editar banner":"Novo banner";
+    $("saveBtn").textContent=ad?"Salvar alterações":"Publicar banner";
+    $("editId").value=ad?ad.id:"";
+    $("titulo").value=ad?.titulo||"";$("descricao").value=ad?.descricao||"";$("link").value=ad?.link||"";
+    $("ordem").value=ad?.ordem??0;$("ativo").checked=ad?ad.ativo!==false:true;
+    (document.querySelector(`#posSeg input[value="${ad?.posicao||'topo'}"]`)||{}).checked=true;
+    clearMsg($("formMsg"));this.syncPreview();
+    $("formScrim").classList.add("open");document.body.style.overflow="hidden";
+  },
+  closeForm(){$("formScrim").classList.remove("open");document.body.style.overflow="";},
+  async pickImage(e){
+    const f=e.target.files[0];e.target.value="";if(!f)return;
+    try{pendingImg=await compress(f);this.syncPreview();}catch{toast("Não consegui processar a imagem.","bad");}
+  },
+  syncPreview(){
+    const pos=document.querySelector('#posSeg input:checked').value;
+    const p=$("preview");p.className="prev "+pos;
+    if(pendingImg)p.innerHTML=`<span class="ad-sponsor">Anúncio</span><img src="${pendingImg}" alt="prévia">`;
+    else p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}</div>`;
+  },
+  async save(e){
+    e.preventDefault();
+    const data={
+      titulo:$("titulo").value.trim(),descricao:$("descricao").value.trim(),link:$("link").value.trim(),
+      posicao:document.querySelector('#posSeg input:checked').value,
+      ordem:parseInt($("ordem").value||"0",10),ativo:$("ativo").checked,
+      imagem:pendingImg||"",updatedAt:serverTimestamp()
+    };
+    if(!data.titulo)return msg($("formMsg"),"Informe um título.","err");
+    if(JSON.stringify(data).length>980000)return msg($("formMsg"),"A imagem ficou grande demais. Use uma menor.","err");
+    $("saveBtn").disabled=true;
+    try{
+      if(editing)await updateDoc(doc(db,"banners",editing),data);
+      else await addDoc(ref,{...data,createdAt:serverTimestamp()});
+      toast(editing?"Banner atualizado.":"Banner publicado.","ok");this.closeForm();
+    }catch(err){
+      console.error(err);
+      msg($("formMsg"),err.code==="permission-denied"?"Sem permissão. Confira se seu e-mail está nas regras do Firestore para 'banners'.":"Erro ao salvar: "+(err.code||err.message),"err");
+    }finally{$("saveBtn").disabled=false;}
+  },
+  async toggleActive(id,val){
+    try{await updateDoc(doc(db,"banners",id),{ativo:val,updatedAt:serverTimestamp()});}
+    catch(err){toast("Não foi possível alterar o status.","bad");this.render();}
+  },
+  async remove(id){
+    const a=ADS.find(x=>x.id===id);if(!a)return;
+    if(!confirm(`Excluir o banner "${a.titulo}"?`))return;
+    try{await deleteDoc(doc(db,"banners",id));toast("Banner excluído.","ok");}
+    catch(err){toast("Não foi possível excluir.","bad");}
+  },
+
+  /* ---- render ---- */
+  render(){
+    const posName={topo:"Topo da lista",grade:"Na grade",rodape:"Rodapé"};
+    $("stats").innerHTML=[
+      ["Total",ADS.length],["No ar",ADS.filter(a=>a.ativo!==false).length],
+      ["Topo",ADS.filter(a=>a.posicao==="topo").length],
+      ["Grade",ADS.filter(a=>a.posicao==="grade").length],
+      ["Rodapé",ADS.filter(a=>a.posicao==="rodape").length],
+    ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+    if(!ADS.length){$("list").innerHTML="";$("emptyState").classList.remove("hide");return;}
+    $("emptyState").classList.add("hide");
+    $("list").innerHTML=ADS.map(a=>{
+      const thumb=a.imagem?`<img src="${a.imagem}" alt="">`:`<span>sem imagem</span>`;
+      const on=a.ativo!==false;
+      return `<div class="row">
+        <div class="thumb">${thumb}</div>
+        <div class="info">
+          <h3>${esc(a.titulo)}</h3>
+          <div class="sub">${a.link?esc(a.link):"sem link"}${a.descricao?" • "+esc(a.descricao):""}</div>
+          <div class="pos">
+            <span class="badge ${a.posicao}">${posName[a.posicao]||a.posicao}</span>
+            <span class="badge ${on?'on':'off'}">${on?"No ar":"Pausado"}</span>
+            <span class="badge off">ordem ${a.ordem??0}</span>
+          </div>
+        </div>
+        <div class="acts">
+          <label class="switch" title="Ativar/pausar"><input type="checkbox" ${on?"checked":""} onchange="Panel.toggleActive('${a.id}',this.checked)"><span class="slider"></span></label>
+          <button class="iconbtn" title="Editar" onclick="Panel.editById('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+          <button class="iconbtn del" title="Excluir" onclick="Panel.remove('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div>
+      </div>`;
+    }).join("");
+  },
+  editById(id){const a=ADS.find(x=>x.id===id);if(a)this.openForm(a);},
+};
+window.Panel=Panel;
+$("ativo").addEventListener("change",e=>$("ativoLbl").textContent=e.target.checked?"Ativo (no ar)":"Pausado");
+["titulo","descricao"].forEach(id=>$(id).addEventListener("input",()=>Panel.syncPreview()));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")Panel.closeForm();});
+$("formScrim").addEventListener("click",e=>{if(e.target===$("formScrim"))Panel.closeForm();});
+$("email").addEventListener("keydown",e=>{if(e.key==="Enter")$("senha").focus();});
+$("senha").addEventListener("keydown",e=>{if(e.key==="Enter")Panel.auth();});
+
+/* ---- boot ---- */
+function showLogin(){$("loginCard").classList.remove("hide");$("dash").classList.add("hide");$("whoami").classList.add("hide");$("logoutBtn").classList.add("hide");}
+function showDash(email){
+  $("loginCard").classList.add("hide");$("dash").classList.remove("hide");
+  $("whoami").textContent=email;$("whoami").classList.remove("hide");$("logoutBtn").classList.remove("hide");
+}
+
+if(!isConfigured){$("setupCard").classList.remove("hide");}
+else{
+  const app=initializeApp(firebaseConfig);
+  auth=getAuth(app);db=getFirestore(app);ref=collection(db,"banners");
+  onAuthStateChanged(auth,user=>{
+    if(user){
+      showDash(user.email);
+      onSnapshot(query(ref,orderBy("ordem","asc")),snap=>{
+        ADS=snap.docs.map(d=>({id:d.id,...d.data()}));
+        ADS.sort((a,b)=>(a.ordem??0)-(b.ordem??0));
+        Panel.render();
+      },err=>{console.error(err);toast("Erro ao ler banners. Confira as regras do Firestore.","bad");});
+    }else{showLogin();}
+  });
+}
+</script>
+</body>
+</html>
