@@ -230,6 +230,7 @@
 <main class="wrap hide" id="dash">
   <div class="tabs" id="panelTabs">
     <button class="tabbtn active" data-tab="overview" onclick="Panel.switchTab('overview')">Visão geral</button>
+    <button class="tabbtn" data-tab="users" onclick="Panel.switchTab('users')">Usuários</button>
     <button class="tabbtn" data-tab="settings" onclick="Panel.switchTab('settings')">Configurações</button>
     <button class="tabbtn" data-tab="banners" onclick="Panel.switchTab('banners')">Banners</button>
   </div>
@@ -243,11 +244,26 @@
       </div>
     </div>
     <div class="stats" id="overviewStats"></div>
-    <p class="help-txt" style="margin-bottom:18px">Cada visitante é identificado de forma anônima pelo navegador. "Usuários cadastrados" é o total de visitantes únicos já registrados; "acessos" conta visitantes únicos por dia.</p>
+    <p class="help-txt" style="margin-bottom:18px">"Usuários cadastrados" é o total de pessoas que fizeram o cadastro (nome, WhatsApp e e-mail) para anunciar no portal. "Acessos" conta visitantes únicos por dia, identificados de forma anônima pelo navegador.</p>
     <div class="chartcard">
       <h3>Acessos nos últimos 14 dias</h3>
       <div class="bars" id="accessBars"></div>
     </div>
+  </section>
+
+  <!-- ABA: USUÁRIOS -->
+  <section id="tabUsers" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Usuários cadastrados</h1>
+        <p>Pessoas que se cadastraram para anunciar no portal.</p>
+      </div>
+    </div>
+    <div class="list" id="usersList"></div>
+    <section class="empty hide" id="usersEmpty">
+      <h3>Nenhum usuário cadastrado ainda</h3>
+      <p>Os cadastros feitos no portal (nome, WhatsApp e e-mail) aparecem aqui.</p>
+    </section>
   </section>
 
   <!-- ABA: CONFIGURAÇÕES -->
@@ -560,11 +576,58 @@ const Panel={
 
   /* ---------- abas ---------- */
   switchTab(name){
-    const map={overview:"tabOverview",settings:"tabSettings",banners:"tabBanners"};
+    const map={overview:"tabOverview",users:"tabUsers",settings:"tabSettings",banners:"tabBanners"};
     Object.entries(map).forEach(([k,id])=>$(id).classList.toggle("hide",k!==name));
     document.querySelectorAll("#panelTabs .tabbtn").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
     if(name==="overview")this.loadOverview();
+    if(name==="users")this.loadUsers();
     if(name==="settings")this.loadConfigForm();
+  },
+
+  /* ---------- usuários cadastrados ---------- */
+  async loadUsers(){
+    const wrap=$("usersList");
+    wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
+    $("usersEmpty").classList.add("hide");
+    try{
+      const snap=await getDocs(query(usuariosRef,where("cadastrado","==",true)));
+      let users=snap.docs.map(d=>({id:d.id,...d.data()}));
+      // ordena pelos mais recentes (client-side, evita índice composto)
+      users.sort((a,b)=>{
+        const ta=a.cadastradoEm?.toMillis?a.cadastradoEm.toMillis():0;
+        const tb=b.cadastradoEm?.toMillis?b.cadastradoEm.toMillis():0;
+        return tb-ta;
+      });
+      if(!users.length){wrap.innerHTML="";$("usersEmpty").classList.remove("hide");return;}
+      wrap.innerHTML=users.map(u=>{
+        const nome=esc(u.nome||"(sem nome)");
+        const email=u.email?esc(u.email):"—";
+        const fone=esc(u.whatsapp||"");
+        const waDigits=String(u.whatsapp||"").replace(/\D/g,"");
+        const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
+        const data=u.cadastradoEm?.toMillis?new Date(u.cadastradoEm.toMillis()).toLocaleDateString("pt-BR"):"";
+        return `<div class="row">
+          <div class="thumb" style="width:46px;height:46px;border-radius:50%;background:var(--marigold-soft);color:#9a6512;font-size:17px">
+            ${esc((u.nome||"?").trim().charAt(0).toUpperCase()||"?")}
+          </div>
+          <div class="info">
+            <h3>${nome}</h3>
+            <div class="sub">${email}${fone?" • "+fone:""}</div>
+            <div class="pos">
+              ${waHref?`<a class="badge grade" style="text-decoration:none" href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+              ${data?`<span class="badge off">cadastrado em ${data}</span>`:""}
+            </div>
+          </div>
+        </div>`;
+      }).join("");
+    }catch(err){
+      console.error(err);
+      const code=err.code||err.message||"desconhecido";
+      wrap.innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+        <h3 style="color:var(--danger)">Não consegui carregar os usuários</h3>
+        <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+        <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> para o seu e-mail de administrador.</p></div>`;
+    }
   },
 
   /* ---------- visão geral: usuários e acessos ---------- */
@@ -578,7 +641,7 @@ const Panel={
       const monthStart=dateStr(new Date(now.getFullYear(),now.getMonth(),1));
       const monthEnd=dateStr(new Date(now.getFullYear(),now.getMonth()+1,0));
       const [uTotal,aHoje,aMes]=await Promise.all([
-        getCountFromServer(usuariosRef),
+        getCountFromServer(query(usuariosRef,where("cadastrado","==",true))),
         getCountFromServer(query(acessosRef,where("data","==",today))),
         getCountFromServer(query(acessosRef,where("data",">=",monthStart),where("data","<=",monthEnd)))
       ]);
