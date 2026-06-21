@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -77,6 +76,19 @@
     border-bottom:3px solid transparent;cursor:pointer;font-family:inherit}
   .tabbtn:hover{color:var(--ink)}
   .tabbtn.active{color:var(--ink);border-bottom-color:var(--marigold)}
+
+  /* filtros de moderação */
+  .modtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .modbtn{background:var(--surface);border:1px solid var(--line-strong);border-radius:30px;padding:8px 16px;
+    font-weight:600;font-size:13.5px;color:var(--ink-soft);font-family:inherit;cursor:pointer;transition:.12s}
+  .modbtn:hover{background:var(--surface-2)}
+  .modbtn.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .mod-photo{width:64px;height:64px;border-radius:10px;object-fit:cover;flex:none;border:1px solid var(--line);background:var(--surface-2)}
+  .mod-noimg{width:64px;height:64px;border-radius:10px;flex:none;border:1px solid var(--line);background:var(--surface-2);
+    display:grid;place-items:center;color:var(--ink-soft);font-size:10px;font-weight:600;text-align:center}
+  .iconbtn.ok-act:hover{border-color:var(--trade);color:var(--trade);background:var(--trade-soft)}
+  .btn-approve{background:var(--trade);color:#fff;border:1px solid transparent}
+  .btn-approve:hover{background:#26795a}
 
   /* gráfico de acessos */
   .chartcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px 14px;box-shadow:var(--shadow)}
@@ -233,6 +245,7 @@
   <div class="tabs" id="panelTabs">
     <button class="tabbtn active" data-tab="overview" onclick="Panel.switchTab('overview')">Visão geral</button>
     <button class="tabbtn" data-tab="users" onclick="Panel.switchTab('users')">Usuários</button>
+    <button class="tabbtn" data-tab="moderacao" onclick="Panel.switchTab('moderacao')">Anúncios de terceiros</button>
     <button class="tabbtn" data-tab="settings" onclick="Panel.switchTab('settings')">Configurações</button>
     <button class="tabbtn" data-tab="banners" onclick="Panel.switchTab('banners')">Banners</button>
   </div>
@@ -316,6 +329,34 @@
       <h3>Nenhum anúncio cadastrado</h3>
       <p>Crie o primeiro banner para começar a veicular publicidade no portal.</p>
       <button class="btn btn-primary" onclick="Panel.openForm()" style="margin-top:8px">Criar primeiro banner</button>
+    </section>
+  </section>
+
+  <!-- ABA: ANÚNCIOS DE TERCEIROS (MODERAÇÃO) -->
+  <section id="tabModeracao" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Anúncios de terceiros</h1>
+        <p>Anúncios de livros cadastrados pelas famílias. Aprove os que seguem as diretrizes e exclua os que estiverem <b>fora do nicho</b> ou violando as regras do portal.</p>
+      </div>
+      <button class="btn btn-ghost" onclick="Panel.loadModeracao()" title="Recarregar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 16v-4h4"/></svg>
+        Atualizar
+      </button>
+    </div>
+
+    <div class="modtabs" id="modFilters">
+      <button class="modbtn active" data-mf="pendente" onclick="Panel.setModFilter('pendente')">Em avaliação</button>
+      <button class="modbtn" data-mf="ativo" onclick="Panel.setModFilter('ativo')">No ar</button>
+      <button class="modbtn" data-mf="todos" onclick="Panel.setModFilter('todos')">Todos</button>
+    </div>
+
+    <div class="stats" id="modStats"></div>
+    <div class="list" id="modList"></div>
+
+    <section class="empty hide" id="modEmpty">
+      <h3>Nada por aqui</h3>
+      <p>Nenhum anúncio de terceiro neste filtro.</p>
     </section>
   </section>
 </main>
@@ -533,7 +574,8 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
   from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
-let usuariosRef=null, acessosRef=null, configRef=null;
+let usuariosRef=null, acessosRef=null, configRef=null, livrosRef=null;
+let MOD_ADS=[], modFilter="pendente", USERS_CACHE=[];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function ytId(url){
@@ -606,11 +648,12 @@ const Panel={
 
   /* ---------- abas ---------- */
   switchTab(name){
-    const map={overview:"tabOverview",users:"tabUsers",settings:"tabSettings",banners:"tabBanners"};
+    const map={overview:"tabOverview",users:"tabUsers",moderacao:"tabModeracao",settings:"tabSettings",banners:"tabBanners"};
     Object.entries(map).forEach(([k,id])=>$(id).classList.toggle("hide",k!==name));
     document.querySelectorAll("#panelTabs .tabbtn").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
     if(name==="overview")this.loadOverview();
     if(name==="users")this.loadUsers();
+    if(name==="moderacao")this.loadModeracao();
     if(name==="settings")this.loadConfigForm();
   },
 
@@ -629,6 +672,7 @@ const Panel={
         return tb-ta;
       });
       if(!users.length){wrap.innerHTML="";$("usersEmpty").classList.remove("hide");return;}
+      USERS_CACHE=users;
       wrap.innerHTML=users.map(u=>{
         const nome=esc(u.nome||"(sem nome)");
         const email=u.email?esc(u.email):"—";
@@ -648,6 +692,9 @@ const Panel={
               ${data?`<span class="badge off">cadastrado em ${data}</span>`:""}
             </div>
           </div>
+          <div class="acts">
+            <button class="iconbtn del" title="Excluir usuário" onclick="Panel.removeUser('${u.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+          </div>
         </div>`;
       }).join("");
     }catch(err){
@@ -657,6 +704,119 @@ const Panel={
         <h3 style="color:var(--danger)">Não consegui carregar os usuários</h3>
         <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
         <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> para o seu e-mail de administrador.</p></div>`;
+    }
+  },
+
+  async removeUser(id){
+    const u=USERS_CACHE.find(x=>x.id===id);
+    const nome=u?(u.nome||u.email||"este usuário"):"este usuário";
+    if(!confirm(`Excluir o cadastro de "${nome}"?\n\nIsto remove o registro do usuário no portal. Os anúncios dele continuam na aba "Anúncios de terceiros", onde você pode removê-los individualmente.`))return;
+    try{
+      await deleteDoc(doc(db,"usuarios",id));
+      USERS_CACHE=USERS_CACHE.filter(x=>x.id!==id);
+      toast("Usuário excluído.","ok");
+      this.loadUsers();
+    }catch(err){
+      console.error(err);
+      toast(err.code==="permission-denied"?"Sem permissão. Confira nas regras do Firestore se o seu e-mail pode excluir 'usuarios'.":"Não foi possível excluir o usuário.","bad");
+    }
+  },
+
+  /* ---------- moderação: anúncios de terceiros (coleção livros) ---------- */
+  async loadModeracao(){
+    const wrap=$("modList");
+    wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
+    $("modEmpty").classList.add("hide");
+    try{
+      const snap=await getDocs(livrosRef);
+      MOD_ADS=snap.docs.map(d=>({id:d.id,...d.data()}));
+      MOD_ADS.sort((a,b)=>{
+        const ta=a.createdAt?.toMillis?a.createdAt.toMillis():0;
+        const tb=b.createdAt?.toMillis?b.createdAt.toMillis():0;
+        return tb-ta;
+      });
+      this.renderModeracao();
+    }catch(err){
+      console.error(err);
+      const code=err.code||err.message||"desconhecido";
+      wrap.innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+        <h3 style="color:var(--danger)">Não consegui carregar os anúncios</h3>
+        <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+        <p>Confira se as regras do Firestore liberam a leitura de <code>livros</code>.</p></div>`;
+    }
+  },
+  setModFilter(f){
+    modFilter=f;
+    document.querySelectorAll("#modFilters .modbtn").forEach(b=>b.classList.toggle("active",b.dataset.mf===f));
+    this.renderModeracao();
+  },
+  renderModeracao(){
+    const all=MOD_ADS;
+    const pend=all.filter(a=>(a.status||"ativo")==="pendente");
+    const ativos=all.filter(a=>(a.status||"ativo")==="ativo");
+    $("modStats").innerHTML=[
+      ["Em avaliação",pend.length],["No ar",ativos.length],["Total",all.length],
+    ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+    const list = modFilter==="pendente"?pend : modFilter==="ativo"?ativos : all;
+    const wrap=$("modList");
+    if(!list.length){wrap.innerHTML="";$("modEmpty").classList.remove("hide");return;}
+    $("modEmpty").classList.add("hide");
+
+    const tipoLabel={venda:"Venda",troca:"Troca",doacao:"Doação"};
+    wrap.innerHTML=list.map(a=>{
+      const st=a.status||"ativo";
+      const foto=Array.isArray(a.fotos)&&a.fotos[0]?a.fotos[0]:"";
+      const thumb=foto?`<img class="mod-photo" src="${foto}" alt="">`:`<div class="mod-noimg">sem foto</div>`;
+      const catLine=a.categoria==="geral"?(a.genero||"Geral"):[a.disciplina,a.serie].filter(Boolean).join(" • ");
+      const stBadge=st==="pendente"?`<span class="badge topo">Em avaliação</span>`
+        :st==="finalizado"?`<span class="badge off">Concluído</span>`
+        :`<span class="badge on">No ar</span>`;
+      const approveBtn=st!=="ativo"?`<button class="btn btn-approve" style="padding:9px 14px;font-size:13px" onclick="Panel.approveAd('${a.id}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M20 6 9 17l-5-5"/></svg> Aprovar
+        </button>`:"";
+      return `<div class="row">
+        <div style="display:flex;gap:12px;align-items:center;flex:none">${thumb}</div>
+        <div class="info">
+          <h3>${esc(a.titulo||"(sem título)")}</h3>
+          <div class="sub">${esc([a.autor,a.editora].filter(Boolean).join(" • ")||"—")}</div>
+          <div class="pos">
+            <span class="badge ${a.tipo==='troca'?'grade':a.tipo==='doacao'?'rodape':'off'}">${esc(tipoLabel[a.tipo]||a.tipo||"—")}</span>
+            ${catLine?`<span class="badge off">${esc(catLine)}</span>`:""}
+            ${a.nome?`<span class="badge off">por ${esc(a.nome)}</span>`:""}
+            ${stBadge}
+          </div>
+        </div>
+        <div class="acts">
+          ${approveBtn}
+          <button class="iconbtn del" title="Excluir anúncio" onclick="Panel.rejectAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div>
+      </div>`;
+    }).join("");
+  },
+  async approveAd(id){
+    const a=MOD_ADS.find(x=>x.id===id);if(!a)return;
+    try{
+      await updateDoc(doc(db,"livros",id),{status:"ativo",aprovadoEm:serverTimestamp()});
+      a.status="ativo";
+      toast("Anúncio aprovado — já está no ar.","ok");
+      this.renderModeracao();
+    }catch(err){
+      console.error(err);
+      toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'livros' (admin pode aprovar).":"Não foi possível aprovar.","bad");
+    }
+  },
+  async rejectAd(id){
+    const a=MOD_ADS.find(x=>x.id===id);if(!a)return;
+    if(!confirm(`Excluir o anúncio "${a.titulo||"(sem título)"}"?\n\nUse isto para remover anúncios fora do nicho ou que violem as diretrizes do portal. Esta ação não pode ser desfeita.`))return;
+    try{
+      await deleteDoc(doc(db,"livros",id));
+      MOD_ADS=MOD_ADS.filter(x=>x.id!==id);
+      toast("Anúncio excluído.","ok");
+      this.renderModeracao();
+    }catch(err){
+      console.error(err);
+      toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'livros' (admin pode excluir).":"Não foi possível excluir.","bad");
     }
   },
 
@@ -964,6 +1124,7 @@ else{
   const app=initializeApp(firebaseConfig,"passalivro-painel");
   auth=getAuth(app);db=getFirestore(app);ref=collection(db,"banners");
   usuariosRef=collection(db,"usuarios");acessosRef=collection(db,"acessos");configRef=doc(db,"config","geral");
+  livrosRef=collection(db,"livros");
   let bannersSubReady=false;
   onAuthStateChanged(auth,user=>{
     // só consideramos administrador uma conta real (não anônima)
