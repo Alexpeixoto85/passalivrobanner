@@ -900,12 +900,17 @@ function showDash(email){
 
 if(!isConfigured){$("setupCard").classList.remove("hide");}
 else{
-  const app=initializeApp(firebaseConfig);
+  // App NOMEADO: isola a sessão do painel da sessão (anônima) do portal,
+  // que vive no app padrão e estava trocando esta tela de login pelo dashboard.
+  const app=initializeApp(firebaseConfig,"passalivro-painel");
   auth=getAuth(app);db=getFirestore(app);ref=collection(db,"banners");
   usuariosRef=collection(db,"usuarios");acessosRef=collection(db,"acessos");configRef=doc(db,"config","geral");
+  let bannersSubReady=false;
   onAuthStateChanged(auth,user=>{
-    if(user){
+    // só consideramos administrador uma conta real (não anônima)
+    if(user&&!user.isAnonymous){
       showDash(user.email);
+      if(bannersSubReady)return;bannersSubReady=true;
       onSnapshot(query(ref,orderBy("ordem","asc")),snap=>{
         ADS=snap.docs.map(d=>({id:d.id,...d.data()}));
         ADS.sort((a,b)=>(a.ordem??0)-(b.ordem??0));
