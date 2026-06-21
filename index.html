@@ -144,11 +144,27 @@
   .drop:hover{border-color:var(--marigold);background:var(--surface-2)}
   .drop svg{width:24px;height:24px;color:var(--marigold);margin-bottom:4px}
   .drop b{color:var(--ink)}
-  .prev{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--surface)}
-  .prev .ad-sponsor{position:absolute;top:8px;right:8px;background:rgba(20,40,37,.62);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px}
-  .prev img{width:100%;display:block;height:auto}
-  .prev.grade img{aspect-ratio:5/4;max-width:260px;object-fit:contain;background:var(--surface-2)}
-  .prev .ph{padding:30px;text-align:center;color:var(--ink-soft);font-size:13px}
+  .prev{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--surface);height:160px}
+  .prev .ad-sponsor{position:absolute;top:8px;right:8px;background:rgba(20,40,37,.62);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;z-index:3}
+  .prev img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+  .prev.grade img{object-fit:contain;background:var(--surface-2)}
+  .prev .ph{padding:30px;text-align:center;color:var(--ink-soft);font-size:13px;position:relative;z-index:2}
+  .prev .overlay-txt{position:absolute;z-index:2;max-width:80%;line-height:1.25;pointer-events:none;word-break:break-word}
+  /* seção tipografia sobreposta */
+  .txt-overlay-section{background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-top:4px}
+  .txt-overlay-section .sec-title{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+  .color-row{display:flex;align-items:center;gap:10px}
+  .color-swatch{width:36px;height:36px;border-radius:9px;border:2px solid var(--line-strong);cursor:pointer;padding:0;background:none;overflow:hidden;flex:none}
+  .color-swatch input[type=color]{width:150%;height:150%;margin:-25%;border:none;padding:0;cursor:pointer;background:none}
+  .font-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .toggle-group{display:flex;gap:6px}
+  .tog{width:36px;height:36px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);font-size:14px;font-weight:700;color:var(--ink-soft);cursor:pointer;display:grid;place-items:center;transition:.12s}
+  .tog.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:126px}
+  .pos-cell{width:38px;height:38px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;display:grid;place-items:center;transition:.12s}
+  .pos-cell.on{background:var(--ink);border-color:var(--ink)}
+  .pos-cell svg{width:13px;height:13px;color:var(--ink-soft)}
+  .pos-cell.on svg{color:#fff}
   .toggle-row{display:flex;align-items:center;gap:12px;margin-top:4px}
   .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--line);margin-top:8px}
   .help-txt{font-size:12px;color:var(--ink-soft);margin-top:6px}
@@ -353,6 +369,93 @@
           <input type="file" id="imgInput" accept="image/*" class="hide" onchange="Panel.pickImage(event)">
           <div class="prev topo" id="preview"><div class="ph">A pré-visualização aparece aqui</div></div>
         </div>
+
+        <!-- TEXTO SOBREPOSTO NA IMAGEM -->
+        <div class="field" id="overlaySection">
+          <label class="lab">Texto sobre a imagem <span style="font-weight:500;color:var(--ink-soft)">(opcional — só aparece quando há imagem)</span></label>
+          <div class="txt-overlay-section">
+            <div class="sec-title">Conteúdo</div>
+            <div class="field" style="margin-bottom:12px">
+              <input class="inp" id="overlayTitulo" placeholder="Título em destaque (ex.: 20% OFF)" oninput="Panel.syncPreview()">
+            </div>
+            <div class="field" style="margin-bottom:16px">
+              <input class="inp" id="overlaySub" placeholder="Subtítulo (ex.: só esta semana)" oninput="Panel.syncPreview()">
+            </div>
+
+            <div class="sec-title">Tipografia</div>
+            <div class="font-grid" style="margin-bottom:14px">
+              <div>
+                <label class="lab" style="margin-bottom:6px">Fonte</label>
+                <div class="sel" style="position:relative">
+                  <select class="inp" id="overlayFont" onchange="Panel.syncPreview()" style="padding-right:34px;appearance:none">
+                    <option value="DM Sans">DM Sans (padrão)</option>
+                    <option value="Fraunces">Fraunces (serif)</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Impact">Impact</option>
+                    <option value="ui-monospace">Monospace</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="lab" style="margin-bottom:6px">Tamanho (px)</label>
+                <input class="inp" id="overlaySize" type="number" value="28" min="12" max="72" step="1" oninput="Panel.syncPreview()">
+              </div>
+            </div>
+
+            <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px">
+              <div>
+                <label class="lab" style="margin-bottom:8px">Cor do texto</label>
+                <div class="color-row">
+                  <button type="button" class="color-swatch" title="Cor do título"><input type="color" id="overlayColor" value="#ffffff" oninput="Panel.syncPreview()"></button>
+                  <div>
+                    <div style="font-size:12px;font-weight:600;color:var(--ink)">Título</div>
+                    <div style="font-size:11px;color:var(--ink-soft)" id="overlayColorHex">#ffffff</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="lab" style="margin-bottom:8px">Cor do subtítulo</label>
+                <div class="color-row">
+                  <button type="button" class="color-swatch" title="Cor do subtítulo"><input type="color" id="overlaySubColor" value="#f0f0f0" oninput="Panel.syncPreview()"></button>
+                  <div>
+                    <div style="font-size:12px;font-weight:600;color:var(--ink)">Subtítulo</div>
+                    <div style="font-size:11px;color:var(--ink-soft)" id="overlaySubColorHex">#f0f0f0</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="lab" style="margin-bottom:8px">Estilo</label>
+                <div class="toggle-group">
+                  <button type="button" class="tog" id="togBold" title="Negrito" onclick="Panel.toggleTog('togBold');Panel.syncPreview()"><b>B</b></button>
+                  <button type="button" class="tog" id="togItalic" title="Itálico" onclick="Panel.toggleTog('togItalic');Panel.syncPreview()"><i>I</i></button>
+                  <button type="button" class="tog on" id="togShadow" title="Sombra no texto" onclick="Panel.toggleTog('togShadow');Panel.syncPreview()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="13" height="13" rx="2"/><rect x="8" y="8" width="13" height="13" rx="2" opacity=".4"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-title">Posição na imagem</div>
+            <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+              <div class="pos-grid" id="posGrid">
+                <button type="button" class="pos-cell" data-pos="top-left"    onclick="Panel.setOverlayPos('top-left')"    title="Topo esquerda">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 5h6M5 5v6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="top-center"  onclick="Panel.setOverlayPos('top-center')"  title="Topo centro">     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v6M8 5h8"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="top-right"   onclick="Panel.setOverlayPos('top-right')"   title="Topo direita">    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 5h-6M19 5v6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="mid-left"    onclick="Panel.setOverlayPos('mid-left')"    title="Meio esquerda">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h6M5 9v6"/></svg></button>
+                <button type="button" class="pos-cell on" data-pos="mid-center" onclick="Panel.setOverlayPos('mid-center')" title="Centro">         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="mid-right"   onclick="Panel.setOverlayPos('mid-right')"   title="Meio direita">    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12h-6M19 9v6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="bot-left"    onclick="Panel.setOverlayPos('bot-left')"    title="Rodapé esquerda"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 19h6M5 19v-6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="bot-center"  onclick="Panel.setOverlayPos('bot-center')"  title="Rodapé centro">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19v-6M8 19h8"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="bot-right"   onclick="Panel.setOverlayPos('bot-right')"   title="Rodapé direita">  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 19h-6M19 19v-6"/></svg></button>
+              </div>
+              <div style="font-size:12px;color:var(--ink-soft);line-height:1.6">
+                Escolha onde o<br>texto aparece<br>na imagem.
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="msg" id="formMsg"></div>
         <div class="form-foot">
           <button type="button" class="btn btn-ghost" onclick="Panel.closeForm()">Cancelar</button>
@@ -553,6 +656,19 @@ const Panel={
     // prazo individual do banner
     $("validoAte").value=ad?.validoAte||"";
     $("tempoBanner").value=ad?.tempoBanner??6;
+    // overlay de texto
+    $("overlayTitulo").value=ad?.overlayTitulo||"";
+    $("overlaySub").value=ad?.overlaySub||"";
+    $("overlayFont").value=ad?.overlayFont||"DM Sans";
+    $("overlaySize").value=ad?.overlaySize||28;
+    $("overlayColor").value=ad?.overlayColor||"#ffffff";
+    $("overlaySubColor").value=ad?.overlaySubColor||"#f0f0f0";
+    $("overlayColorHex").textContent=ad?.overlayColor||"#ffffff";
+    $("overlaySubColorHex").textContent=ad?.overlaySubColor||"#f0f0f0";
+    $("togBold").classList.toggle("on",!!ad?.overlayBold);
+    $("togItalic").classList.toggle("on",!!ad?.overlayItalic);
+    $("togShadow").classList.toggle("on",ad?.overlayShadow!==false);
+    Panel.setOverlayPos(ad?.overlayPos||"mid-center");
     (document.querySelector(`#posSeg input[value="${ad?.posicao||'topo'}"]`)||{}).checked=true;
     clearMsg($("formMsg"));this.syncPreview();
     $("formScrim").classList.add("open");document.body.style.overflow="hidden";
@@ -566,8 +682,52 @@ const Panel={
     const pos=document.querySelector('#posSeg input:checked').value;
     const p=$("preview");p.className="prev "+pos;
     const lbl=$("dropLbl");if(lbl)lbl.textContent=pendingImg?"Imagem carregada — toque para trocar":"Toque para enviar a imagem";
-    if(pendingImg)p.innerHTML=`<span class="ad-sponsor">Anúncio</span><img src="${pendingImg}" alt="prévia">`;
-    else p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}</div>`;
+    // atualiza hex labels
+    const oc=$("overlayColor"),osc=$("overlaySubColor");
+    if(oc){$("overlayColorHex").textContent=oc.value;}
+    if(osc){$("overlaySubColorHex").textContent=osc.value;}
+    if(pendingImg){
+      const otxt=$("overlayTitulo")?.value||"";
+      const osub=$("overlaySub")?.value||"";
+      const font=$("overlayFont")?.value||"DM Sans";
+      const size=parseInt($("overlaySize")?.value||"28",10);
+      const color=oc?.value||"#ffffff";
+      const subColor=osc?.value||"#f0f0f0";
+      const bold=$("togBold")?.classList.contains("on");
+      const italic=$("togItalic")?.classList.contains("on");
+      const shadow=$("togShadow")?.classList.contains("on");
+      const overlayPos=document.querySelector("#posGrid .pos-cell.on")?.dataset.pos||"mid-center";
+      const posStyle=Panel.overlayPosStyle(overlayPos);
+      const shadowStyle=shadow?"text-shadow:1px 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.4)":"";
+      const overlayHTML=(otxt||osub)?`<div class="overlay-txt" style="${posStyle}font-family:'${font}',sans-serif;${shadowStyle}">
+        ${otxt?`<div style="font-size:${size}px;color:${color};font-weight:${bold?700:400};font-style:${italic?'italic':'normal'};line-height:1.2">${esc(otxt)}</div>`:""}
+        ${osub?`<div style="font-size:${Math.round(size*0.6)}px;color:${subColor};font-weight:${bold?600:400};font-style:${italic?'italic':'normal'};margin-top:4px">${esc(osub)}</div>`:""}
+      </div>`:"";
+      p.innerHTML=`<span class="ad-sponsor">Anúncio</span><img src="${pendingImg}" alt="prévia">${overlayHTML}`;
+    }else{
+      p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}</div>`;
+    }
+  },
+  overlayPosStyle(pos){
+    const map={
+      "top-left":   "top:12px;left:12px;text-align:left;",
+      "top-center": "top:12px;left:50%;transform:translateX(-50%);text-align:center;",
+      "top-right":  "top:12px;right:12px;text-align:right;",
+      "mid-left":   "top:50%;left:12px;transform:translateY(-50%);text-align:left;",
+      "mid-center": "top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;",
+      "mid-right":  "top:50%;right:12px;transform:translateY(-50%);text-align:right;",
+      "bot-left":   "bottom:12px;left:12px;text-align:left;",
+      "bot-center": "bottom:12px;left:50%;transform:translateX(-50%);text-align:center;",
+      "bot-right":  "bottom:12px;right:12px;text-align:right;",
+    };
+    return map[pos]||map["mid-center"];
+  },
+  toggleTog(id){$(id).classList.toggle("on");},
+  setOverlayPos(pos){
+    document.querySelectorAll("#posGrid .pos-cell").forEach(el=>{
+      el.classList.toggle("on",el.dataset.pos===pos);
+    });
+    this.syncPreview();
   },
   async save(e){
     e.preventDefault();
@@ -577,7 +737,18 @@ const Panel={
       ordem:parseInt($("ordem").value||"0",10),ativo:$("ativo").checked,
       imagem:pendingImg||"",updatedAt:serverTimestamp(),
       validoAte:$("validoAte").value||null,
-      tempoBanner:Math.max(3,parseInt($("tempoBanner").value||"6",10))
+      tempoBanner:Math.max(3,parseInt($("tempoBanner").value||"6",10)),
+      // overlay de texto sobre a imagem
+      overlayTitulo:$("overlayTitulo").value.trim(),
+      overlaySub:$("overlaySub").value.trim(),
+      overlayFont:$("overlayFont").value||"DM Sans",
+      overlaySize:Math.min(72,Math.max(12,parseInt($("overlaySize").value||"28",10))),
+      overlayColor:$("overlayColor").value||"#ffffff",
+      overlaySubColor:$("overlaySubColor").value||"#f0f0f0",
+      overlayBold:$("togBold").classList.contains("on"),
+      overlayItalic:$("togItalic").classList.contains("on"),
+      overlayShadow:$("togShadow").classList.contains("on"),
+      overlayPos:document.querySelector("#posGrid .pos-cell.on")?.dataset.pos||"mid-center",
     };
     if(!data.titulo)return msg($("formMsg"),"Informe um título.","err");
     if(JSON.stringify(data).length>980000)return msg($("formMsg"),"A imagem ficou grande demais. Use uma menor.","err");
