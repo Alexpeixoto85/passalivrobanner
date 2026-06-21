@@ -90,6 +90,24 @@
   .btn-approve{background:var(--trade);color:#fff;border:1px solid transparent}
   .btn-approve:hover{background:#26795a}
 
+  /* visualização do anúncio de terceiro */
+  .vw-main{width:100%;height:300px;background:var(--surface-2);border:1px solid var(--line);border-radius:13px;overflow:hidden;display:grid;place-items:center}
+  .vw-main img{width:100%;height:100%;object-fit:contain}
+  .vw-main .noimg{color:var(--ink-soft);font-size:13px;font-weight:600}
+  .vw-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .vw-thumb{width:62px;height:62px;border-radius:9px;overflow:hidden;border:2px solid var(--line-strong);cursor:pointer;background:var(--surface-2);padding:0}
+  .vw-thumb img{width:100%;height:100%;object-fit:cover}
+  .vw-thumb.on{border-color:var(--marigold)}
+  .vw-badges{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 4px}
+  .vw-info{margin-top:14px;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--surface)}
+  .vw-row{display:flex;justify-content:space-between;gap:18px;padding:11px 15px;border-bottom:1px solid var(--line)}
+  .vw-row:last-child{border-bottom:none}
+  .vw-row .k{color:var(--ink-soft);font-size:13px;font-weight:600;flex:none}
+  .vw-row .v{font-weight:600;text-align:right;word-break:break-word}
+  .vw-row .v a{font-weight:600}
+  .vw-desc{margin-top:14px;background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:14px 16px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+  .vw-sec{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);margin:18px 0 8px}
+
   /* gráfico de acessos */
   .chartcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px 14px;box-shadow:var(--shadow)}
   .chartcard h3{font-size:13.5px;margin-bottom:16px;color:var(--ink-soft);font-family:"DM Sans",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
@@ -546,6 +564,17 @@
   </div>
 </div>
 
+<!-- MODAL VISUALIZAR ANÚNCIO DE TERCEIRO -->
+<div class="scrim" id="viewScrim">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2 id="viewTitle">Anúncio</h2>
+      <button class="xclose" onclick="Panel.closeView()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body" id="viewBody"></div>
+  </div>
+</div>
+
 <div class="toasts" id="toasts"></div>
 
 <script type="module">
@@ -578,6 +607,7 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
 let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
 let usuariosRef=null, acessosRef=null, configRef=null, livrosRef=null;
 let MOD_ADS=[], modFilter="pendente", USERS_CACHE=[];
+let viewPhotos=[], viewIdx=0;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function ytId(url){
@@ -778,8 +808,8 @@ const Panel={
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M20 6 9 17l-5-5"/></svg> Aprovar
         </button>`:"";
       return `<div class="row">
-        <div style="display:flex;gap:12px;align-items:center;flex:none">${thumb}</div>
-        <div class="info">
+        <div style="display:flex;gap:12px;align-items:center;flex:none;cursor:pointer" onclick="Panel.openView('${a.id}')">${thumb}</div>
+        <div class="info" style="cursor:pointer" onclick="Panel.openView('${a.id}')">
           <h3>${esc(a.titulo||"(sem título)")}</h3>
           <div class="sub">${esc([a.autor,a.editora].filter(Boolean).join(" • ")||"—")}</div>
           <div class="pos">
@@ -790,6 +820,7 @@ const Panel={
           </div>
         </div>
         <div class="acts">
+          <button class="iconbtn" title="Ver anúncio" onclick="Panel.openView('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           ${approveBtn}
           <button class="iconbtn del" title="Excluir anúncio" onclick="Panel.rejectAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
         </div>
@@ -802,6 +833,7 @@ const Panel={
       await updateDoc(doc(db,"livros",id),{status:"ativo",aprovadoEm:serverTimestamp()});
       a.status="ativo";
       toast("Anúncio aprovado — já está no ar.","ok");
+      this.closeView();
       this.renderModeracao();
     }catch(err){
       console.error(err);
@@ -815,12 +847,88 @@ const Panel={
       await deleteDoc(doc(db,"livros",id));
       MOD_ADS=MOD_ADS.filter(x=>x.id!==id);
       toast("Anúncio excluído.","ok");
+      this.closeView();
       this.renderModeracao();
     }catch(err){
       console.error(err);
       toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'livros' (admin pode excluir).":"Não foi possível excluir.","bad");
     }
   },
+
+  /* ---------- abrir anúncio de terceiro (todas as fotos + informações) ---------- */
+  openView(id){
+    const a=MOD_ADS.find(x=>x.id===id);if(!a)return;
+    const st=a.status||"ativo";
+    const tipoLabel={venda:"Venda",troca:"Troca",doacao:"Doação"};
+    const catLabel=a.categoria==="geral"?"Leitura / geral":"Escolar";
+    viewPhotos=Array.isArray(a.fotos)?a.fotos.filter(Boolean):[];
+    viewIdx=0;
+
+    const stBadge=st==="pendente"?`<span class="badge topo">Em avaliação</span>`
+      :st==="finalizado"?`<span class="badge off">Concluído</span>`
+      :`<span class="badge on">No ar</span>`;
+    const tipoBadge=`<span class="badge ${a.tipo==='troca'?'grade':a.tipo==='doacao'?'rodape':'off'}">${esc(tipoLabel[a.tipo]||a.tipo||"—")}</span>`;
+
+    const waDigits=String(a.whatsapp||"").replace(/\D/g,"");
+    const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
+    const dataPub=a.createdAt?.toMillis?new Date(a.createdAt.toMillis()).toLocaleString("pt-BR"):"";
+
+    const valorTxt=a.tipo==="venda"?("R$ "+Number(a.preco||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}))
+      :a.tipo==="troca"?("Troca por: "+(a.trocaPor||"—"))
+      :"Doação";
+
+    const rows=[
+      ["Tipo / valor",esc(valorTxt)],
+      ["Categoria",esc(catLabel)],
+      a.categoria==="geral"?["Gênero",esc(a.genero||"—")]:["Disciplina",esc(a.disciplina||"—")],
+      a.categoria==="geral"?null:["Série / ano",esc(a.serie||"—")],
+      ["Autor",esc(a.autor||"—")],
+      ["Editora",esc(a.editora||"—")],
+      ["Edição",esc(a.edicao||"—")],
+      ["Estado de conservação",esc(a.estado||"—")],
+    ].filter(Boolean);
+
+    const contato=[
+      ["Anunciante",esc(a.nome||"—")],
+      ["WhatsApp",waHref?`<a href="${waHref}" target="_blank" rel="noopener">${esc(a.whatsapp)}</a>`:esc(a.whatsapp||"—")],
+      ["Cidade",esc(a.cidade||"—")],
+      dataPub?["Cadastrado em",esc(dataPub)]:null,
+    ].filter(Boolean);
+
+    const mainImg=viewPhotos.length
+      ? `<img id="vwMainImg" src="${viewPhotos[0]}" alt="foto do anúncio">`
+      : `<span class="noimg">Este anúncio não tem fotos</span>`;
+    const thumbs=viewPhotos.length>1
+      ? `<div class="vw-thumbs">${viewPhotos.map((src,i)=>`<button class="vw-thumb ${i===0?'on':''}" data-i="${i}" onclick="Panel.viewPhoto(${i})"><img src="${src}" alt="foto ${i+1}"></button>`).join("")}</div>`
+      : "";
+
+    const approveBtn=st!=="ativo"
+      ? `<button class="btn btn-approve" onclick="Panel.approveAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Aprovar anúncio</button>`
+      : "";
+
+    $("viewTitle").textContent=a.titulo||"Anúncio";
+    $("viewBody").innerHTML=`
+      <div class="vw-badges">${tipoBadge}${stBadge}</div>
+      <div class="vw-main">${mainImg}</div>
+      ${thumbs}
+      <div class="vw-sec">Informações do livro</div>
+      <div class="vw-info">${rows.map(([k,v])=>`<div class="vw-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
+      ${a.descricao?`<div class="vw-sec">Descrição</div><div class="vw-desc">${esc(a.descricao)}</div>`:""}
+      <div class="vw-sec">Contato do anunciante</div>
+      <div class="vw-info">${contato.map(([k,v])=>`<div class="vw-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
+      <div class="form-foot" style="margin-top:18px">
+        ${approveBtn}
+        <button class="btn btn-ghost" style="color:var(--danger);border-color:var(--danger-soft)" onclick="Panel.rejectAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg> Excluir</button>
+      </div>`;
+    $("viewScrim").classList.add("open");document.body.style.overflow="hidden";
+  },
+  viewPhoto(i){
+    if(i<0||i>=viewPhotos.length)return;
+    viewIdx=i;
+    const main=$("vwMainImg");if(main)main.src=viewPhotos[i];
+    document.querySelectorAll("#viewBody .vw-thumb").forEach(b=>b.classList.toggle("on",Number(b.dataset.i)===i));
+  },
+  closeView(){$("viewScrim").classList.remove("open");document.body.style.overflow="";},
 
   /* ---------- visão geral: usuários e acessos ---------- */
   async loadOverview(){
@@ -1106,8 +1214,9 @@ const Panel={
 window.Panel=Panel;
 $("ativo").addEventListener("change",e=>$("ativoLbl").textContent=e.target.checked?"Ativo (no ar)":"Pausado");
 ["titulo","descricao"].forEach(id=>$(id).addEventListener("input",()=>Panel.syncPreview()));
-document.addEventListener("keydown",e=>{if(e.key==="Escape")Panel.closeForm();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){Panel.closeForm();Panel.closeView();}});
 $("formScrim").addEventListener("click",e=>{if(e.target===$("formScrim"))Panel.closeForm();});
+$("viewScrim").addEventListener("click",e=>{if(e.target===$("viewScrim"))Panel.closeView();});
 $("email").addEventListener("keydown",e=>{if(e.key==="Enter")$("senha").focus();});
 $("senha").addEventListener("keydown",e=>{if(e.key==="Enter")Panel.auth();});
 
