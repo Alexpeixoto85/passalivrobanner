@@ -134,6 +134,7 @@
   .row .info .pos{display:inline-flex;gap:6px;margin-top:6px;flex-wrap:wrap}
   .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.2px}
   .badge.topo{background:var(--marigold-soft);color:#9a6512}
+  .badge.cabecalho{background:var(--trade-soft);color:var(--trade)}
   .badge.grade{background:var(--trade-soft);color:var(--trade)}
   .badge.rodape{background:var(--doa-soft);color:var(--doa)}
   .badge.on{background:var(--trade);color:#fff}
@@ -181,7 +182,6 @@
   .prev{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--surface);height:160px}
   .prev .ad-sponsor{position:absolute;top:8px;right:8px;background:rgba(20,40,37,.62);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;z-index:3}
   .prev img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
-  .prev.grade img{object-fit:contain;background:var(--surface-2)}
   .prev .ph{padding:30px;text-align:center;color:var(--ink-soft);font-size:13px;position:relative;z-index:2}
   .prev .overlay-txt{position:absolute;z-index:2;max-width:80%;line-height:1.25;pointer-events:none;word-break:break-word}
   /* seção tipografia sobreposta */
@@ -407,8 +407,8 @@
         <div class="field">
           <label class="lab">Posição no portal</label>
           <div class="seg" id="posSeg">
+            <label><input type="radio" name="pos" value="cabecalho" onchange="Panel.syncPreview()"><span class="opt-b">Abaixo do cabeçalho<small>faixa 1100×300</small></span></label>
             <label><input type="radio" name="pos" value="topo" checked onchange="Panel.syncPreview()"><span class="opt-b">Topo da lista<small>faixa 1100×300</small></span></label>
-            <label><input type="radio" name="pos" value="grade" onchange="Panel.syncPreview()"><span class="opt-b">Na grade<small>cartão 600×480</small></span></label>
             <label><input type="radio" name="pos" value="rodape" onchange="Panel.syncPreview()"><span class="opt-b">Rodapé<small>faixa 1100×300</small></span></label>
           </div>
         </div>
@@ -1166,11 +1166,11 @@ const Panel={
 
   /* ---- render ---- */
   render(){
-    const posName={topo:"Topo da lista",grade:"Na grade",rodape:"Rodapé"};
+    const posName={cabecalho:"Abaixo do cabeçalho",topo:"Topo da lista",rodape:"Rodapé"};
     $("stats").innerHTML=[
       ["Total",ADS.length],["No ar",ADS.filter(a=>a.ativo!==false).length],
+      ["Cabeçalho",ADS.filter(a=>a.posicao==="cabecalho").length],
       ["Topo",ADS.filter(a=>a.posicao==="topo").length],
-      ["Grade",ADS.filter(a=>a.posicao==="grade").length],
       ["Rodapé",ADS.filter(a=>a.posicao==="rodape").length],
     ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
 
