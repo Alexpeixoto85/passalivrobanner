@@ -1,1097 +1,505 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PassaLivro — livros que passam de mão em mão</title>
+<title>PassaLivro — Painel de anúncios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F6F2E9;
-    --surface:#FFFFFF;
-    --surface-2:#FBF8F1;
-    --ink:#173F3B;
-    --ink-soft:#46615C;
-    --line:#E7DFCE;
-    --line-strong:#D8CDB4;
-    --marigold:#DD942F;
-    --marigold-soft:#F7E6C6;
-    --trade:#2F8F6B;
-    --trade-soft:#DBEFE4;
-    --doa:#7A5AA6;
-    --doa-soft:#EAE2F4;
-    --wa:#1FA855;
-    --wa-press:#178a45;
-    --danger:#BE4527;
-    --danger-soft:#F6E0D8;
-    --text:#1A2421;
-    --shadow:0 1px 2px rgba(23,63,59,.06),0 8px 24px rgba(23,63,59,.07);
-    --shadow-lg:0 12px 40px rgba(23,63,59,.18);
-    --r:16px;
-    --r-sm:11px;
+    --paper:#F6F2E9;--surface:#fff;--surface-2:#FBF8F1;--ink:#173F3B;--ink-soft:#46615C;
+    --line:#E7DFCE;--line-strong:#D8CDB4;--marigold:#DD942F;--marigold-soft:#F7E6C6;
+    --trade:#2F8F6B;--trade-soft:#DBEFE4;--doa:#7A5AA6;--doa-soft:#EAE2F4;--danger:#BE4527;--danger-soft:#F6E0D8;
+    --text:#1A2421;--shadow:0 1px 2px rgba(23,63,59,.06),0 8px 24px rgba(23,63,59,.07);
+    --shadow-lg:0 12px 40px rgba(23,63,59,.18);--r:16px;
   }
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0;background:var(--paper);color:var(--text);
-    font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.1;margin:0;color:var(--ink)}
+  body{margin:0;background:var(--paper);color:var(--text);font-family:"DM Sans",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;margin:0;color:var(--ink);line-height:1.1}
   button{font-family:inherit;cursor:pointer}
-  a{color:inherit}
+  a{color:var(--marigold)}
   :focus-visible{outline:3px solid var(--marigold);outline-offset:2px;border-radius:6px}
 
-  /* ---------- header ---------- */
-  .topbar{
-    position:sticky;top:0;z-index:40;background:rgba(246,242,233,.86);
-    backdrop-filter:saturate(140%) blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .topbar-inner{
-    max-width:1140px;margin:0 auto;padding:14px 20px;
-    display:flex;align-items:center;gap:16px;
-  }
-  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto}
-  .mark{
-    width:40px;height:40px;border-radius:11px;background:var(--ink);
-    display:grid;place-items:center;flex:none;box-shadow:var(--shadow);
-    position:relative;overflow:hidden;
-  }
-  .mark svg{width:23px;height:23px}
-  .brand-name{font-family:"Fraunces",serif;font-weight:600;font-size:21px;color:var(--ink);letter-spacing:-.2px}
-  .brand-name b{color:var(--marigold);font-weight:600}
-  .brand-tag{display:block;font-family:"DM Sans";font-size:11px;color:var(--ink-soft);font-weight:500;letter-spacing:.2px;margin-top:-2px}
-
-  .btn{
-    border:1px solid transparent;border-radius:11px;padding:11px 18px;
-    font-size:14.5px;font-weight:600;display:inline-flex;align-items:center;
-    gap:8px;text-decoration:none;white-space:nowrap;transition:transform .08s,box-shadow .15s,background .15s;
-  }
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(246,242,233,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar-inner{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+  .mark{width:38px;height:38px;border-radius:11px;background:var(--ink);display:grid;place-items:center;flex:none}
+  .mark svg{width:22px;height:22px}
+  .brand-name{font-family:"Fraunces",serif;font-weight:600;font-size:20px;color:var(--ink)}
+  .brand-name b{color:var(--marigold)}
+  .brand-sub{font-size:11px;color:var(--ink-soft);font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+  .who{font-size:13px;color:var(--ink-soft);font-weight:500}
+  .btn{border:1px solid transparent;border-radius:11px;padding:11px 18px;font-size:14.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;white-space:nowrap;transition:transform .08s,background .15s}
   .btn:active{transform:translateY(1px)}
+  .btn svg{width:17px;height:17px}
   .btn-primary{background:var(--ink);color:#fff;box-shadow:var(--shadow)}
   .btn-primary:hover{background:#10302d}
   .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
   .btn-ghost:hover{background:var(--surface-2)}
-  .btn-ghost.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .btn svg{width:17px;height:17px;flex:none}
-  .nav-actions{display:flex;align-items:center;gap:10px}
-  .btn.icon-pill{padding:11px;gap:0}
-  .icon-only{display:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 70px}
 
-  /* ---------- hero ---------- */
-  .hero{max-width:1140px;margin:0 auto;padding:40px 20px 8px}
-  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
-    letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);
-    background:var(--marigold-soft);padding:6px 12px;border-radius:30px;margin-bottom:18px;
-  }
-  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--marigold)}
-  .hero h1{font-size:clamp(33px,5.2vw,52px);letter-spacing:-1px;font-weight:600}
-  .hero h1 em{font-style:italic;color:var(--marigold)}
-  .hero p.lead{font-size:17px;color:var(--ink-soft);max-width:30em;margin:18px 0 26px}
-  .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
-  .stats{display:flex;gap:26px;margin-top:30px}
-  .stat .n{font-family:"Fraunces",serif;font-size:27px;font-weight:600;color:var(--ink)}
+  /* login */
+  .login{max-width:430px;margin:8vh auto;background:var(--surface);border:1px solid var(--line);border-radius:22px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .login-top{padding:28px 30px 6px}
+  .login-top h1{font-size:26px}
+  .login-top p{color:var(--ink-soft);font-size:14.5px;margin:8px 0 0}
+  .login-body{padding:20px 30px 30px}
+  .field{margin-bottom:15px}
+  label.lab{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:7px}
+  .inp{width:100%;padding:12px 14px;border-radius:11px;border:1px solid var(--line-strong);background:var(--surface);
+    font-family:inherit;font-size:15px;color:var(--text)}
+  .inp:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px rgba(23,63,59,.1)}
+  .login .btn{width:100%;justify-content:center;padding:14px;margin-top:4px}
+  .swap{text-align:center;font-size:13.5px;margin-top:16px;color:var(--ink-soft)}
+  .swap a{cursor:pointer;font-weight:600}
+  .msg{font-size:13px;font-weight:600;margin-top:12px;padding:10px 12px;border-radius:10px;display:none}
+  .msg.show{display:block}
+  .msg.err{background:var(--danger-soft);color:var(--danger)}
+  .msg.ok{background:var(--trade-soft);color:var(--trade)}
+
+  /* dashboard */
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .head h1{font-size:30px}
+  .head p{color:var(--ink-soft);margin:6px 0 0;font-size:14.5px}
+  .stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;min-width:120px;box-shadow:var(--shadow)}
+  .stat .n{font-family:"Fraunces",serif;font-weight:600;font-size:26px;color:var(--ink)}
   .stat .l{font-size:12.5px;color:var(--ink-soft);font-weight:500}
 
-  /* stacked book illustration */
-  .hero-art{position:relative;height:300px}
-  .bk{position:absolute;border-radius:5px 9px 9px 5px;box-shadow:var(--shadow-lg);
-      border-left:9px solid rgba(0,0,0,.16);display:flex;flex-direction:column;justify-content:flex-end;padding:18px 16px;color:#fff}
-  .bk .bt{font-family:"Fraunces",serif;font-weight:600;font-size:17px;line-height:1.15}
-  .bk .ba{font-size:11.5px;opacity:.85;margin-top:4px}
-  .bk1{width:178px;height:236px;left:28%;top:10px;transform:rotate(-7deg);background:linear-gradient(150deg,#1d5450,#173F3B)}
-  .bk2{width:172px;height:226px;left:40%;top:46px;transform:rotate(5deg);background:linear-gradient(150deg,#e6a443,#cf7f25)}
-  .bk3{width:160px;height:210px;left:10%;top:84px;transform:rotate(-2deg);background:linear-gradient(150deg,#358a6c,#256f54)}
-  .bk-tape{position:absolute;width:74px;height:22px;background:rgba(255,255,255,.34);top:-9px;left:50%;transform:translateX(-50%) rotate(-3deg);border-radius:2px}
+  /* abas */
+  .tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:26px}
+  .tabbtn{background:none;border:none;padding:10px 2px 12px;font-weight:600;font-size:14.5px;color:var(--ink-soft);
+    border-bottom:3px solid transparent;cursor:pointer;font-family:inherit}
+  .tabbtn:hover{color:var(--ink)}
+  .tabbtn.active{color:var(--ink);border-bottom-color:var(--marigold)}
 
-  /* ---------- toolbar / filters ---------- */
-  .controls{max-width:1140px;margin:0 auto;padding:26px 20px 0;scroll-margin-top:80px}
-  .search-row{display:flex;gap:12px;flex-wrap:wrap}
-  .search{flex:1;min-width:240px;position:relative}
-  .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:19px;height:19px;color:var(--ink-soft)}
-  .search input{
-    width:100%;padding:14px 16px 14px 44px;border-radius:13px;border:1px solid var(--line-strong);
-    background:var(--surface);font-size:15px;font-family:inherit;color:var(--text);box-shadow:var(--shadow);
-    -webkit-appearance:none;appearance:none}
-  .search input::placeholder{color:#9aa6a1}
-  /* remove a lupa/botões nativos do type=search (evita lupa duplicada no Safari/iPad) */
-  .search input::-webkit-search-decoration,
-  .search input::-webkit-search-results-button,
-  .search input::-webkit-search-results-decoration,
-  .search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;display:none}
-  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
-  .sel{position:relative}
-  select,.price-in{
-    appearance:none;border:1px solid var(--line-strong);background:var(--surface);
-    border-radius:11px;padding:10px 34px 10px 14px;font-family:inherit;font-size:13.5px;
-    font-weight:500;color:var(--ink);cursor:pointer}
-  .sel::after{content:"";position:absolute;right:13px;top:50%;width:8px;height:8px;border-right:2px solid var(--ink-soft);
-    border-bottom:2px solid var(--ink-soft);transform:translateY(-70%) rotate(45deg);pointer-events:none}
-  .price-in{width:118px;padding-right:14px;cursor:text}
-  .filters .clearf{margin-left:auto;background:none;border:none;color:var(--ink-soft);font-weight:600;font-size:13.5px;padding:8px;display:none}
-  .filters .clearf.show{display:inline-block}
-  .resultline{max-width:1140px;margin:0 auto;padding:20px 20px 0;font-size:14px;color:var(--ink-soft);display:flex;align-items:baseline;gap:8px}
-  .resultline b{color:var(--ink);font-weight:700}
+  /* gráfico de acessos */
+  .chartcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px 14px;box-shadow:var(--shadow)}
+  .chartcard h3{font-size:13.5px;margin-bottom:16px;color:var(--ink-soft);font-family:"DM Sans",sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+  .bars{display:flex;align-items:stretch;gap:8px;height:130px;overflow-x:auto;padding-bottom:2px}
+  .bar-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;min-width:26px;flex:1}
+  .bar{width:100%;max-width:22px;background:var(--marigold);border-radius:5px 5px 2px 2px;align-self:center;min-height:4px}
+  .bar-l{font-size:9.5px;color:var(--ink-soft);font-weight:600;white-space:nowrap}
 
-  /* ---------- grid / cards ---------- */
-  .grid{max-width:1140px;margin:0 auto;padding:16px 20px 70px;
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:22px}
-  .card{
-    background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-    overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
-    transition:transform .14s,box-shadow .14s;cursor:pointer}
-  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-  .cover{position:relative;aspect-ratio:5/4;overflow:hidden;background:var(--surface-2)}
-  .cover img{width:100%;height:100%;object-fit:cover;display:block}
-  .cover-gen{width:100%;height:100%;display:flex;flex-direction:column;justify-content:flex-end;
-    padding:16px;color:#fff;position:relative}
-  .cover-gen::before{content:"";position:absolute;left:0;top:0;bottom:0;width:11px;background:rgba(0,0,0,.18)}
-  .cover-gen .cg-t{font-family:"Fraunces",serif;font-weight:600;font-size:18px;line-height:1.12;
-    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-  .cover-gen .cg-a{font-size:11.5px;opacity:.86;margin-top:5px}
-  .cover-gen .cg-ico{position:absolute;top:14px;right:14px;opacity:.5}
-  .badge{position:absolute;top:11px;left:11px;font-size:11.5px;font-weight:700;
-    padding:5px 11px;border-radius:30px;letter-spacing:.2px;backdrop-filter:blur(4px)}
-  .badge.venda{background:#fff;color:var(--ink)}
-  .badge.troca{background:var(--trade);color:#fff}
-  .badge.doacao{background:var(--doa);color:#fff}
-  .badge.status-fim{left:auto;right:11px;background:var(--ink);color:#fff}
-  .badge.status-exp{left:auto;right:11px;background:var(--danger-soft);color:var(--danger)}
-  .photocount{position:absolute;bottom:11px;right:11px;background:rgba(20,40,37,.7);color:#fff;
-    font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:20px;display:flex;align-items:center;gap:5px}
-  .photocount svg{width:13px;height:13px}
-  .card-body{padding:15px 16px 0;flex:1}
-  .card-body h3{font-size:17.5px;letter-spacing:-.2px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .card-author{font-size:13px;color:var(--ink-soft);margin-top:3px}
-  .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
-  .chip{font-size:11.5px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);
-    color:var(--ink-soft);padding:4px 9px;border-radius:8px}
-  .card-foot{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
-  .price{font-family:"Fraunces",serif;font-weight:600;font-size:21px;color:var(--ink)}
-  .price small{font-size:12px;font-weight:500;color:var(--ink-soft);font-family:"DM Sans"}
-  .price.troca{color:var(--trade);font-size:16px}
-  .price.doacao{color:var(--doa);font-size:16px}
-  .wa-btn{background:var(--wa);color:#fff;border:none;border-radius:10px;padding:10px 13px;
-    font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:7px;flex:none}
-  .wa-btn:hover{background:var(--wa-press)}
-  .wa-btn svg{width:16px;height:16px}
+  /* configurações */
+  .cfgcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;box-shadow:var(--shadow);max-width:520px}
 
-  /* favoritos */
-  .fav-count{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 4px;border-radius:10px;
-    background:var(--danger);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;line-height:1}
-  .fav-btn{position:absolute;top:11px;right:11px;width:36px;height:36px;border-radius:50%;z-index:3;
-    background:rgba(255,255,255,.92);border:1px solid var(--line);display:grid;place-items:center;
-    color:var(--ink-soft);box-shadow:var(--shadow);transition:transform .1s,color .15s,background .15s}
-  .fav-btn:hover{transform:scale(1.08)}
-  .fav-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
-  .fav-btn.on{color:var(--danger)}
-  .fav-btn.on svg{fill:var(--danger);stroke:var(--danger)}
-  .fav-btn.detail{position:static;width:auto;height:auto;border-radius:11px;padding:11px 16px;gap:8px;
-    display:inline-flex;align-items:center;font-weight:600;font-size:14px;color:var(--ink)}
-  .fav-btn.detail.on{color:var(--danger);border-color:var(--danger-soft);background:var(--danger-soft)}
-
-  /* owner tag */
-  .owner-row{display:flex;gap:8px;padding:0 16px 4px}
-  .owner-actions{display:flex;gap:8px;width:100%;flex-wrap:wrap}
-  .mini{flex:1;min-width:84px;border:1px solid var(--line-strong);background:var(--surface);border-radius:9px;
-    padding:8px;font-weight:600;font-size:12.5px;color:var(--ink-soft);display:inline-flex;
-    align-items:center;justify-content:center;gap:6px}
-  .mini.del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
-  .mini.edit:hover{border-color:var(--ink);color:var(--ink)}
-  .mini.fim:hover{border-color:var(--trade);color:var(--trade);background:var(--trade-soft)}
-  .mini svg{width:14px;height:14px}
-
-  /* empty / states */
-  .state{max-width:560px;margin:30px auto 80px;text-align:center;padding:50px 24px;
-    background:var(--surface);border:1px dashed var(--line-strong);border-radius:22px}
-  .state .ico{width:64px;height:64px;border-radius:18px;background:var(--marigold-soft);
-    display:grid;place-items:center;margin:0 auto 18px}
-  .state .ico svg{width:30px;height:30px;color:var(--marigold)}
-  .state h2{font-size:24px;margin-bottom:8px}
-  .state p{color:var(--ink-soft);margin:0 auto 22px;max-width:34em}
-
-  /* ---------- modal ---------- */
-  .scrim{position:fixed;inset:0;background:rgba(16,32,30,.5);backdrop-filter:blur(3px);
-    z-index:60;display:none;align-items:flex-start;justify-content:center;padding:24px;overflow:auto}
-  .scrim.open{display:flex}
-  .modal{background:var(--paper);border-radius:24px;width:100%;max-width:620px;margin:auto;
-    box-shadow:var(--shadow-lg);overflow:hidden;animation:pop .2s ease}
-  .modal.wide{max-width:760px}
-  @keyframes pop{from{transform:translateY(14px) scale(.98);opacity:0}to{transform:none;opacity:1}}
-  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;
-    border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--paper);z-index:2}
-  .modal-head h2{font-size:23px}
-  .xclose{width:38px;height:38px;border-radius:11px;border:1px solid var(--line-strong);background:var(--surface);
+  .list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.list{grid-template-columns:1fr}}
+  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:16px;
+    align-items:center;box-shadow:var(--shadow)}
+  .row .thumb{width:150px;height:64px;border-radius:10px;overflow:hidden;background:var(--surface-2);flex:none;
+    border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-soft);font-size:12px;font-weight:600;text-align:center}
+  .row .thumb img{width:100%;height:100%;object-fit:cover}
+  .row .info{flex:1;min-width:0}
+  .row .info h3{font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .sub{font-size:13px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .pos{display:inline-flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.2px}
+  .badge.topo{background:var(--marigold-soft);color:#9a6512}
+  .badge.grade{background:var(--trade-soft);color:var(--trade)}
+  .badge.rodape{background:var(--doa-soft);color:var(--doa)}
+  .badge.on{background:var(--trade);color:#fff}
+  .badge.off{background:#ECE6D8;color:var(--ink-soft)}
+  .row .acts{display:flex;gap:8px;flex:none}
+  .iconbtn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);
     display:grid;place-items:center;color:var(--ink)}
-  .xclose:hover{background:var(--surface-2)}
-  .xclose svg{width:18px;height:18px}
-  .modal-body{padding:24px 26px}
+  .iconbtn:hover{background:var(--surface-2)}
+  .iconbtn.del:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+  .iconbtn svg{width:18px;height:18px}
+  .switch{position:relative;width:46px;height:26px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:#D8CDB4;border-radius:30px;transition:.2s;cursor:pointer}
+  .slider::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+  .switch input:checked + .slider{background:var(--trade)}
+  .switch input:checked + .slider::before{transform:translateX(20px)}
 
-  /* form */
-  .field{margin-bottom:17px}
+  .empty{text-align:center;padding:50px 24px;background:var(--surface);border:1px dashed var(--line-strong);border-radius:20px;color:var(--ink-soft)}
+  .empty h3{font-size:21px;margin-bottom:6px}
+
+  /* modal */
+  .scrim{position:fixed;inset:0;background:rgba(16,32,30,.5);backdrop-filter:blur(3px);z-index:60;
+    display:none;align-items:flex-start;justify-content:center;padding:24px;overflow:auto}
+  .scrim.open{display:flex}
+  .modal{background:var(--paper);border-radius:22px;width:100%;max-width:620px;margin:auto;box-shadow:var(--shadow-lg);overflow:hidden}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--paper);z-index:2}
+  .modal-head h2{font-size:22px}
+  .xclose{width:36px;height:36px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);display:grid;place-items:center}
+  .xclose svg{width:18px;height:18px}
+  .modal-body{padding:22px 24px}
   .field.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .field.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-  label.lab{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:7px}
-  label.lab .opt{font-weight:500;color:var(--ink-soft)}
-  .inp{width:100%;padding:12px 14px;border-radius:11px;border:1px solid var(--line-strong);
-    background:var(--surface);font-family:inherit;font-size:15px;color:var(--text)}
-  textarea.inp{resize:vertical;min-height:84px}
-  .inp:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px rgba(23,63,59,.1)}
+  textarea.inp{resize:vertical;min-height:64px}
   .seg{display:flex;gap:8px}
   .seg label{flex:1}
-  .seg input{position:absolute;opacity:0;pointer-events:none}
-  .seg .opt-b{display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 6px;border:1px solid var(--line-strong);
-    border-radius:12px;background:var(--surface);font-weight:600;font-size:13.5px;text-align:center;color:var(--ink-soft)}
-  .seg .opt-b small{font-weight:500;font-size:11px}
-  .seg input:checked + .opt-b{border-color:var(--ink);background:var(--ink);color:#fff;box-shadow:var(--shadow)}
-  .seg input:focus-visible + .opt-b{outline:3px solid var(--marigold);outline-offset:2px}
-
-  /* photo uploader */
-  .drop{border:2px dashed var(--line-strong);border-radius:14px;padding:20px;text-align:center;
-    background:var(--surface);color:var(--ink-soft);cursor:pointer;transition:.15s}
+  .seg input{position:absolute;opacity:0}
+  .seg .opt-b{display:flex;flex-direction:column;gap:2px;align-items:center;padding:11px 6px;border:1px solid var(--line-strong);
+    border-radius:11px;background:var(--surface);font-weight:600;font-size:13px;text-align:center;color:var(--ink-soft)}
+  .seg .opt-b small{font-weight:500;font-size:10.5px}
+  .seg input:checked + .opt-b{border-color:var(--ink);background:var(--ink);color:#fff}
+  .drop{border:2px dashed var(--line-strong);border-radius:13px;padding:18px;text-align:center;background:var(--surface);color:var(--ink-soft);cursor:pointer}
   .drop:hover{border-color:var(--marigold);background:var(--surface-2)}
-  .drop svg{width:26px;height:26px;color:var(--marigold);margin-bottom:6px}
+  .drop svg{width:24px;height:24px;color:var(--marigold);margin-bottom:4px}
   .drop b{color:var(--ink)}
-  .drop .hint{font-size:12px;margin-top:3px}
-  .thumbs{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-  .thumb{position:relative;width:74px;height:74px;border-radius:11px;overflow:hidden;border:1px solid var(--line)}
-  .thumb img{width:100%;height:100%;object-fit:cover}
-  .thumb button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;
-    background:rgba(20,40,37,.78);color:#fff;border:none;display:grid;place-items:center;font-size:13px;line-height:1}
-  .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--line);margin-top:6px}
-  .form-foot .btn{padding:13px 22px}
+  .prev{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--surface);height:160px}
+  .prev .ad-sponsor{position:absolute;top:8px;right:8px;background:rgba(20,40,37,.62);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;z-index:3}
+  .prev img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+  .prev.grade img{object-fit:contain;background:var(--surface-2)}
+  .prev .ph{padding:30px;text-align:center;color:var(--ink-soft);font-size:13px;position:relative;z-index:2}
+  .prev .overlay-txt{position:absolute;z-index:2;max-width:80%;line-height:1.25;pointer-events:none;word-break:break-word}
+  /* seção tipografia sobreposta */
+  .txt-overlay-section{background:var(--surface-2);border:1px solid var(--line);border-radius:13px;padding:16px 18px;margin-top:4px}
+  .txt-overlay-section .sec-title{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:14px}
+  .color-row{display:flex;align-items:center;gap:10px}
+  .color-swatch{width:36px;height:36px;border-radius:9px;border:2px solid var(--line-strong);cursor:pointer;padding:0;background:none;overflow:hidden;flex:none}
+  .color-swatch input[type=color]{width:150%;height:150%;margin:-25%;border:none;padding:0;cursor:pointer;background:none}
+  .font-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .toggle-group{display:flex;gap:6px}
+  .tog{width:36px;height:36px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);font-size:14px;font-weight:700;color:var(--ink-soft);cursor:pointer;display:grid;place-items:center;transition:.12s}
+  .tog.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:126px}
+  .pos-cell{width:38px;height:38px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;display:grid;place-items:center;transition:.12s}
+  .pos-cell.on{background:var(--ink);border-color:var(--ink)}
+  .pos-cell svg{width:13px;height:13px;color:var(--ink-soft)}
+  .pos-cell.on svg{color:#fff}
+  .toggle-row{display:flex;align-items:center;gap:12px;margin-top:4px}
+  .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--line);margin-top:8px}
   .help-txt{font-size:12px;color:var(--ink-soft);margin-top:6px}
-  .err{color:var(--danger);font-size:12.5px;margin-top:6px;font-weight:600;display:none}
-  .err.show{display:block}
 
-  /* detail modal */
-  .detail-gallery{aspect-ratio:16/10;background:var(--surface-2);border-radius:16px;overflow:hidden;position:relative;margin-bottom:18px}
-  .detail-gallery img{width:100%;height:100%;object-fit:cover}
-  .gal-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;
-    background:rgba(255,255,255,.9);border:none;display:grid;place-items:center;box-shadow:var(--shadow)}
-  .gal-nav.prev{left:12px}.gal-nav.next{right:12px}
-  .gal-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
-  .gal-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.55)}
-  .gal-dots i.on{background:#fff}
-  .detail-price{font-family:"Fraunces",serif;font-weight:600;font-size:30px;color:var(--ink);margin-bottom:4px}
-  .detail-meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-  .dl{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;margin:18px 0;font-size:14.5px}
-  .dl dt{color:var(--ink-soft);font-weight:600}
-  .dl dd{margin:0;color:var(--text)}
-
-  /* ----- detalhe bem estruturado ----- */
-  .detail-head{margin:2px 0 14px}
-  .detail-badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
-  .detail-head h2{font-size:26px;line-height:1.12;letter-spacing:-.3px}
-  .detail-sub{font-size:14px;color:var(--ink-soft);margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-  .detail-sub .sep{opacity:.5}
-  .price-band{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-    background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:0 0 16px;box-shadow:var(--shadow)}
-  .price-band .pb-price{font-family:"Fraunces",serif;font-weight:600;font-size:28px;color:var(--ink);line-height:1}
-  .price-band .pb-price.troca{color:var(--trade);font-size:20px}
-  .price-band .pb-price.doacao{color:var(--doa);font-size:20px}
-  .price-band .pb-label{font-size:12px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
-  .detail-section-title{font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
-    color:var(--ink-soft);margin:20px 0 10px}
-  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .info-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
-  .info-item .k{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.2px;margin-bottom:3px}
-  .info-item .v{font-size:14.5px;font-weight:600;color:var(--ink);word-break:break-word}
-  .info-item.full{grid-column:1/-1}
-  @media(max-width:560px){.info-grid{grid-template-columns:1fr}}
-  .detail-desc{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;color:var(--text);white-space:pre-wrap;font-size:14.5px}
-  .detail-wa{width:100%;justify-content:center;font-size:16px;padding:15px;margin-top:18px}
-  .detail-gallery{cursor:zoom-in}
-  .zoom-hint{position:absolute;bottom:12px;right:12px;background:rgba(20,40,37,.7);color:#fff;font-size:11.5px;
-    font-weight:600;padding:5px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;z-index:3;pointer-events:none}
-  .zoom-hint svg{width:13px;height:13px}
-
-  /* ---------- lightbox (tela cheia) ---------- */
-  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(8,18,16,.94);
-    display:none;align-items:center;justify-content:center}
-  .lightbox.open{display:flex}
-  .lightbox img{max-width:100vw;max-height:100vh;width:auto;height:auto;object-fit:contain;
-    -webkit-user-select:none;user-select:none}
-  .lb-close{position:absolute;top:16px;right:16px;width:46px;height:46px;border-radius:50%;
-    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:#fff;display:grid;place-items:center;z-index:3}
-  .lb-close:hover{background:rgba(255,255,255,.24)}
-  .lb-close svg{width:22px;height:22px}
-  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;
-    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);color:#fff;display:grid;place-items:center;z-index:3}
-  .lb-nav:hover{background:rgba(255,255,255,.24)}
-  .lb-nav.prev{left:14px}.lb-nav.next{right:14px}
-  .lb-nav svg{width:26px;height:26px}
-  .lb-count{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;
-    font-weight:600;background:rgba(255,255,255,.14);padding:6px 14px;border-radius:20px;z-index:3}
-  @media(max-width:560px){
-    .lb-nav{width:44px;height:44px}.lb-nav.prev{left:8px}.lb-nav.next{right:8px}
-    .lb-close{top:10px;right:10px}
-  }
-
-  /* toast */
   .toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:10px;width:calc(100% - 32px);max-width:420px}
-  .toast{background:var(--ink);color:#fff;padding:14px 18px;border-radius:13px;box-shadow:var(--shadow-lg);
-    display:flex;align-items:center;gap:11px;font-size:14px;font-weight:500;animation:slide .25s ease}
+  .toast{background:var(--ink);color:#fff;padding:14px 18px;border-radius:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:11px;font-size:14px;font-weight:500}
   .toast.ok{background:var(--trade)}.toast.bad{background:var(--danger)}
   .toast svg{width:19px;height:19px;flex:none}
-  @keyframes slide{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
 
-  /* setup banner */
-  .setup{max-width:760px;margin:30px auto 60px;background:var(--surface);border:1px solid var(--line-strong);
-    border-radius:22px;overflow:hidden;box-shadow:var(--shadow)}
-  .setup-top{background:var(--ink);color:#fff;padding:26px 28px}
-  .setup-top h2{color:#fff;font-size:24px}
-  .setup-top p{margin:8px 0 0;opacity:.85;font-size:14.5px}
-  .setup-body{padding:26px 28px}
-  .setup-body ol{margin:0;padding-left:22px}
-  .setup-body li{margin-bottom:14px;font-size:14.5px}
-  .setup-body code,.setup-body pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
-  .setup-body pre{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto;margin:10px 0 0}
-  .setup-body a{color:var(--marigold);font-weight:600}
-  .pill{display:inline-block;background:var(--marigold-soft);color:#9a6512;font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px}
-
-  .footer{border-top:1px solid var(--line);padding:30px 20px;text-align:center;color:var(--ink-soft);font-size:13px}
-  .footer b{color:var(--ink)}
+  .setup{max-width:620px;margin:8vh auto;background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+  .setup-top{background:var(--ink);color:#fff;padding:24px 26px}.setup-top h2{color:#fff}
+  .setup-body{padding:22px 26px}.setup-body code{font-family:ui-monospace,monospace;font-size:12.5px;background:var(--surface-2);padding:2px 5px;border-radius:5px}
   .hide{display:none!important}
-  .cloud-dot{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface)}
-  .cloud-dot i{width:9px;height:9px;border-radius:50%;background:var(--trade);box-shadow:0 0 0 3px var(--trade-soft)}
-
-  /* ---------- anúncios / publicidade ---------- */
-  .ad-wrap{max-width:1140px;margin:0 auto;padding:8px 20px 0}
-  .ad-wrap.footer-ad{padding:10px 20px 30px}
-  .ad-label{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:.6px;
-    text-transform:uppercase;color:#a9a293;margin:0 0 6px 2px}
-  .ad-label::before{content:"";width:5px;height:5px;border-radius:50%;background:#c9c1ae}
-
-  /* Slot: altura máxima de 160 px — discreto mas visível */
-  .ad-slot{
-    position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);
-    background:var(--surface);box-shadow:var(--shadow);
-    height:160px;          /* altura fixa e compacta */
-  }
-
-  /* Carrossel: slides empilhados, transição de opacidade suave */
-  .ad-carousel{position:relative;width:100%;height:100%}
-  .ad-slide{
-    display:block;text-decoration:none;position:absolute;inset:0;
-    overflow:hidden;opacity:0;transition:opacity .55s ease;pointer-events:none;
-  }
-  .ad-slide.active{opacity:1;pointer-events:auto}
-  .ad-slide img{width:100%;height:100%;object-fit:cover;display:block}
-  .ad-slide.no-img{
-    display:flex;align-items:center;justify-content:center;flex-direction:column;
-    background:linear-gradient(120deg,var(--surface-2),#fff);color:var(--ink);padding:20px;text-align:center
-  }
-  .ad-slide.no-img .at{font-family:"Fraunces",serif;font-weight:600;font-size:20px}
-  .ad-slide.no-img .ad-cta{margin-top:6px;font-size:13px;font-weight:600;color:var(--marigold)}
-
-  /* Bolinhas de navegação */
-  .ad-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3}
-  .ad-dots button{
-    width:7px;height:7px;border-radius:50%;border:none;
-    background:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(0,0,0,.18);
-    padding:0;cursor:pointer;transition:width .2s,background .2s
-  }
-  .ad-dots button.on{background:#fff;width:16px;border-radius:4px}
-
-  /* Tag "Anúncio" */
-  .ad-sponsor{
-    position:absolute;top:8px;right:9px;background:rgba(20,40,37,.58);color:#fff;
-    font-size:9.5px;font-weight:700;letter-spacing:.4px;padding:3px 7px;border-radius:20px;z-index:3
-  }
-
-  /* Camada de escurecimento sobre a imagem (deixa o texto sobreposto mais legível) */
-  .ad-scrim{position:absolute;inset:0;z-index:1;pointer-events:none}
-
-  /* Botão de play (banners de vídeo) */
-  .ad-play{
-    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;
-    width:58px;height:58px;border-radius:50%;background:rgba(20,40,37,.62);
-    display:grid;place-items:center;color:#fff;box-shadow:0 6px 22px rgba(0,0,0,.35);
-    transition:transform .15s,background .15s;pointer-events:none
-  }
-  .ad-play svg{width:26px;height:26px;margin-left:3px}
-  .ad-slide:hover .ad-play,.ad-card:hover .ad-play{transform:translate(-50%,-50%) scale(1.07);background:var(--ink)}
-  .ad-play.sm{width:46px;height:46px}.ad-play.sm svg{width:21px;height:21px}
-
-  /* ---------- modal de vídeo (YouTube no próprio portal) ---------- */
-  .vidmodal{position:fixed;inset:0;z-index:120;background:rgba(8,18,16,.94);
-    display:none;align-items:center;justify-content:center;padding:18px}
-  .vidmodal.open{display:flex}
-  .vid-inner{width:100%;max-width:980px;background:#000;border-radius:16px;overflow:hidden;
-    box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
-  .vid-bar{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#0c1a18}
-  .vid-title{flex:1;min-width:0;color:#fff;font-weight:600;font-size:14px;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.92}
-  .vid-actions{display:flex;gap:8px;flex:none}
-  .vid-btn{width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.22);
-    background:rgba(255,255,255,.12);color:#fff;display:grid;place-items:center}
-  .vid-btn:hover{background:rgba(255,255,255,.22)}
-  .vid-btn svg{width:19px;height:19px}
-  .vid-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-  .vid-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
-  .vid-inner:fullscreen{max-width:none;width:100%;height:100%;border-radius:0;justify-content:center}
-  .vid-inner:fullscreen .vid-frame{flex:1;aspect-ratio:auto;height:100%}
-  @media(max-width:560px){.vid-bar{padding:8px 10px}.vid-btn{width:36px;height:36px}}
-
-  /* native ad card dentro da grade */
-  .ad-card{grid-column:span 1;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-    overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;text-decoration:none;
-    transition:transform .14s,box-shadow .14s}
-  .ad-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-  .ad-card .ad-cover{aspect-ratio:5/4;position:relative;overflow:hidden;background:var(--surface-2)}
-  .ad-card .ad-cover img{width:100%;height:100%;object-fit:contain;background:var(--surface-2)}
-  .ad-card .ad-cover.no-img{display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-weight:600}
-  .ad-card .ad-meta{padding:14px 16px}
-  .ad-card .ad-meta .at{font-family:"Fraunces",serif;font-weight:600;font-size:17px;color:var(--ink);line-height:1.15}
-  .ad-card .ad-meta .ad-cta{margin-top:8px;display:inline-flex;align-items:center;gap:6px;color:var(--marigold);font-weight:700;font-size:13px}
-  .ad-tag{position:absolute;top:10px;left:10px;background:#fff;color:var(--ink-soft);font-size:10px;font-weight:700;
-    letter-spacing:.4px;padding:4px 9px;border-radius:20px;box-shadow:var(--shadow)}
-
-  @media(max-width:860px){
-    .hero-grid{grid-template-columns:1fr;gap:8px}
-    .hero-art{display:none}
-    .hero{padding-top:30px}
-  }
   @media(max-width:560px){
-    .brand-tag{display:none}
-    .cloud-dot{display:none}
-    .nav-actions{gap:7px}
-    .nav-actions .btn span.lbl{display:none}
-    .nav-actions .btn{padding:11px}
-    .icon-only{display:inline-flex}
-    .stats{gap:18px;flex-wrap:wrap}
-    .field.row2,.field.row3{grid-template-columns:1fr}
-    .modal-body{padding:20px}
-    .dl{grid-template-columns:1fr}
-    .dl dt{margin-top:6px}
-
-    /* ----- visualização de livros otimizada no celular ----- */
-    .grid{grid-template-columns:1fr 1fr;gap:12px;padding:12px 14px 60px}
-    .card{border-radius:13px}
-    .cover{aspect-ratio:3/4}
-    .card-body{padding:11px 11px 0}
-    .card-body h3{font-size:14.5px;-webkit-line-clamp:2}
-    .card-author{font-size:11.5px;margin-top:2px}
-    .meta{gap:4px;margin-top:8px}
-    .chip{font-size:10.5px;padding:3px 7px}
-    .card-foot{padding:10px 11px;flex-direction:column;align-items:stretch;gap:8px}
-    .price{font-size:17px}
-    .price.troca,.price.doacao{font-size:14px}
-    .wa-btn{justify-content:center;width:100%;padding:9px;font-size:12.5px}
-    .badge{font-size:10.5px;padding:4px 9px}
-    .owner-row{padding:0 11px 4px}
-    .mini{font-size:11.5px;padding:7px;min-width:0}
-    /* detalhe em tela cheia no celular */
-    .scrim{padding:0}
-    .modal,.modal.wide{border-radius:0;max-width:100%;min-height:100vh}
-    .detail-gallery{aspect-ratio:4/3;border-radius:12px}
-    .detail-price{font-size:26px}
+    .field.row2{grid-template-columns:1fr}
+    .row{flex-wrap:wrap}.row .thumb{width:100%;height:120px}.row .acts{margin-left:auto}
+    .head h1{font-size:24px}
   }
-  @media(max-width:380px){
-    .grid{grid-template-columns:1fr 1fr;gap:10px}
-    .card-body h3{font-size:13.5px}
-  }
-  /* ---------- bottom nav (mobile app-style) ---------- */
-  .bottom-nav{display:none}
-
-  @media(max-width:700px){
-    /* clean up the top bar: keep brand + account only, move the rest to the bottom nav */
-    #favBtn,#mineBtn,#addBtnTop{display:none!important}
-    body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
-
-    .bottom-nav{
-      position:fixed;left:0;right:0;bottom:0;z-index:50;
-      display:flex;align-items:flex-end;justify-content:space-around;
-      background:rgba(251,248,241,.92);backdrop-filter:saturate(180%) blur(16px);
-      border-top:1px solid var(--line);
-      padding:7px 2px calc(7px + env(safe-area-inset-bottom));
-      box-shadow:0 -8px 26px rgba(23,63,59,.10);
-    }
-    .bn-item{
-      background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;
-      color:var(--ink-soft);font-size:10px;font-weight:600;padding:6px 2px;flex:1;
-      border-radius:12px;position:relative;min-width:0;
-    }
-    .bn-item svg{width:21px;height:21px}
-    .bn-item.active{color:var(--ink)}
-    .bn-item.active svg{color:var(--marigold);stroke:var(--marigold)}
-    .bn-add{margin-top:-30px;flex:1.1}
-    .bn-add-circle{
-      width:52px;height:52px;border-radius:50%;background:var(--ink);color:#fff;
-      display:grid;place-items:center;box-shadow:var(--shadow-lg);margin-bottom:3px;
-      border:4px solid var(--paper);
-    }
-    .bn-add-circle svg{width:23px;height:23px;color:#fff;stroke:#fff}
-    .bn-add span:last-child{color:var(--ink);font-weight:700}
-    .bn-badge{position:absolute;top:-2px;right:20%;min-width:16px;height:16px;padding:0 3px;
-      border-radius:9px;background:var(--danger);color:#fff;font-size:9.5px;font-weight:700;
-      display:grid;place-items:center;line-height:1}
-
-    /* ---------- compact, modern hero ---------- */
-    .hero{padding:16px 16px 0}
-    .eyebrow{font-size:11px;padding:5px 10px;margin-bottom:12px;gap:6px}
-    .hero h1{font-size:25px;letter-spacing:-.5px}
-    .hero p.lead{font-size:14.5px;margin:10px 0 16px;
-      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .hero-cta{gap:10px;flex-wrap:nowrap}
-    .hero-cta .btn{flex:1;justify-content:center;padding:13px 10px;font-size:13.5px}
-    .stats{margin-top:18px;gap:0;background:var(--surface);border:1px solid var(--line);
-      border-radius:14px;padding:14px 4px;box-shadow:var(--shadow)}
-    .stat{flex:1;text-align:center;position:relative}
-    .stat:not(:last-child)::after{content:"";position:absolute;right:0;top:4px;bottom:4px;width:1px;background:var(--line)}
-    .stat .n{font-size:20px}
-    .stat .l{font-size:10px;line-height:1.25}
-
-    /* ---------- search + filters: compact, swipeable pills ---------- */
-    .controls{padding:18px 14px 0}
-    .search input{padding:13px 16px 13px 42px;border-radius:14px;font-size:14.5px}
-    .filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
-      scrollbar-width:none;gap:8px;margin:12px -14px 0;padding:0 14px 4px}
-    .filters::-webkit-scrollbar{display:none}
-    .filters .sel{flex:none}
-    .filters select{font-size:12.5px;padding:9px 28px 9px 13px;border-radius:30px;white-space:nowrap}
-    .filters .price-in{width:88px;border-radius:30px}
-    .filters .clearf{flex:none}
-  }
-
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
 <header class="topbar">
   <div class="topbar-inner">
-    <a class="brand" href="#" onclick="App.goHome();return false;">
-      <span class="mark">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 4.5C3 4.5 6 3.2 9 4.2C11 4.9 12 6 12 6V20C12 20 11 18.9 9 18.2C6 17.2 3 18.5 3 18.5V4.5Z" fill="#DD942F"/><path d="M21 4.5C21 4.5 18 3.2 15 4.2C13 4.9 12 6 12 6V20C12 20 13 18.9 15 18.2C18 17.2 21 18.5 21 18.5V4.5Z" fill="#fff"/></svg>
-      </span>
-      <span>
-        <span class="brand-name">Passa<b>Livro</b></span>
-        <span class="brand-tag">livros de mão em mão entre as famílias</span>
-      </span>
-    </a>
-    <div class="nav-actions">
-      <span class="cloud-dot" id="cloudDot" title="Conectado à nuvem" aria-label="Conectado à nuvem"><i></i></span>
-      <button class="btn btn-ghost" id="regBtn" onclick="App.openRegister()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-        <span class="lbl" id="regBtnLbl">Cadastrar</span>
-      </button>
-      <button class="btn btn-ghost" id="favBtn" data-nav="favs" onclick="App.toggleFavsView()" title="Meus favoritos" style="position:relative">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-        <span class="lbl">Favoritos</span>
-        <span class="fav-count hide favCountEl" id="favCount">0</span>
-      </button>
-      <button class="btn btn-ghost" id="mineBtn" data-nav="mine" onclick="App.toggleMine()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span class="lbl">Meus anúncios</span>
-      </button>
-      <button class="btn btn-primary" id="addBtnTop" onclick="App.openForm()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-        <span class="lbl">Anunciar livro</span>
-      </button>
+    <div class="brand">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none"><path d="M3 4.5C3 4.5 6 3.2 9 4.2C11 4.9 12 6 12 6V20C12 20 11 18.9 9 18.2C6 17.2 3 18.5 3 18.5V4.5Z" fill="#DD942F"/><path d="M21 4.5C21 4.5 18 3.2 15 4.2C13 4.9 12 6 12 6V20C12 20 13 18.9 15 18.2C18 17.2 21 18.5 21 18.5V4.5Z" fill="#fff"/></svg></span>
+      <div><div class="brand-name">Passa<b>Livro</b></div><div class="brand-sub">Painel de anúncios</div></div>
     </div>
+    <span class="who hide" id="whoami"></span>
+    <button class="btn btn-ghost hide" id="logoutBtn" onclick="Panel.logout()">Sair</button>
   </div>
 </header>
 
-<!-- ---------- BOTTOM NAV (somente celular) ---------- -->
-<nav class="bottom-nav" id="bottomNav" aria-label="Navegação principal">
-  <button class="bn-item" data-nav="home" onclick="App.goHome()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
-    <span>Início</span>
-  </button>
-  <button class="bn-item" data-nav="search" onclick="App.scrollToList()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-    <span>Buscar</span>
-  </button>
-  <button class="bn-item bn-add" onclick="App.openForm()" aria-label="Anunciar livro">
-    <span class="bn-add-circle">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
-    </span>
-    <span>Anunciar</span>
-  </button>
-  <button class="bn-item" data-nav="favs" onclick="App.toggleFavsView()" style="position:relative">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-    <span class="fav-count hide favCountEl bn-badge" id="favCountBn">0</span>
-    <span>Favoritos</span>
-  </button>
-  <button class="bn-item" data-nav="mine" onclick="App.toggleMine()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
-    <span>Meus livros</span>
-  </button>
-</nav>
-
-<!-- SETUP (mostrado só quando o Firebase não está configurado) -->
+<!-- SETUP -->
 <section class="setup hide" id="setupCard">
-  <div class="setup-top">
-    <h2>Falta um passo: conectar ao Firebase</h2>
-    <p>Seus anúncios serão salvos na nuvem para que todas as famílias vejam. Leva ~3 minutos e é gratuito.</p>
-  </div>
+  <div class="setup-top"><h2>Configure o Firebase</h2><p style="opacity:.85;margin:8px 0 0">Cole o <code>firebaseConfig</code> no topo deste arquivo, igual fez no portal.</p></div>
   <div class="setup-body">
+    <p>Este painel precisa, além do que o portal já usa:</p>
     <ol>
-      <li>Acesse o <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console do Firebase</a> e clique em <b>Adicionar projeto</b>.</li>
-      <li>No menu lateral, abra <b>Build → Firestore Database</b> e clique em <b>Criar banco de dados</b> (pode iniciar no modo de teste).</li>
-      <li>Abra <b>Build → Authentication → Sign-in method</b> e ative os provedores <b>Anônimo</b> (navegação) e <b>E-mail/senha</b> (contas dos usuários).</li>
-      <li>Em <b>Configurações do projeto ⚙️ → Seus apps</b>, registre um app <b>Web</b> e copie o objeto <code>firebaseConfig</code>.</li>
-      <li>Cole esse objeto neste arquivo, dentro do bloco marcado <span class="pill">COLE AQUI</span>, salve e recarregue a página.</li>
+      <li>Ativar o provedor <b>E-mail/senha</b> em <b>Authentication → Sign-in method</b>.</li>
+      <li>Criar o seu usuário administrador (na primeira vez, use o botão <b>Criar conta de administrador</b> nesta tela).</li>
+      <li>Publicar as regras do Firestore para a coleção <code>banners</code> (veja abaixo), trocando pelo <b>seu e-mail</b>.</li>
     </ol>
-    <p style="margin:18px 0 6px;font-weight:600;color:var(--ink)">Regras de segurança recomendadas (cole em Firestore → Regras):</p>
-    <pre>rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /livros/{id} {
-      allow read: if true;
-      allow create: if request.auth != null
-                    &amp;&amp; request.resource.data.ownerId == request.auth.uid;
-      allow update, delete: if request.auth != null
-                    &amp;&amp; resource.data.ownerId == request.auth.uid;
-    }
-    match /banners/{id} {
-      allow read: if true;
-      allow write: if request.auth != null
-                   &amp;&amp; request.auth.token.email == "SEU-EMAIL-DE-ADMIN@exemplo.com";
-    }
-    match /config/{id} {
-      allow read: if true;
-      allow write: if request.auth != null
-                   &amp;&amp; request.auth.token.email == "SEU-EMAIL-DE-ADMIN@exemplo.com";
-    }
-    match /usuarios/{uid} {
-      allow read: if request.auth != null
-                  &amp;&amp; (request.auth.token.email == "SEU-EMAIL-DE-ADMIN@exemplo.com"
-                       || request.auth.uid == uid);
-      allow create, update: if request.auth != null &amp;&amp; request.auth.uid == uid;
-    }
-    match /acessos/{id} {
-      allow read: if request.auth != null
-                  &amp;&amp; request.auth.token.email == "SEU-EMAIL-DE-ADMIN@exemplo.com";
-      allow create, update: if request.auth != null
-                  &amp;&amp; request.resource.data.uid == request.auth.uid;
-    }
-  }
-}</pre>
   </div>
 </section>
 
-<!-- HERO -->
-<section class="hero" id="heroSection">
-  <div class="hero-grid">
-    <div>
-      <span class="eyebrow"><span class="dot"></span>Livros escolares e de leitura • passe adiante</span>
-      <h1>Os livros parados na sua estante podem ser <em>a próxima leitura</em> de outra família.</h1>
-      <p class="lead">Anuncie livros escolares que sua casa não usa mais — e também romances, técnicos, infantis e de conhecimentos gerais. Combine tudo direto no WhatsApp, sem intermediário.</p>
-      <div class="hero-cta">
-        <button class="btn btn-primary" onclick="App.openForm()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-          Anunciar um livro
-        </button>
-        <button class="btn btn-ghost" onclick="App.scrollToList()">Ver livros disponíveis</button>
-      </div>
-      <div class="stats">
-        <div class="stat"><div class="n" id="statBooks">0</div><div class="l">livros à disposição</div></div>
-        <div class="stat"><div class="n" id="statTroca">0</div><div class="l">abertos a troca</div></div>
-        <div class="stat"><div class="n" id="statDoa">0</div><div class="l">para doação</div></div>
+<!-- LOGIN -->
+<section class="login hide" id="loginCard">
+  <div class="login-top">
+    <h1 id="loginTitle">Acesso do administrador</h1>
+    <p id="loginSub">Entre para gerenciar os anúncios exibidos no portal.</p>
+  </div>
+  <div class="login-body">
+    <div class="field"><label class="lab" for="email">E-mail</label><input class="inp" id="email" type="email" autocomplete="username" placeholder="voce@exemplo.com"></div>
+    <div class="field"><label class="lab" for="senha">Senha</label><input class="inp" id="senha" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn btn-primary" id="loginBtn" onclick="Panel.auth()">Entrar</button>
+    <div class="msg" id="loginMsg"></div>
+    <div class="swap" id="swapLine">Primeiro acesso? <a onclick="Panel.toggleMode()">Criar conta de administrador</a></div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<main class="wrap hide" id="dash">
+  <div class="tabs" id="panelTabs">
+    <button class="tabbtn active" data-tab="overview" onclick="Panel.switchTab('overview')">Visão geral</button>
+    <button class="tabbtn" data-tab="users" onclick="Panel.switchTab('users')">Usuários</button>
+    <button class="tabbtn" data-tab="settings" onclick="Panel.switchTab('settings')">Configurações</button>
+    <button class="tabbtn" data-tab="banners" onclick="Panel.switchTab('banners')">Banners</button>
+  </div>
+
+  <!-- ABA: VISÃO GERAL -->
+  <section id="tabOverview" class="tabpanel">
+    <div class="head">
+      <div>
+        <h1>Visão geral</h1>
+        <p>Usuários e acessos ao portal PassaLivro.</p>
       </div>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <div class="bk bk3"><div class="bt">Ciências</div><div class="ba">9º ano</div></div>
-      <div class="bk bk1"><div class="bt">Matemática</div><div class="ba">Ensino Fundamental</div></div>
-      <div class="bk bk2"><span class="bk-tape"></span><div class="bt">Romance</div><div class="ba">Literatura</div></div>
+    <div class="stats" id="overviewStats"></div>
+    <p class="help-txt" style="margin-bottom:18px">"Usuários cadastrados" é o total de pessoas que fizeram o cadastro (nome, WhatsApp e e-mail) para anunciar no portal. "Acessos" conta visitantes únicos por dia, identificados de forma anônima pelo navegador.</p>
+    <div class="chartcard">
+      <h3>Acessos nos últimos 14 dias</h3>
+      <div class="bars" id="accessBars"></div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- CONTROLS -->
-<section class="controls" id="listTop">
-  <div class="search-row">
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input id="q" type="search" placeholder="Buscar por título, autor, disciplina ou editora…" oninput="App.render()">
+  <!-- ABA: USUÁRIOS -->
+  <section id="tabUsers" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Usuários cadastrados</h1>
+        <p>Pessoas que se cadastraram para anunciar no portal.</p>
+      </div>
     </div>
-  </div>
-  <div class="filters">
-    <div class="sel"><select id="fCategoria" onchange="App.render()">
-      <option value="">Escolares e gerais</option>
-      <option value="escolar">Só escolares</option>
-      <option value="geral">Só conhecimentos gerais</option>
-    </select></div>
-    <div class="sel"><select id="fDisc" onchange="App.render()"><option value="">Todas as disciplinas</option></select></div>
-    <div class="sel"><select id="fSerie" onchange="App.render()"><option value="">Todas as séries</option></select></div>
-    <div class="sel hide" id="fGeneroWrap"><select id="fGenero" onchange="App.render()"><option value="">Todos os gêneros</option></select></div>
-    <div class="sel"><select id="fTipo" onchange="App.render()">
-      <option value="">Venda, troca e doação</option>
-      <option value="venda">À venda</option>
-      <option value="troca">Para troca</option>
-      <option value="doacao">Doação</option>
-    </select></div>
-    <div class="sel"><select id="fEstado" onchange="App.render()">
-      <option value="">Qualquer estado</option>
-      <option>Novo</option><option>Seminovo</option><option>Usado em bom estado</option><option>Bastante usado</option>
-    </select></div>
-    <div class="sel"><select id="fSort" onchange="App.render()">
-      <option value="recent">Mais recentes</option>
-      <option value="priceA">Menor preço</option>
-      <option value="priceD">Maior preço</option>
-    </select></div>
-    <button class="clearf" id="clearF" onclick="App.clearFilters()">Limpar filtros</button>
-  </div>
-</section>
+    <div class="list" id="usersList"></div>
+    <section class="empty hide" id="usersEmpty">
+      <h3>Nenhum usuário cadastrado ainda</h3>
+      <p>Os cadastros feitos no portal (nome, WhatsApp e e-mail) aparecem aqui.</p>
+    </section>
+  </section>
 
-<!-- ESPAÇO PUBLICITÁRIO — topo da lista -->
-<div class="ad-wrap hide" id="adTopWrap">
-  <div class="ad-label">Publicidade</div>
-  <div class="ad-slot" id="adTopSlot"></div>
-</div>
-
-<div class="resultline" id="resultLine"></div>
-<main class="grid" id="grid"></main>
-
-<!-- estados -->
-<section class="state hide" id="emptyState">
-  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-  <h2 id="emptyTitle">Ainda não há livros por aqui</h2>
-  <p id="emptyText">Seja a primeira família a anunciar. Cadastre um livro que você não usa mais e ajude alguém da escola.</p>
-  <button class="btn btn-primary" onclick="App.openForm()">Anunciar o primeiro livro</button>
-</section>
-
-<section class="state hide" id="loadingState">
-  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.2-8.6"/></svg></div>
-  <h2>Carregando os livros…</h2>
-  <p>Buscando os anúncios na nuvem.</p>
-</section>
-
-<!-- ESPAÇO PUBLICITÁRIO — rodapé -->
-<div class="ad-wrap footer-ad hide" id="adFootWrap">
-  <div class="ad-label">Publicidade</div>
-  <div class="ad-slot" id="adFootSlot"></div>
-</div>
-
-<footer class="footer">
-  <b>PassaLivro</b> — feito para a comunidade escolar. Os negócios são combinados diretamente entre as famílias pelo WhatsApp.
-</footer>
-
-<!-- =============== MODAL: FORM =============== -->
-<div class="scrim" id="formScrim">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
-    <div class="modal-head">
-      <h2 id="formTitle">Anunciar um livro</h2>
-      <button class="xclose" onclick="App.closeForm()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <!-- ABA: CONFIGURAÇÕES -->
+  <section id="tabSettings" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Configurações de anúncios</h1>
+        <p>Regras que valem para todos os anúncios criados pelos usuários no portal.</p>
+      </div>
     </div>
-    <div class="modal-body">
-      <form id="bookForm" onsubmit="App.saveBook(event)">
-        <input type="hidden" id="editId">
-
+    <div class="cfgcard">
+      <form id="cfgForm" onsubmit="Panel.saveConfig(event)">
         <div class="field">
-          <label class="lab" for="titulo">Título do livro</label>
-          <input class="inp" id="titulo" placeholder="Ex.: Matemática — Bianchini, 8º ano" required>
-        </div>
-
-        <div class="field row2">
-          <div>
-            <label class="lab" for="autor">Autor <span class="opt">(opcional)</span></label>
-            <input class="inp" id="autor" placeholder="Ex.: Edwaldo Bianchini">
-          </div>
-          <div>
-            <label class="lab" for="editora">Editora <span class="opt">(opcional)</span></label>
-            <input class="inp" id="editora" placeholder="Ex.: Moderna">
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="lab">Tipo de livro</label>
-          <div class="seg" id="categoriaSeg">
-            <label><input type="radio" name="categoria" value="escolar" checked onchange="App.onCategoria()"><span class="opt-b">Escolar / didático<small>tem disciplina e série</small></span></label>
-            <label><input type="radio" name="categoria" value="geral" onchange="App.onCategoria()"><span class="opt-b">Conhecimentos gerais<small>romance, técnico, infantil…</small></span></label>
-          </div>
-        </div>
-
-        <div class="field row3" id="escolarFields">
-          <div>
-            <label class="lab" for="disciplina">Disciplina</label>
-            <input class="inp" id="disciplina" list="discList" placeholder="Ex.: Matemática" required>
-            <datalist id="discList">
-              <option>Português</option><option>Matemática</option><option>História</option>
-              <option>Geografia</option><option>Ciências</option><option>Biologia</option>
-              <option>Física</option><option>Química</option><option>Inglês</option>
-              <option>Espanhol</option><option>Artes</option><option>Filosofia</option>
-              <option>Sociologia</option><option>Literatura</option><option>Redação</option>
-              <option>Apostila / Material integrado</option><option>Paradidático</option>
-            </datalist>
-          </div>
-          <div>
-            <label class="lab" for="serie">Série / Ano</label>
-            <input class="inp" id="serie" list="serieList" placeholder="Ex.: 8º ano" required>
-            <datalist id="serieList">
-              <option>Educação Infantil</option><option>1º ano</option><option>2º ano</option>
-              <option>3º ano</option><option>4º ano</option><option>5º ano</option><option>6º ano</option>
-              <option>7º ano</option><option>8º ano</option><option>9º ano</option>
-              <option>1ª série EM</option><option>2ª série EM</option><option>3ª série EM</option>
-              <option>Pré-vestibular</option>
-            </datalist>
-          </div>
-          <div>
-            <label class="lab" for="edicao">Edição / Ano <span class="opt">(opcional)</span></label>
-            <input class="inp" id="edicao" placeholder="Ex.: 9ª ed.">
-          </div>
-        </div>
-
-        <div class="field row2 hide" id="geralFields">
-          <div>
-            <label class="lab" for="genero">Gênero / categoria</label>
-            <input class="inp" id="genero" list="generoList" placeholder="Ex.: Romance">
-            <datalist id="generoList">
-              <option>Romance</option><option>Conto / Crônica</option><option>Poesia</option>
-              <option>Ficção científica</option><option>Fantasia</option><option>Suspense / Policial</option>
-              <option>Terror</option><option>Aventura</option><option>Biografia / Memórias</option>
-              <option>História</option><option>Autoajuda / Desenvolvimento pessoal</option>
-              <option>Negócios / Finanças</option><option>Técnico / Profissional</option>
-              <option>Concursos / Vestibular</option><option>Idiomas</option>
-              <option>Religião / Espiritualidade</option><option>Filosofia</option>
-              <option>Saúde / Bem-estar</option><option>Culinária</option><option>Arte / Design</option>
-              <option>Infantil</option><option>Juvenil</option><option>HQ / Mangá / Graphic novel</option>
-              <option>Didático / Universitário</option><option>Outros</option>
-            </datalist>
-          </div>
-          <div>
-            <label class="lab" for="edicaoG">Edição / Ano <span class="opt">(opcional)</span></label>
-            <input class="inp" id="edicaoG" placeholder="Ex.: 2ª ed., 2021">
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="lab">Estado de conservação</label>
-          <div class="seg" id="estadoSeg">
-            <label><input type="radio" name="estado" value="Novo"><span class="opt-b">Novo<small>lacrado/sem uso</small></span></label>
-            <label><input type="radio" name="estado" value="Seminovo" checked><span class="opt-b">Seminovo<small>pouco uso</small></span></label>
-            <label><input type="radio" name="estado" value="Usado em bom estado"><span class="opt-b">Usado<small>bom estado</small></span></label>
-            <label><input type="radio" name="estado" value="Bastante usado"><span class="opt-b">Marcado<small>bem usado</small></span></label>
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="lab">Tipo de negócio</label>
-          <div class="seg" id="tipoSeg">
-            <label><input type="radio" name="tipo" value="venda" checked onchange="App.onTipo()"><span class="opt-b">À venda<small>tem preço</small></span></label>
-            <label><input type="radio" name="tipo" value="troca" onchange="App.onTipo()"><span class="opt-b">Troca<small>por outro livro</small></span></label>
-            <label><input type="radio" name="tipo" value="doacao" onchange="App.onTipo()"><span class="opt-b">Doação<small>de graça</small></span></label>
-          </div>
-        </div>
-
-        <div class="field" id="precoField">
-          <label class="lab" for="preco">Preço (R$)</label>
-          <input class="inp" id="preco" type="number" min="0" step="0.50" placeholder="Ex.: 45,00">
-        </div>
-        <div class="field hide" id="trocaField">
-          <label class="lab" for="trocaPor">O que você aceita em troca?</label>
-          <input class="inp" id="trocaPor" placeholder="Ex.: Livro de Ciências do 9º ano">
-        </div>
-
-        <div class="field">
-          <label class="lab" for="descricao">Descrição <span class="opt">(opcional)</span></label>
-          <textarea class="inp" id="descricao" placeholder="Conte sobre marcações, capa, se acompanha adesivos/CD, motivo da venda…"></textarea>
-        </div>
-
-        <div class="field">
-          <label class="lab">Fotos <span class="opt">(até 3 — recomendado)</span></label>
-          <div class="drop" id="dropZone" onclick="document.getElementById('photoInput').click()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
-            <div><b>Toque para adicionar fotos</b></div>
-            <div class="hint">As imagens são compactadas automaticamente</div>
-          </div>
-          <input type="file" id="photoInput" accept="image/*" multiple class="hide" onchange="App.addPhotos(event)">
-          <div class="thumbs" id="thumbs"></div>
-        </div>
-
-        <hr style="border:none;border-top:1px solid var(--line);margin:6px 0 18px">
-
-        <div class="help-txt" id="contatoHint" style="margin:0 0 12px">Dados de contato puxados do seu cadastro — você pode ajustar para este anúncio.</div>
-        <div class="field row2">
-          <div>
-            <label class="lab" for="nome">Seu nome</label>
-            <input class="inp" id="nome" placeholder="Ex.: Ana (mãe do João, 5º A)" required>
-          </div>
-          <div>
-            <label class="lab" for="whats">WhatsApp (com DDD)</label>
-            <input class="inp" id="whats" type="tel" placeholder="Ex.: (11) 99876-5432" required>
-          </div>
+          <label class="lab" for="cfgPrazo">Prazo de validade dos anúncios (dias)</label>
+          <input class="inp" id="cfgPrazo" type="number" min="0" step="1" value="0">
+          <div class="help-txt">Anúncios mais antigos que esse número de dias saem da listagem pública automaticamente. Use <b>0</b> para não aplicar prazo.</div>
         </div>
         <div class="field">
-          <label class="lab" for="cidade">Bairro / Cidade <span class="opt">(ou escola — opcional)</span></label>
-          <input class="inp" id="cidade" placeholder="Ex.: Pinheiros, SP — ou Colégio São José">
+          <label class="lab" for="cfgLimite">Limite de anúncios ativos por usuário</label>
+          <input class="inp" id="cfgLimite" type="number" min="0" step="1" value="0">
+          <div class="help-txt">Cada família poderá ter no máximo esse número de anúncios ativos ao mesmo tempo. Use <b>0</b> para não aplicar limite.</div>
         </div>
-
-        <div class="err" id="formErr"></div>
-
+        <div class="msg" id="cfgMsg"></div>
         <div class="form-foot">
-          <button type="button" class="btn btn-ghost" onclick="App.closeForm()">Cancelar</button>
-          <button type="submit" class="btn btn-primary" id="saveBtn">Publicar anúncio</button>
+          <button type="submit" class="btn btn-primary" id="cfgSaveBtn">Salvar configurações</button>
         </div>
       </form>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- =============== MODAL: CONTA (entrar / criar / minha conta) =============== -->
-<div class="scrim" id="regScrim">
-  <div class="modal" style="max-width:460px" role="dialog" aria-modal="true" aria-labelledby="regTitle">
+  <!-- ABA: BANNERS -->
+  <section id="tabBanners" class="tabpanel hide">
+    <div class="head">
+      <div>
+        <h1>Anúncios do portal</h1>
+        <p>Cadastre banners que aparecem para as famílias. Eles entram no ar assim que ficam <b>ativos</b>.</p>
+      </div>
+      <button class="btn btn-primary" onclick="Panel.openForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        Novo banner
+      </button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="list" id="list"></div>
+
+    <section class="empty hide" id="emptyState">
+      <h3>Nenhum anúncio cadastrado</h3>
+      <p>Crie o primeiro banner para começar a veicular publicidade no portal.</p>
+      <button class="btn btn-primary" onclick="Panel.openForm()" style="margin-top:8px">Criar primeiro banner</button>
+    </section>
+  </section>
+</main>
+
+<!-- MODAL FORM -->
+<div class="scrim" id="formScrim">
+  <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-head">
-      <h2 id="regTitle">Entrar no PassaLivro</h2>
-      <button class="xclose" onclick="App.closeRegister()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <h2 id="formTitle">Novo banner</h2>
+      <button class="xclose" onclick="Panel.closeForm()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
     <div class="modal-body">
-      <div class="err" id="authErr" style="margin-bottom:14px"></div>
-
-      <!-- escolha -->
-      <div id="authChoice">
-        <p style="color:var(--ink-soft);margin:0 0 18px;font-size:14.5px">Para anunciar e favoritar livros, entre na sua conta ou crie uma. É rápido.</p>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <button class="btn btn-primary" style="justify-content:center;padding:14px" onclick="App.authShow('login')">Já tenho conta — entrar</button>
-          <button class="btn btn-ghost" style="justify-content:center;padding:14px" onclick="App.authShow('register')">Quero criar uma conta</button>
-        </div>
-      </div>
-
-      <!-- login -->
-      <form id="authLogin" class="hide" onsubmit="App.doLogin(event)">
-        <p style="color:var(--ink-soft);margin:0 0 16px;font-size:14px">Entre com o e-mail (ou WhatsApp) e a senha do seu cadastro.</p>
+      <form id="adForm" onsubmit="Panel.save(event)">
+        <input type="hidden" id="editId">
         <div class="field">
-          <label class="lab" for="loginWhats">E-mail ou WhatsApp</label>
-          <input class="inp" id="loginWhats" type="text" placeholder="seu@email.com ou (11) 99876-5432" autocomplete="username">
+          <label class="lab" for="titulo">Nome / título do anúncio</label>
+          <input class="inp" id="titulo" placeholder="Ex.: Papelaria do Bairro — 20% off" required>
         </div>
         <div class="field">
-          <label class="lab" for="loginSenha">Senha</label>
-          <input class="inp" id="loginSenha" type="password" placeholder="Sua senha" autocomplete="current-password">
-          <p class="help-txt" style="margin-top:8px"><a style="color:var(--marigold);font-weight:600;cursor:pointer" onclick="App.authShow('forgot')">Esqueci minha senha</a></p>
+          <label class="lab" for="descricao">Chamada <span style="font-weight:500;color:var(--ink-soft)">(aparece quando não há imagem ou no cartão)</span></label>
+          <input class="inp" id="descricao" placeholder="Ex.: Material escolar com desconto para a comunidade">
         </div>
-        <div class="form-foot" style="justify-content:space-between">
-          <button type="button" class="btn btn-ghost" onclick="App.authShow('choice')">Voltar</button>
-          <button type="submit" class="btn btn-primary" id="loginBtn">Entrar</button>
+        <div class="field">
+          <label class="lab" for="link">Link de destino</label>
+          <input class="inp" id="link" type="url" placeholder="https://...">
+          <div class="help-txt">Para onde a pessoa vai ao tocar no anúncio. Dica: adicione <code>?utm_source=passalivro</code> para medir no seu site.</div>
         </div>
-        <p class="help-txt" style="text-align:center;margin-top:12px">Não tem conta? <a style="color:var(--marigold);font-weight:600;cursor:pointer" onclick="App.authShow('register')">Criar agora</a></p>
+        <div class="field">
+          <label class="lab">Posição no portal</label>
+          <div class="seg" id="posSeg">
+            <label><input type="radio" name="pos" value="topo" checked onchange="Panel.syncPreview()"><span class="opt-b">Topo da lista<small>faixa 1100×300</small></span></label>
+            <label><input type="radio" name="pos" value="grade" onchange="Panel.syncPreview()"><span class="opt-b">Na grade<small>cartão 600×480</small></span></label>
+            <label><input type="radio" name="pos" value="rodape" onchange="Panel.syncPreview()"><span class="opt-b">Rodapé<small>faixa 1100×300</small></span></label>
+          </div>
+        </div>
+        <div class="field row2">
+          <div>
+            <label class="lab" for="ordem">Ordem de exibição</label>
+            <input class="inp" id="ordem" type="number" value="0" min="0" step="1">
+            <div class="help-txt">Menor número aparece primeiro.</div>
+          </div>
+          <div>
+            <label class="lab">Status</label>
+            <div class="toggle-row">
+              <span class="switch"><input type="checkbox" id="ativo" checked><span class="slider"></span></span>
+              <span id="ativoLbl" style="font-weight:600">Ativo (no ar)</span>
+            </div>
+          </div>
+        </div>
+        <div class="field row2">
+          <div>
+            <label class="lab" for="validoAte">Válido até <span style="font-weight:500;color:var(--ink-soft)">(prazo do banner)</span></label>
+            <input class="inp" id="validoAte" type="date">
+            <div class="help-txt">Deixe em branco para sem prazo. O banner sai do ar automaticamente após essa data.</div>
+          </div>
+          <div>
+            <label class="lab" for="tempoBanner">Tempo no slide (segundos)</label>
+            <input class="inp" id="tempoBanner" type="number" value="6" min="3" max="60" step="1">
+            <div class="help-txt">Quanto tempo este banner fica visível antes de avançar. Mín. 3 s.</div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="lab">Tipo de mídia</label>
+          <div class="seg" id="midiaSeg">
+            <label><input type="radio" name="midia" value="imagem" checked onchange="Panel.syncMidia()"><span class="opt-b">Imagem<small>foto / arte</small></span></label>
+            <label><input type="radio" name="midia" value="video" onchange="Panel.syncMidia()"><span class="opt-b">Vídeo<small>YouTube</small></span></label>
+          </div>
+        </div>
+        <div class="field hide" id="videoField">
+          <label class="lab" for="videoUrl">Link do vídeo (YouTube)</label>
+          <input class="inp" id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." oninput="Panel.syncPreview()">
+          <div class="help-txt">O vídeo abre <b>dentro do portal</b> quando a pessoa toca no banner e pode ser visto em <b>tela cheia</b>. A imagem abaixo é opcional — sem ela, usamos a capa do próprio vídeo.</div>
+        </div>
+        <div class="field">
+          <label class="lab">Imagem do banner</label>
+          <div class="drop" onclick="document.getElementById('imgInput').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
+            <div><b id="dropLbl">Toque para enviar a imagem</b></div>
+            <div class="help-txt" style="margin-top:2px">Compactada automaticamente • JPG/PNG</div>
+          </div>
+          <input type="file" id="imgInput" accept="image/*" class="hide" onchange="Panel.pickImage(event)">
+          <div class="prev topo" id="preview"><div class="ph">A pré-visualização aparece aqui</div></div>
+        </div>
+
+        <!-- TEXTO SOBREPOSTO NA IMAGEM -->
+        <div class="field" id="overlaySection">
+          <label class="lab">Texto sobre a imagem <span style="font-weight:500;color:var(--ink-soft)">(opcional — só aparece quando há imagem)</span></label>
+          <div class="txt-overlay-section">
+            <div class="sec-title">Imagem de fundo</div>
+            <div class="field" style="margin-bottom:16px">
+              <label class="lab" style="margin-bottom:6px">Escurecer a imagem para destacar o texto: <b id="scrimVal">40%</b></label>
+              <input type="range" id="overlayScrim" min="0" max="85" value="40" step="5" style="width:100%;accent-color:var(--ink)" oninput="Panel.syncPreview()">
+              <div class="help-txt">Aplica uma camada escura semitransparente sobre a imagem (ou sobre a capa do vídeo). Quanto maior, mais o texto claro se destaca.</div>
+            </div>
+
+            <div class="sec-title">Conteúdo</div>
+            <div class="field" style="margin-bottom:12px">
+              <input class="inp" id="overlayTitulo" placeholder="Título em destaque (ex.: 20% OFF)" oninput="Panel.syncPreview()">
+            </div>
+            <div class="field" style="margin-bottom:16px">
+              <input class="inp" id="overlaySub" placeholder="Subtítulo (ex.: só esta semana)" oninput="Panel.syncPreview()">
+            </div>
+
+            <div class="sec-title">Tipografia</div>
+            <div class="font-grid" style="margin-bottom:14px">
+              <div>
+                <label class="lab" style="margin-bottom:6px">Fonte</label>
+                <div class="sel" style="position:relative">
+                  <select class="inp" id="overlayFont" onchange="Panel.syncPreview()" style="padding-right:34px;appearance:none">
+                    <option value="DM Sans">DM Sans (padrão)</option>
+                    <option value="Fraunces">Fraunces (serif)</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Impact">Impact</option>
+                    <option value="ui-monospace">Monospace</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="lab" style="margin-bottom:6px">Tamanho (px)</label>
+                <input class="inp" id="overlaySize" type="number" value="28" min="12" max="72" step="1" oninput="Panel.syncPreview()">
+              </div>
+            </div>
+
+            <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px">
+              <div>
+                <label class="lab" style="margin-bottom:8px">Cor do texto</label>
+                <div class="color-row">
+                  <button type="button" class="color-swatch" title="Cor do título"><input type="color" id="overlayColor" value="#ffffff" oninput="Panel.syncPreview()"></button>
+                  <div>
+                    <div style="font-size:12px;font-weight:600;color:var(--ink)">Título</div>
+                    <div style="font-size:11px;color:var(--ink-soft)" id="overlayColorHex">#ffffff</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="lab" style="margin-bottom:8px">Cor do subtítulo</label>
+                <div class="color-row">
+                  <button type="button" class="color-swatch" title="Cor do subtítulo"><input type="color" id="overlaySubColor" value="#f0f0f0" oninput="Panel.syncPreview()"></button>
+                  <div>
+                    <div style="font-size:12px;font-weight:600;color:var(--ink)">Subtítulo</div>
+                    <div style="font-size:11px;color:var(--ink-soft)" id="overlaySubColorHex">#f0f0f0</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="lab" style="margin-bottom:8px">Estilo</label>
+                <div class="toggle-group">
+                  <button type="button" class="tog" id="togBold" title="Negrito" onclick="Panel.toggleTog('togBold');Panel.syncPreview()"><b>B</b></button>
+                  <button type="button" class="tog" id="togItalic" title="Itálico" onclick="Panel.toggleTog('togItalic');Panel.syncPreview()"><i>I</i></button>
+                  <button type="button" class="tog on" id="togShadow" title="Sombra no texto" onclick="Panel.toggleTog('togShadow');Panel.syncPreview()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><rect x="3" y="3" width="13" height="13" rx="2"/><rect x="8" y="8" width="13" height="13" rx="2" opacity=".4"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-title">Posição na imagem</div>
+            <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+              <div class="pos-grid" id="posGrid">
+                <button type="button" class="pos-cell" data-pos="top-left"    onclick="Panel.setOverlayPos('top-left')"    title="Topo esquerda">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 5h6M5 5v6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="top-center"  onclick="Panel.setOverlayPos('top-center')"  title="Topo centro">     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v6M8 5h8"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="top-right"   onclick="Panel.setOverlayPos('top-right')"   title="Topo direita">    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 5h-6M19 5v6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="mid-left"    onclick="Panel.setOverlayPos('mid-left')"    title="Meio esquerda">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h6M5 9v6"/></svg></button>
+                <button type="button" class="pos-cell on" data-pos="mid-center" onclick="Panel.setOverlayPos('mid-center')" title="Centro">         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="mid-right"   onclick="Panel.setOverlayPos('mid-right')"   title="Meio direita">    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12h-6M19 9v6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="bot-left"    onclick="Panel.setOverlayPos('bot-left')"    title="Rodapé esquerda"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 19h6M5 19v-6"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="bot-center"  onclick="Panel.setOverlayPos('bot-center')"  title="Rodapé centro">   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19v-6M8 19h8"/></svg></button>
+                <button type="button" class="pos-cell" data-pos="bot-right"   onclick="Panel.setOverlayPos('bot-right')"   title="Rodapé direita">  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 19h-6M19 19v-6"/></svg></button>
+              </div>
+              <div style="font-size:12px;color:var(--ink-soft);line-height:1.6">
+                Escolha onde o<br>texto aparece<br>na imagem.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="msg" id="formMsg"></div>
+        <div class="form-foot">
+          <button type="button" class="btn btn-ghost" onclick="Panel.closeForm()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">Publicar banner</button>
+        </div>
       </form>
-
-      <!-- esqueci a senha -->
-      <form id="authForgot" class="hide" onsubmit="App.doForgot(event)">
-        <p style="color:var(--ink-soft);margin:0 0 16px;font-size:14px">Digite o e-mail do seu cadastro. Enviaremos um link para você criar uma nova senha.</p>
-        <div class="field">
-          <label class="lab" for="forgotEmail">E-mail cadastrado</label>
-          <input class="inp" id="forgotEmail" type="email" placeholder="seu@email.com" autocomplete="email">
-        </div>
-        <div class="form-foot" style="justify-content:space-between">
-          <button type="button" class="btn btn-ghost" onclick="App.authShow('login')">Voltar</button>
-          <button type="submit" class="btn btn-primary" id="forgotBtn">Enviar link</button>
-        </div>
-      </form>
-
-      <!-- registro -->
-      <form id="authRegister" class="hide" onsubmit="App.doRegister(event)">
-        <div class="field">
-          <label class="lab" for="regNome">Seu nome</label>
-          <input class="inp" id="regNome" placeholder="Ex.: Ana Souza" autocomplete="name">
-        </div>
-        <div class="field">
-          <label class="lab" for="regWhats">WhatsApp (com DDD) <span class="opt">— será seu usuário</span></label>
-          <input class="inp" id="regWhats" type="tel" placeholder="Ex.: (11) 99876-5432" autocomplete="tel">
-        </div>
-        <div class="field">
-          <label class="lab" for="regEmail">E-mail <span class="opt">— para recuperar a senha</span></label>
-          <input class="inp" id="regEmail" type="email" placeholder="voce@exemplo.com" autocomplete="email">
-        </div>
-        <div class="field">
-          <label class="lab" for="regSenha">Senha</label>
-          <input class="inp" id="regSenha" type="password" minlength="6" placeholder="Pelo menos 6 caracteres" autocomplete="new-password">
-          <div class="help-txt">Use no mínimo 6 caracteres. Pode ser números, letras ou os dois.</div>
-        </div>
-        <div class="form-foot" style="justify-content:space-between">
-          <button type="button" class="btn btn-ghost" onclick="App.authShow('choice')">Voltar</button>
-          <button type="submit" class="btn btn-primary" id="regSaveBtn">Criar conta</button>
-        </div>
-        <p class="help-txt" style="text-align:center;margin-top:12px">Já tem conta? <a style="color:var(--marigold);font-weight:600;cursor:pointer" onclick="App.authShow('login')">Entrar</a></p>
-      </form>
-
-      <!-- minha conta -->
-      <div id="authAccount" class="hide">
-        <form onsubmit="App.saveAccount(event)">
-          <div class="field">
-            <label class="lab" for="accNome">Nome</label>
-            <input class="inp" id="accNome" placeholder="Seu nome">
-          </div>
-          <div class="field">
-            <label class="lab">WhatsApp (usuário)</label>
-            <div class="inp" style="background:var(--surface-2);color:var(--ink-soft)" id="accWhats">—</div>
-          </div>
-          <div class="field">
-            <label class="lab" for="accEmail">E-mail <span class="opt">(opcional)</span></label>
-            <input class="inp" id="accEmail" type="email" placeholder="voce@exemplo.com">
-          </div>
-          <div class="form-foot" style="justify-content:space-between">
-            <button type="button" class="btn btn-ghost" style="color:var(--danger);border-color:var(--danger-soft)" onclick="App.logout()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-              Sair
-            </button>
-            <button type="submit" class="btn btn-primary" id="accSaveBtn">Salvar dados</button>
-          </div>
-        </form>
-      </div>
-
     </div>
-  </div>
-</div>
-
-<!-- =============== MODAL: DETALHE =============== -->
-<div class="scrim" id="detailScrim">
-  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="dTitle">
-    <div class="modal-head">
-      <h2 id="dTitle">Detalhes do livro</h2>
-      <button class="xclose" onclick="App.closeDetail()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body" id="detailBody"></div>
-  </div>
-</div>
-
-<!-- =============== MODAL: CONCLUIR ANÚNCIO =============== -->
-<div class="scrim" id="finishScrim">
-  <div class="modal" style="max-width:420px" role="dialog" aria-modal="true" aria-labelledby="finishTitle">
-    <div class="modal-head">
-      <h2 id="finishTitle">Concluir anúncio</h2>
-      <button class="xclose" onclick="App.closeFinish()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--ink-soft);margin:0 0 18px;font-size:14.5px">Esse livro foi negociado (vendido, trocado ou doado) através do PassaLivro?</p>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <button class="btn btn-primary" style="justify-content:center;padding:14px" onclick="App.confirmFinish(true)">Sim, fiz negócio</button>
-        <button class="btn btn-ghost" style="justify-content:center;padding:14px" onclick="App.confirmFinish(false)">Não fiz negócio</button>
-        <button class="btn btn-ghost" style="justify-content:center;border:none;color:var(--ink-soft)" onclick="App.closeFinish()">Cancelar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- =============== LIGHTBOX (foto em tela cheia) =============== -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto em tela cheia">
-  <button class="lb-close" onclick="App.closeLightbox()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-  <button class="lb-nav prev" id="lbPrev" onclick="App.lightboxNav(-1)" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
-  <img id="lbImg" src="" alt="">
-  <button class="lb-nav next" id="lbNext" onclick="App.lightboxNav(1)" aria-label="Próxima"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
-  <div class="lb-count" id="lbCount"></div>
-</div>
-
-<!-- =============== MODAL: VÍDEO (YouTube no portal) =============== -->
-<div class="vidmodal" id="videoModal" role="dialog" aria-modal="true" aria-label="Vídeo">
-  <div class="vid-inner" id="videoInner">
-    <div class="vid-bar">
-      <span class="vid-title" id="videoTitle">Publicidade</span>
-      <div class="vid-actions">
-        <button class="vid-btn" onclick="App.videoFullscreen()" aria-label="Tela cheia" title="Tela cheia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
-        <button class="vid-btn" onclick="App.closeVideo()" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-      </div>
-    </div>
-    <div class="vid-frame" id="videoFrame"></div>
   </div>
 </div>
 
@@ -1099,8 +507,7 @@ service cloud.firestore {
 
 <script type="module">
 /* ============================================================
-   1) CONFIGURAÇÃO DO FIREBASE
-   --- COLE AQUI ---  (substitua os valores pelo seu firebaseConfig)
+   CONFIGURAÇÃO DO FIREBASE — use a MESMA do portal
    ============================================================ */
 const firebaseConfig = {
   apiKey: "AIzaSyB-vYs_Pld4DccL2TdiaIdRzFaF3aUxSSI",
@@ -1111,114 +518,25 @@ const firebaseConfig = {
   appId: "1:1070393055617:web:504874c5cfef1582a07080",
   measurementId: "G-BVG34858XJ"
 };
-/* ===================== fim da configuração ===================== */
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged,
-         createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
-         EmailAuthProvider, linkWithCredential, sendPasswordResetEmail }
-  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc,
-         onSnapshot, query, orderBy, serverTimestamp, getDoc, setDoc,
-         arrayUnion, arrayRemove }
-  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+/* (Opcional) restringe o painel a um e-mail. Deixe "" para não restringir no cliente
+   — a segurança real fica nas regras do Firestore de qualquer forma. */
+const ADMIN_EMAIL = "";
+/* ============================================================ */
 
 const isConfigured = !String(firebaseConfig.apiKey).startsWith("COLE_AQUI");
 
-let db=null, auth=null, uid=null, colRef=null, bannerRef=null;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp,
+         getDoc, setDoc, where, getDocs, getCountFromServer }
+  from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
 let usuariosRef=null, acessosRef=null, configRef=null;
-let CONFIG={prazoDias:0, limiteAnuncios:0};
-let BOOKS=[];           // anúncios vindos da nuvem
-let BANNERS=[];         // banners publicitários
-let adTopIdx=0, adTimer=null;
-let pendingPhotos=[];   // fotos do formulário (base64)
-let editingId=null;
-let showMine=false;
-let showFavs=false;
-let detailBook=null, galIndex=0;
-let finishingId=null;
-let USER_PROFILE=null;       // perfil da conta logada (nome, telefone, email, favoritos)
-let currentUser=null;        // usuário do Firebase Auth
-let isAnon=true;             // sessão anônima (apenas navegação)
-let FAVS=new Set();          // ids de livros favoritados
-let listenersReady=false;    // evita reassinar os snapshots
-const EMAIL_DOMAIN="passalivro.app"; // domínio sintético: o telefone é o "usuário"
-
 const $=id=>document.getElementById(id);
-const setNav=(name,on)=>document.querySelectorAll(`[data-nav="${name}"]`).forEach(el=>el.classList.toggle("active",on));
-const COVER_PALETTE=[
-  ["#1d5450","#173F3B"],["#e6a443","#cf7f25"],["#358a6c","#256f54"],
-  ["#3b6ea5","#2b5483"],["#a8556b","#8a3f53"],["#6b5b95","#4f4373"],
-  ["#c2703a","#a4582a"],["#4f7a8a","#3a5f6d"]
-];
-
-/* ---------------- util ---------------- */
-function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}return Math.abs(h);}
-function coverFor(b){const p=COVER_PALETTE[hashStr((b.titulo||"")+(b.disciplina||""))%COVER_PALETTE.length];return p;}
-function brl(n){return Number(n).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});}
-function tipoLabel(t){return t==="venda"?"À venda":t==="troca"?"Troca":"Doação";}
-
-function normalizePhone(raw){
-  let d=String(raw||"").replace(/\D/g,"");
-  if(d.startsWith("0"))d=d.replace(/^0+/,"");
-  if(!d.startsWith("55")&&(d.length===10||d.length===11))d="55"+d;
-  return d;
-}
-function waLink(b){
-  const phone=normalizePhone(b.whatsapp);
-  const tipoTxt=b.tipo==="venda"?`(anunciado por R$ ${brl(b.preco)})`
-              :b.tipo==="troca"?"(para troca)":"(doação)";
-  const msg=`Olá! Vi seu anúncio do livro "${b.titulo}" ${tipoTxt} no PassaLivro. Ainda está disponível? 🙂`;
-  return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-}
-
-/* ---------------- prazo / limite / acessos ---------------- */
-function dateStr(d=new Date()){
-  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
-}
-function isExpired(b){
-  if(!CONFIG.prazoDias||CONFIG.prazoDias<=0)return false;
-  if(b.status==="finalizado")return false;
-  const dias=(Date.now()-(b._t||Date.now()))/86400000;
-  return dias>CONFIG.prazoDias;
-}
-function activeCount(ownerUid){
-  return BOOKS.filter(b=>b.ownerId===ownerUid&&b.status!=="finalizado").length;
-}
-/* registra 1 acesso por usuário por dia (vale para qualquer visitante) */
-async function trackAccess(uidVal){
-  try{
-    const ds=dateStr();
-    await setDoc(doc(db,"acessos",`${ds}_${uidVal}`),{data:ds,uid:uidVal,ts:serverTimestamp()},{merge:true});
-  }catch(e){console.warn("acessos:",e);}
-}
-/* carrega o perfil da conta logada (nome, telefone, email, favoritos) */
-async function loadProfile(uidVal){
-  USER_PROFILE=null;FAVS=new Set();
-  try{
-    const snap=await getDoc(doc(db,"usuarios",uidVal));
-    if(snap.exists()){
-      USER_PROFILE=snap.data();
-      (USER_PROFILE.favoritos||[]).forEach(id=>FAVS.add(id));
-      if(USER_PROFILE.nome)localStorage.setItem("pl_nome",USER_PROFILE.nome);
-      if(USER_PROFILE.whatsapp)localStorage.setItem("pl_whats",USER_PROFILE.whatsapp);
-      if(USER_PROFILE.email)localStorage.setItem("pl_email",USER_PROFILE.email);
-    }
-  }catch(e){console.warn("perfil:",e);}
-  if(isRegistered()){
-    try{await setDoc(doc(db,"usuarios",uidVal),{ultimoAcesso:serverTimestamp()},{merge:true});}catch(e){}
-  }
-  App.updateRegBtn();
-}
-/* logado = conta real (não anônima) */
-function isRegistered(){return !!(currentUser&&!currentUser.isAnonymous);}
-function isValidEmail(s){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s||"").trim());}
-/* telefone vira o "usuário": e-mail sintético para o Firebase Auth */
-function phoneToEmail(raw){return `${normalizePhone(raw)}@${EMAIL_DOMAIN}`;}
-/* extrai o ID de um vídeo do YouTube a partir de vários formatos de link */
-function youtubeId(url){
+const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function ytId(url){
   if(!url)return "";
   const s=String(url).trim();
   if(/^[A-Za-z0-9_-]{11}$/.test(s))return s;
@@ -1227,1022 +545,452 @@ function youtubeId(url){
   m=s.match(/[?&]v=([A-Za-z0-9_-]{11})/);
   return m?m[1]:"";
 }
-/* deixa um texto seguro para usar dentro de uma string JS em atributo onclick="" */
-function jsAttr(s){
-  return String(s||"")
-    .replace(/\\/g,"\\\\").replace(/'/g,"\\'")
-    .replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;")
-    .replace(/\r?\n/g," ");
-}
 
-/* ---------------- toast ---------------- */
-function toast(msg,kind="",icon=""){
-  const t=document.createElement("div");
-  t.className="toast "+kind;
-  const ic=kind==="ok"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>'
-        :kind==="bad"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>'
-        :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
-  t.innerHTML=ic+"<span>"+escapeHtml(msg)+"</span>";
-  $("toasts").appendChild(t);
-  setTimeout(()=>{t.style.opacity="0";t.style.transform="translateY(10px)";setTimeout(()=>t.remove(),250);},3200);
+function toast(msg,kind=""){
+  const t=document.createElement("div");t.className="toast "+kind;
+  t.innerHTML=(kind==="ok"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>':kind==="bad"?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>':'')+"<span>"+esc(msg)+"</span>";
+  $("toasts").appendChild(t);setTimeout(()=>t.remove(),3200);
 }
+function msg(el,text,kind){el.className="msg show "+kind;el.textContent=text;}
+function clearMsg(el){el.className="msg";}
 
-/* ---------------- image compression ---------------- */
 function compress(file){
   return new Promise((res,rej)=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const img=new Image();
-      img.onload=()=>{
-        const max=900;let{width:w,height:h}=img;
-        if(w>h&&w>max){h=h*max/w;w=max;}else if(h>=w&&h>max){w=w*max/h;h=max;}
-        const c=document.createElement("canvas");c.width=w;c.height=h;
-        c.getContext("2d").drawImage(img,0,0,w,h);
-        let q=0.62,out=c.toDataURL("image/jpeg",q);
-        while(out.length>140000&&q>0.35){q-=0.1;out=c.toDataURL("image/jpeg",q);}
-        res(out);
-      };
-      img.onerror=rej;img.src=e.target.result;
-    };
-    reader.onerror=rej;reader.readAsDataURL(file);
+    const r=new FileReader();
+    r.onload=e=>{const img=new Image();img.onload=()=>{
+      const max=1280;let{width:w,height:h}=img;
+      if(w>h&&w>max){h=h*max/w;w=max;}else if(h>=w&&h>max){w=w*max/h;h=max;}
+      const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);
+      let q=0.7,out=c.toDataURL("image/jpeg",q);
+      while(out.length>230000&&q>0.35){q-=0.08;out=c.toDataURL("image/jpeg",q);}
+      res(out);
+    };img.onerror=rej;img.src=e.target.result;};
+    r.onerror=rej;r.readAsDataURL(file);
   });
 }
 
-/* ============================================================
-   App
-   ============================================================ */
-const App={
-  goHome(){showMine=false;showFavs=false;setNav("mine",false);setNav("favs",false);this.updateRegBtn();this.scrollToTop();this.render();},
-  scrollToTop(){window.scrollTo({top:0,behavior:"smooth"});},
-  scrollToList(){$("listTop").scrollIntoView({behavior:"smooth",block:"start"});},
+/* ---------------- util de data (acessos) ---------------- */
+function dateStr(d=new Date()){
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 
-  /* ---------- conta: login / cadastro / sair ---------- */
-  updateRegBtn(){
-    const lbl=$("regBtnLbl");if(!lbl)return;
-    const btn=$("regBtn");
-    if(isRegistered()){
-      lbl.textContent="";lbl.classList.add("hide");
-      btn.classList.add("icon-pill");
-      btn.title="Minha conta";btn.setAttribute("aria-label","Minha conta");
-    }else{
-      lbl.textContent="Entrar";lbl.classList.remove("hide");
-      btn.classList.remove("icon-pill");
-      btn.title="Entrar ou criar conta";btn.setAttribute("aria-label","Entrar");
-    }
-    // botão de favoritos
-    setNav("favs",showFavs);
-    setNav("home",!showFavs&&!showMine);
+const Panel={
+  toggleMode(){
+    signupMode=!signupMode;
+    $("loginTitle").textContent=signupMode?"Criar conta de administrador":"Acesso do administrador";
+    $("loginSub").textContent=signupMode?"Crie a conta que vai gerenciar os anúncios. Use o mesmo e-mail definido nas regras.":"Entre para gerenciar os anúncios exibidos no portal.";
+    $("loginBtn").textContent=signupMode?"Criar conta":"Entrar";
+    $("swapLine").innerHTML=signupMode?'Já tem conta? <a onclick="Panel.toggleMode()">Entrar</a>':'Primeiro acesso? <a onclick="Panel.toggleMode()">Criar conta de administrador</a>';
+    clearMsg($("loginMsg"));
   },
-  // ponto de entrada do botão "Entrar / Minha conta"
-  openRegister(afterCb){
-    if(!isConfigured){toast("Configure o Firebase para usar contas (veja o passo a passo no topo).","bad");return;}
-    this._afterAuth=(typeof afterCb==="function")?afterCb:null;
-    $("authErr").classList.remove("show");
-    $("regScrim").classList.add("open");document.body.style.overflow="hidden";
-    if(isRegistered())this.authShow("account");
-    else this.authShow("choice");
-  },
-  closeRegister(){$("regScrim").classList.remove("open");document.body.style.overflow="";this._afterAuth=null;},
-  authShow(view){
-    ["authChoice","authLogin","authRegister","authAccount","authForgot"].forEach(id=>$(id).classList.add("hide"));
-    $("authErr").classList.remove("show");
-    const titles={choice:"Entrar no PassaLivro",login:"Entrar na sua conta",register:"Criar uma conta",account:"Minha conta",forgot:"Recuperar senha"};
-    $("regTitle").textContent=titles[view]||"Entrar no PassaLivro";
-    if(view==="choice")$("authChoice").classList.remove("hide");
-    else if(view==="login"){
-      $("authLogin").classList.remove("hide");
-      $("loginWhats").value=localStorage.getItem("pl_email")||localStorage.getItem("pl_whats")||"";
-      setTimeout(()=>$("loginWhats").focus(),60);
-    }else if(view==="forgot"){
-      $("authForgot").classList.remove("hide");
-      $("forgotEmail").value=localStorage.getItem("pl_email")||"";
-      setTimeout(()=>$("forgotEmail").focus(),60);
-    }else if(view==="register"){
-      $("authRegister").classList.remove("hide");
-      $("regNome").value=localStorage.getItem("pl_nome")||"";
-      $("regWhats").value=localStorage.getItem("pl_whats")||"";
-      $("regEmail").value=localStorage.getItem("pl_email")||"";
-      $("regSenha").value="";
-      setTimeout(()=>$("regNome").focus(),60);
-    }else if(view==="account"){
-      $("authAccount").classList.remove("hide");
-      const p=USER_PROFILE||{};
-      $("accNome").value=p.nome||localStorage.getItem("pl_nome")||"";
-      $("accEmail").value=p.email||localStorage.getItem("pl_email")||"";
-      $("accWhats").textContent=p.whatsapp||localStorage.getItem("pl_whats")||"—";
-    }
-  },
-  authError(msg){const el=$("authErr");el.textContent=msg;el.classList.add("show");},
-
-  async doLogin(e){
-    e.preventDefault();
-    const id=$("loginWhats").value.trim();
-    const senha=$("loginSenha").value;
-    const byEmail=isValidEmail(id);
-    if(!id)return this.authError("Informe seu e-mail ou WhatsApp.");
-    if(!byEmail&&normalizePhone(id).length<12)return this.authError("Informe um e-mail válido ou um WhatsApp com DDD.");
-    if(!senha)return this.authError("Informe sua senha.");
-    const loginEmail=byEmail?id:phoneToEmail(id);
-    $("loginBtn").disabled=true;$("loginBtn").textContent="Entrando…";
+  async auth(){
+    const email=$("email").value.trim(),senha=$("senha").value;
+    if(!email||!senha)return msg($("loginMsg"),"Preencha e-mail e senha.","err");
+    if(ADMIN_EMAIL&&email.toLowerCase()!==ADMIN_EMAIL.toLowerCase())
+      return msg($("loginMsg"),"Este e-mail não é o administrador configurado.","err");
+    $("loginBtn").disabled=true;
     try{
-      await signInWithEmailAndPassword(auth,loginEmail,senha);
-      if(byEmail)localStorage.setItem("pl_email",id);else localStorage.setItem("pl_whats",id);
-      const cb=this._afterAuth;
-      toast("Bem-vindo de volta! 👋","ok");
-      this.closeRegister();
-      if(cb)setTimeout(cb,200);
-    }catch(err){
-      const m={"auth/invalid-credential":"E-mail/WhatsApp ou senha incorretos.",
-        "auth/wrong-password":"Senha incorreta.",
-        "auth/user-not-found":"Não há conta com esse e-mail/WhatsApp. Crie uma conta.",
-        "auth/too-many-requests":"Muitas tentativas. Tente de novo em alguns minutos.",
-        "auth/operation-not-allowed":"Ative o provedor E-mail/senha no Firebase (Authentication)."}[err.code];
-      this.authError(m||("Não foi possível entrar: "+(err.code||err.message)));
-    }finally{$("loginBtn").disabled=false;$("loginBtn").textContent="Entrar";}
+      if(signupMode)await createUserWithEmailAndPassword(auth,email,senha);
+      else await signInWithEmailAndPassword(auth,email,senha);
+    }catch(e){
+      const m={"auth/invalid-credential":"E-mail ou senha incorretos.","auth/wrong-password":"Senha incorreta.",
+        "auth/user-not-found":"Conta não encontrada. Use \"Criar conta\".","auth/email-already-in-use":"Já existe conta com esse e-mail. Use \"Entrar\".",
+        "auth/weak-password":"A senha precisa de ao menos 6 caracteres.","auth/invalid-email":"E-mail inválido.",
+        "auth/operation-not-allowed":"Ative o provedor E-mail/senha no Firebase (Authentication)."}[e.code];
+      msg($("loginMsg"),m||("Erro: "+e.code),"err");
+    }finally{$("loginBtn").disabled=false;}
+  },
+  logout(){signOut(auth);},
+
+  /* ---------- abas ---------- */
+  switchTab(name){
+    const map={overview:"tabOverview",users:"tabUsers",settings:"tabSettings",banners:"tabBanners"};
+    Object.entries(map).forEach(([k,id])=>$(id).classList.toggle("hide",k!==name));
+    document.querySelectorAll("#panelTabs .tabbtn").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+    if(name==="overview")this.loadOverview();
+    if(name==="users")this.loadUsers();
+    if(name==="settings")this.loadConfigForm();
   },
 
-  async doForgot(e){
-    e.preventDefault();
-    const email=$("forgotEmail").value.trim();
-    if(!isValidEmail(email))return this.authError("Informe o e-mail que você usou no cadastro.");
-    $("forgotBtn").disabled=true;$("forgotBtn").textContent="Enviando…";
+  /* ---------- usuários cadastrados ---------- */
+  async loadUsers(){
+    const wrap=$("usersList");
+    wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
+    $("usersEmpty").classList.add("hide");
     try{
-      await sendPasswordResetEmail(auth,email);
-      localStorage.setItem("pl_email",email);
-      toast("Enviamos um link de redefinição para o seu e-mail. 📧 Confira a caixa de entrada e o spam.","ok");
-      this.authShow("login");
-      $("loginWhats").value=email;
-    }catch(err){
-      const m={"auth/user-not-found":"Não encontramos uma conta com esse e-mail. Contas antigas que usaram só o WhatsApp não têm e-mail para recuperação.",
-        "auth/invalid-email":"E-mail inválido.",
-        "auth/too-many-requests":"Muitas tentativas. Tente de novo em alguns minutos.",
-        "auth/operation-not-allowed":"Ative o provedor E-mail/senha no Firebase (Authentication)."}[err.code];
-      this.authError(m||("Não foi possível enviar o link: "+(err.code||err.message)));
-    }finally{$("forgotBtn").disabled=false;$("forgotBtn").textContent="Enviar link";}
-  },
-
-  async doRegister(e){
-    e.preventDefault();
-    const nome=$("regNome").value.trim();
-    const whatsapp=$("regWhats").value.trim();
-    const email=$("regEmail").value.trim();
-    const senha=$("regSenha").value;
-    if(!nome)return this.authError("Informe seu nome.");
-    if(normalizePhone(whatsapp).length<12)return this.authError("Informe um WhatsApp válido com DDD.");
-    if(!isValidEmail(email))return this.authError("Informe um e-mail válido — é por ele que você recupera a senha.");
-    if(!senha||senha.length<6)return this.authError("A senha deve ter ao menos 6 caracteres.");
-    $("regSaveBtn").disabled=true;$("regSaveBtn").textContent="Criando…";
-    try{
-      const cred=EmailAuthProvider.credential(email,senha);
-      // Se há sessão anônima, promovemos ela para conta (mantém o MESMO uid,
-      // para que os anúncios criados continuem sendo do usuário). Senão, cria conta nova.
-      if(auth.currentUser&&auth.currentUser.isAnonymous){
-        try{
-          await linkWithCredential(auth.currentUser,cred);
-        }catch(linkErr){
-          if(linkErr.code==="auth/email-already-in-use"||linkErr.code==="auth/credential-already-in-use"){
-            // já existe conta com esse e-mail → entra nela
-            await signInWithEmailAndPassword(auth,email,senha);
-          }else throw linkErr;
-        }
-      }else{
-        await signInWithEmailAndPassword(auth,email,senha)
-          .catch(()=>createUserWithEmailAndPassword(auth,email,senha));
-      }
-      // grava/atualiza o perfil na conta atual (fica salvo na nuvem)
-      await setDoc(doc(db,"usuarios",auth.currentUser.uid),{
-        nome,whatsapp,email,cadastrado:true,
-        cadastradoEm:serverTimestamp(),ultimoAcesso:serverTimestamp()
-      },{merge:true});
-      currentUser=auth.currentUser;uid=auth.currentUser.uid;isAnon=false;
-      USER_PROFILE={...(USER_PROFILE||{}),nome,whatsapp,email,cadastrado:true};
-      localStorage.setItem("pl_nome",nome);localStorage.setItem("pl_whats",whatsapp);localStorage.setItem("pl_email",email);
-      this.updateRegBtn();
-      const cb=this._afterAuth;
-      toast("Conta criada! Agora você pode anunciar e favoritar. 🎉","ok");
-      this.closeRegister();
-      this.render();
-      if(cb)setTimeout(cb,200);
-    }catch(err){
-      const m={"auth/email-already-in-use":"Já existe uma conta com esse e-mail. Toque em \"Já tenho conta\".",
-        "auth/credential-already-in-use":"Esse e-mail já tem conta. Toque em \"Já tenho conta\".",
-        "auth/wrong-password":"Esse e-mail já tem conta, mas a senha não confere. Use \"Esqueci minha senha\".",
-        "auth/invalid-credential":"Esse e-mail já tem conta, mas a senha não confere. Use \"Esqueci minha senha\".",
-        "auth/weak-password":"A senha deve ter ao menos 6 caracteres.",
-        "auth/invalid-email":"O e-mail informado não é válido.",
-        "auth/operation-not-allowed":"Ative o provedor E-mail/senha no Firebase (Authentication)."}[err.code];
-      this.authError(m||("Não foi possível criar a conta: "+(err.code||err.message)));
-    }finally{$("regSaveBtn").disabled=false;$("regSaveBtn").textContent="Criar conta";}
-  },
-
-  async saveAccount(e){
-    e.preventDefault();
-    const nome=$("accNome").value.trim();
-    const email=$("accEmail").value.trim();
-    if(!nome)return this.authError("Informe seu nome.");
-    if(email&&!isValidEmail(email))return this.authError("O e-mail informado não é válido.");
-    $("accSaveBtn").disabled=true;$("accSaveBtn").textContent="Salvando…";
-    try{
-      await setDoc(doc(db,"usuarios",uid),{nome,email},{merge:true});
-      USER_PROFILE={...(USER_PROFILE||{}),nome,email};
-      localStorage.setItem("pl_nome",nome);localStorage.setItem("pl_email",email);
-      this.updateRegBtn();this.render();
-      toast("Dados atualizados.","ok");
-    }catch(err){console.error(err);this.authError("Não foi possível salvar os dados.");}
-    finally{$("accSaveBtn").disabled=false;$("accSaveBtn").textContent="Salvar dados";}
-  },
-
-  async logout(){
-    try{
-      await signOut(auth);
-      USER_PROFILE=null;FAVS=new Set();showMine=false;showFavs=false;
-      setNav("mine",false);
-      this.updateRegBtn();
-      toast("Você saiu da sua conta.","ok");
-      this.closeRegister();
-      // a sessão anônima volta automaticamente pelo onAuthStateChanged (boot)
-    }catch(err){console.error(err);toast("Não foi possível sair.","bad");}
-  },
-
-  /* ---------- favoritos ---------- */
-  isFav(id){return FAVS.has(id);},
-  async toggleFav(id,ev){
-    if(ev)ev.stopPropagation();
-    if(!isRegistered()){
-      toast("Entre na sua conta para favoritar livros.","");
-      this.openRegister(()=>this.toggleFav(id));
-      return;
-    }
-    const adding=!FAVS.has(id);
-    if(adding)FAVS.add(id);else FAVS.delete(id);
-    this.syncFavUI(id);
-    this.updateFavCount();
-    // atualiza o rótulo no detalhe se estiver aberto
-    if(detailBook&&detailBook.id===id&&$("detailScrim").classList.contains("open")){
-      $("detailBody").innerHTML=this.detailHTML(detailBook);
-    }
-    try{
-      await updateDoc(doc(db,"usuarios",uid),{favoritos:adding?arrayUnion(id):arrayRemove(id)});
-      USER_PROFILE=USER_PROFILE||{};USER_PROFILE.favoritos=[...FAVS];
-      toast(adding?"Adicionado aos favoritos ❤️":"Removido dos favoritos","ok");
+      const snap=await getDocs(query(usuariosRef,where("cadastrado","==",true)));
+      let users=snap.docs.map(d=>({id:d.id,...d.data()}));
+      // ordena pelos mais recentes (client-side, evita índice composto)
+      users.sort((a,b)=>{
+        const ta=a.cadastradoEm?.toMillis?a.cadastradoEm.toMillis():0;
+        const tb=b.cadastradoEm?.toMillis?b.cadastradoEm.toMillis():0;
+        return tb-ta;
+      });
+      if(!users.length){wrap.innerHTML="";$("usersEmpty").classList.remove("hide");return;}
+      wrap.innerHTML=users.map(u=>{
+        const nome=esc(u.nome||"(sem nome)");
+        const email=u.email?esc(u.email):"—";
+        const fone=esc(u.whatsapp||"");
+        const waDigits=String(u.whatsapp||"").replace(/\D/g,"");
+        const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
+        const data=u.cadastradoEm?.toMillis?new Date(u.cadastradoEm.toMillis()).toLocaleDateString("pt-BR"):"";
+        return `<div class="row">
+          <div class="thumb" style="width:46px;height:46px;border-radius:50%;background:var(--marigold-soft);color:#9a6512;font-size:17px">
+            ${esc((u.nome||"?").trim().charAt(0).toUpperCase()||"?")}
+          </div>
+          <div class="info">
+            <h3>${nome}</h3>
+            <div class="sub">${email}${fone?" • "+fone:""}</div>
+            <div class="pos">
+              ${waHref?`<a class="badge grade" style="text-decoration:none" href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+              ${data?`<span class="badge off">cadastrado em ${data}</span>`:""}
+            </div>
+          </div>
+        </div>`;
+      }).join("");
     }catch(err){
       console.error(err);
-      if(adding)FAVS.delete(id);else FAVS.add(id);
-      this.syncFavUI(id);this.updateFavCount();
-      if(detailBook&&detailBook.id===id&&$("detailScrim").classList.contains("open")){
-        $("detailBody").innerHTML=this.detailHTML(detailBook);
-      }
-      toast("Não foi possível atualizar os favoritos.","bad");
+      const code=err.code||err.message||"desconhecido";
+      wrap.innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+        <h3 style="color:var(--danger)">Não consegui carregar os usuários</h3>
+        <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+        <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> para o seu e-mail de administrador.</p></div>`;
     }
-    if(showFavs)this.render();
-  },
-  syncFavUI(id){
-    document.querySelectorAll(`.fav-btn[data-id="${id}"]`).forEach(b=>b.classList.toggle("on",FAVS.has(id)));
-  },
-  updateFavCount(){
-    const n=FAVS.size;
-    document.querySelectorAll(".favCountEl").forEach(el=>{el.textContent=n;el.classList.toggle("hide",n===0);});
-  },
-  toggleFavsView(){
-    if(!isRegistered()){
-      toast("Entre na sua conta para ver seus favoritos.","");
-      this.openRegister(()=>{showFavs=true;showMine=false;setNav("mine",false);this.updateRegBtn();this.render();this.scrollToList();});
-      return;
-    }
-    showFavs=!showFavs;if(showFavs){showMine=false;setNav("mine",false);}
-    this.updateRegBtn();this.render();this.scrollToList();
   },
 
-  /* ---------- form ---------- */
-  openForm(book=null){
-    if(!isConfigured){toast("Configure o Firebase para publicar (veja o passo a passo no topo).","bad");return;}
-    if(!isRegistered()){
-      toast("Entre na sua conta para anunciar.","");
-      this.openRegister(()=>this.openForm(book));
-      return;
+  /* ---------- visão geral: usuários e acessos ---------- */
+  async loadOverview(){
+    const box=$("overviewStats");
+    box.innerHTML=[["…","Usuários cadastrados"],["…","Acessos hoje"],["…","Acessos no mês"]]
+      .map(([n,l])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+    try{
+      const today=dateStr();
+      const now=new Date();
+      const monthStart=dateStr(new Date(now.getFullYear(),now.getMonth(),1));
+      const monthEnd=dateStr(new Date(now.getFullYear(),now.getMonth()+1,0));
+      const [uTotal,aHoje,aMes]=await Promise.all([
+        getCountFromServer(query(usuariosRef,where("cadastrado","==",true))),
+        getCountFromServer(query(acessosRef,where("data","==",today))),
+        getCountFromServer(query(acessosRef,where("data",">=",monthStart),where("data","<=",monthEnd)))
+      ]);
+      box.innerHTML=[
+        [uTotal.data().count,"Usuários cadastrados"],
+        [aHoje.data().count,"Acessos hoje"],
+        [aMes.data().count,"Acessos no mês"],
+      ].map(([n,l])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+    }catch(err){
+      console.error(err);
+      const code=err.code||err.message||"desconhecido";
+      box.innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+        <h3 style="color:var(--danger)">Não consegui carregar os números</h3>
+        <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+        <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> e <code>acessos</code> para o seu e-mail de administrador.</p></div>`;
     }
-    // edição: o anúncio precisa pertencer à conta atual (senão a regra do Firestore recusa o salvamento)
-    if(book&&book.ownerId&&book.ownerId!==uid){
-      toast("Este anúncio foi criado em outra sessão e não pode ser editado por esta conta.","bad");
-      return;
+    this.loadAccessChart();
+  },
+  async loadAccessChart(){
+    const wrap=$("accessBars");
+    wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
+    try{
+      const days=[];for(let i=13;i>=0;i--)days.push(dateStr(addDays(new Date(),-i)));
+      const snap=await getDocs(query(acessosRef,where("data",">=",days[0])));
+      const counts={};days.forEach(d=>counts[d]=0);
+      snap.forEach(d=>{const v=d.data().data;if(v in counts)counts[v]++;});
+      const max=Math.max(1,...days.map(d=>counts[d]));
+      wrap.innerHTML=days.map(d=>{
+        const v=counts[d],h=Math.max(4,Math.round((v/max)*100));
+        const label=d.slice(8,10)+"/"+d.slice(5,7);
+        return `<div class="bar-col" title="${d}: ${v} acesso(s)">
+                   <div class="bar" style="height:${h}px"></div>
+                   <span class="bar-l">${label}</span>
+                 </div>`;
+      }).join("");
+    }catch(err){
+      console.error(err);
+      wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Não foi possível carregar o gráfico de acessos.</p>`;
     }
-    editingId=book?book.id:null;
-    pendingPhotos=book?[...(book.fotos||[])]:[];
-    $("formTitle").textContent=book?"Editar anúncio":"Anunciar um livro";
-    $("saveBtn").textContent=book?"Salvar alterações":"Publicar anúncio";
-    $("editId").value=book?book.id:"";
-    $("titulo").value=book?.titulo||"";
-    $("autor").value=book?.autor||"";
-    $("editora").value=book?.editora||"";
-    $("disciplina").value=book?.disciplina||"";
-    $("serie").value=book?.serie||"";
-    $("edicao").value=book?.edicao||"";
-    $("genero").value=book?.genero||"";
-    $("edicaoG").value=book?.edicao||"";
-    $("descricao").value=book?.descricao||"";
-    $("preco").value=book?.preco??"";
-    $("trocaPor").value=book?.trocaPor||"";
-    $("nome").value=book?.nome||(USER_PROFILE&&USER_PROFILE.nome)||localStorage.getItem("pl_nome")||"";
-    $("whats").value=book?.whatsapp||(USER_PROFILE&&USER_PROFILE.whatsapp)||localStorage.getItem("pl_whats")||"";
-    $("cidade").value=book?.cidade||localStorage.getItem("pl_cidade")||"";
-    (document.querySelector(`#estadoSeg input[value="${book?.estado||'Seminovo'}"]`)||{}).checked=true;
-    (document.querySelector(`#tipoSeg input[value="${book?.tipo||'venda'}"]`)||{}).checked=true;
-    (document.querySelector(`#categoriaSeg input[value="${book?.categoria||'escolar'}"]`)||{}).checked=true;
-    this.onCategoria();this.onTipo();this.renderThumbs();
-    $("formErr").classList.remove("show");
+  },
+
+  /* ---------- configurações: prazo e limite ---------- */
+  async loadConfigForm(){
+    clearMsg($("cfgMsg"));
+    try{
+      const snap=await getDoc(configRef);
+      const d=snap.exists()?snap.data():{};
+      $("cfgPrazo").value=d.prazoDias??0;
+      $("cfgLimite").value=d.limiteAnuncios??0;
+    }catch(err){console.error(err);}
+  },
+  async saveConfig(e){
+    e.preventDefault();
+    const prazoDias=Math.max(0,parseInt($("cfgPrazo").value||"0",10));
+    const limiteAnuncios=Math.max(0,parseInt($("cfgLimite").value||"0",10));
+    $("cfgSaveBtn").disabled=true;
+    try{
+      await setDoc(configRef,{prazoDias,limiteAnuncios,updatedAt:serverTimestamp()},{merge:true});
+      msg($("cfgMsg"),"Configurações salvas. Já valem para todos os anúncios.","ok");
+      toast("Configurações atualizadas.","ok");
+    }catch(err){
+      console.error(err);
+      msg($("cfgMsg"),err.code==="permission-denied"?"Sem permissão. Confira se seu e-mail está nas regras do Firestore para 'config'.":"Erro ao salvar: "+(err.code||err.message),"err");
+    }finally{$("cfgSaveBtn").disabled=false;}
+  },
+
+  /* ---- form ---- */
+  openForm(ad=null){
+    editing=ad?ad.id:null;pendingImg=ad?ad.imagem||null:null;
+    $("formTitle").textContent=ad?"Editar banner":"Novo banner";
+    $("saveBtn").textContent=ad?"Salvar alterações":"Publicar banner";
+    $("editId").value=ad?ad.id:"";
+    $("titulo").value=ad?.titulo||"";$("descricao").value=ad?.descricao||"";$("link").value=ad?.link||"";
+    $("ordem").value=ad?.ordem??0;$("ativo").checked=ad?ad.ativo!==false:true;
+    // prazo individual do banner
+    $("validoAte").value=ad?.validoAte||"";
+    $("tempoBanner").value=ad?.tempoBanner??6;
+    // tipo de mídia (imagem / vídeo) + link do vídeo
+    (document.querySelector(`#midiaSeg input[value="${ad?.tipoMidia||'imagem'}"]`)||{}).checked=true;
+    $("videoUrl").value=ad?.videoUrl||"";
+    // escurecimento da imagem (scrim): novos banners começam em 35; existentes respeitam o valor salvo
+    const scrim=ad?(ad.overlayScrim!=null?ad.overlayScrim:0):35;
+    $("overlayScrim").value=scrim;
+    $("scrimVal").textContent=scrim+"%";
+    // overlay de texto
+    $("overlayTitulo").value=ad?.overlayTitulo||"";
+    $("overlaySub").value=ad?.overlaySub||"";
+    $("overlayFont").value=ad?.overlayFont||"DM Sans";
+    $("overlaySize").value=ad?.overlaySize||28;
+    $("overlayColor").value=ad?.overlayColor||"#ffffff";
+    $("overlaySubColor").value=ad?.overlaySubColor||"#f0f0f0";
+    $("overlayColorHex").textContent=ad?.overlayColor||"#ffffff";
+    $("overlaySubColorHex").textContent=ad?.overlaySubColor||"#f0f0f0";
+    $("togBold").classList.toggle("on",!!ad?.overlayBold);
+    $("togItalic").classList.toggle("on",!!ad?.overlayItalic);
+    $("togShadow").classList.toggle("on",ad?.overlayShadow!==false);
+    Panel.setOverlayPos(ad?.overlayPos||"mid-center");
+    (document.querySelector(`#posSeg input[value="${ad?.posicao||'topo'}"]`)||{}).checked=true;
+    clearMsg($("formMsg"));this.syncMidia();this.syncPreview();
     $("formScrim").classList.add("open");document.body.style.overflow="hidden";
-    setTimeout(()=>$("titulo").focus(),60);
   },
   closeForm(){$("formScrim").classList.remove("open");document.body.style.overflow="";},
-  onTipo(){
-    const t=document.querySelector('#tipoSeg input:checked').value;
-    $("precoField").classList.toggle("hide",t!=="venda");
-    $("trocaField").classList.toggle("hide",t!=="troca");
+  syncMidia(){
+    const v=document.querySelector('#midiaSeg input:checked')?.value||'imagem';
+    $("videoField").classList.toggle("hide",v!=='video');
+    this.syncPreview();
   },
-  onCategoria(){
-    const c=document.querySelector('#categoriaSeg input:checked').value;
-    const escolar=c==="escolar";
-    $("escolarFields").classList.toggle("hide",!escolar);
-    $("geralFields").classList.toggle("hide",escolar);
-    // campos required só valem quando visíveis (escondidos com required travam o submit)
-    $("disciplina").required=escolar;
-    $("serie").required=escolar;
-    $("genero").required=!escolar;
+  async pickImage(e){
+    const f=e.target.files[0];e.target.value="";if(!f)return;
+    try{pendingImg=await compress(f);this.syncPreview();}catch{toast("Não consegui processar a imagem.","bad");}
   },
-  async addPhotos(e){
-    const files=[...e.target.files];e.target.value="";
-    for(const f of files){
-      if(pendingPhotos.length>=3){toast("Máximo de 3 fotos por anúncio.");break;}
-      if(!f.type.startsWith("image/"))continue;
-      try{pendingPhotos.push(await compress(f));}catch{toast("Não consegui processar uma das imagens.","bad");}
-    }
-    this.renderThumbs();
-  },
-  renderThumbs(){
-    $("thumbs").innerHTML=pendingPhotos.map((src,i)=>
-      `<div class="thumb"><img src="${src}" alt="foto ${i+1}"><button type="button" onclick="App.removePhoto(${i})" aria-label="Remover">&times;</button></div>`
-    ).join("");
-  },
-  removePhoto(i){pendingPhotos.splice(i,1);this.renderThumbs();},
-
-  async saveBook(e){
-    e.preventDefault();
-    const tipo=document.querySelector('#tipoSeg input:checked').value;
-    const categoria=document.querySelector('#categoriaSeg input:checked').value;
-    const preco=parseFloat($("preco").value||"0");
-    if(categoria==="escolar"){
-      if(!$("disciplina").value.trim())return this.formError("Informe a disciplina do livro escolar.");
-      if(!$("serie").value.trim())return this.formError("Informe a série / ano do livro escolar.");
+  syncPreview(){
+    const pos=document.querySelector('#posSeg input:checked').value;
+    const p=$("preview");p.className="prev "+pos;
+    const midia=document.querySelector('#midiaSeg input:checked')?.value||'imagem';
+    const lbl=$("dropLbl");if(lbl)lbl.textContent=pendingImg?"Imagem carregada — toque para trocar":"Toque para enviar a imagem";
+    // atualiza hex labels
+    const oc=$("overlayColor"),osc=$("overlaySubColor");
+    if(oc){$("overlayColorHex").textContent=oc.value;}
+    if(osc){$("overlaySubColorHex").textContent=osc.value;}
+    // escurecimento
+    const scrim=Math.min(85,Math.max(0,parseInt($("overlayScrim")?.value||"0",10)));
+    if($("scrimVal"))$("scrimVal").textContent=scrim+"%";
+    const vid=midia==='video'?ytId($("videoUrl")?.value||""):"";
+    const bg=pendingImg||(vid?`https://img.youtube.com/vi/${vid}/hqdefault.jpg`:"");
+    if(bg){
+      const otxt=$("overlayTitulo")?.value||"";
+      const osub=$("overlaySub")?.value||"";
+      const font=$("overlayFont")?.value||"DM Sans";
+      const size=parseInt($("overlaySize")?.value||"28",10);
+      const color=oc?.value||"#ffffff";
+      const subColor=osc?.value||"#f0f0f0";
+      const bold=$("togBold")?.classList.contains("on");
+      const italic=$("togItalic")?.classList.contains("on");
+      const shadow=$("togShadow")?.classList.contains("on");
+      const overlayPos=document.querySelector("#posGrid .pos-cell.on")?.dataset.pos||"mid-center";
+      const posStyle=Panel.overlayPosStyle(overlayPos);
+      const shadowStyle=shadow?"text-shadow:1px 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.4)":"";
+      const overlayHTML=(otxt||osub)?`<div class="overlay-txt" style="z-index:2;${posStyle}font-family:'${font}',sans-serif;${shadowStyle}">
+        ${otxt?`<div style="font-size:${size}px;color:${color};font-weight:${bold?700:400};font-style:${italic?'italic':'normal'};line-height:1.2">${esc(otxt)}</div>`:""}
+        ${osub?`<div style="font-size:${Math.round(size*0.6)}px;color:${subColor};font-weight:${bold?600:400};font-style:${italic?'italic':'normal'};margin-top:4px">${esc(osub)}</div>`:""}
+      </div>`:"";
+      const scrimHTML=scrim>0?`<div style="position:absolute;inset:0;background:rgba(0,0,0,${scrim/100});z-index:1"></div>`:"";
+      const playHTML=vid?`<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:54px;height:54px;border-radius:50%;background:rgba(20,40,37,.62);display:grid;place-items:center;color:#fff"><svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg></div>`:"";
+      p.innerHTML=`<img src="${bg}" alt="prévia">${scrimHTML}${overlayHTML}${playHTML}`;
     }else{
-      if(!$("genero").value.trim())return this.formError("Informe o gênero / categoria do livro.");
-    }
-    if(tipo==="venda"&&(!preco||preco<=0)){return this.formError("Informe um preço maior que zero para venda.");}
-    if(tipo==="troca"&&!$("trocaPor").value.trim()){return this.formError("Diga o que você aceita em troca.");}
-    if(!editingId&&CONFIG.limiteAnuncios>0&&activeCount(uid)>=CONFIG.limiteAnuncios){
-      return this.formError(`Você já atingiu o limite de ${CONFIG.limiteAnuncios} anúncios ativos. Conclua ou remova um anúncio para publicar outro.`);
-    }
-
-    const data={
-      titulo:$("titulo").value.trim(),
-      autor:$("autor").value.trim(),
-      editora:$("editora").value.trim(),
-      categoria,
-      disciplina:categoria==="escolar"?$("disciplina").value.trim():"",
-      serie:categoria==="escolar"?$("serie").value.trim():"",
-      genero:categoria==="geral"?$("genero").value.trim():"",
-      edicao:(categoria==="escolar"?$("edicao").value:$("edicaoG").value).trim(),
-      estado:document.querySelector('#estadoSeg input:checked').value,
-      tipo,
-      preco:tipo==="venda"?preco:0,
-      trocaPor:tipo==="troca"?$("trocaPor").value.trim():"",
-      descricao:$("descricao").value.trim(),
-      fotos:pendingPhotos,
-      nome:$("nome").value.trim(),
-      whatsapp:$("whats").value.trim(),
-      cidade:$("cidade").value.trim(),
-      ownerId:uid
-    };
-    // payload guard (limite do documento Firestore = 1 MB)
-    if(JSON.stringify(data).length>950000){return this.formError("As fotos ficaram grandes demais. Remova uma imagem e tente de novo.");}
-
-    localStorage.setItem("pl_nome",data.nome);
-    localStorage.setItem("pl_whats",data.whatsapp);
-    localStorage.setItem("pl_cidade",data.cidade);
-
-    $("saveBtn").disabled=true;$("saveBtn").textContent="Salvando…";
-    try{
-      if(editingId){
-        await updateDoc(doc(db,"livros",editingId),data);
-        toast("Anúncio atualizado.","ok");
-      }else{
-        await addDoc(colRef,{...data,status:"ativo",negocioFechado:null,finalizadoEm:null,createdAt:serverTimestamp()});
-        toast("Anúncio publicado! Já está visível para as famílias.","ok");
-      }
-      this.closeForm();
-    }catch(err){
-      console.error(err);
-      const code=err.code||err.message||"";
-      if(code.includes("permission-denied")){
-        this.formError("Sem permissão para salvar este anúncio. Ele pode ter sido criado em outra conta/sessão. Tente publicá-lo novamente como um anúncio novo.");
-      }else if(code.includes("unavailable")||code.includes("network")){
-        this.formError("Falha de conexão. Verifique sua internet e tente novamente.");
-      }else{
-        this.formError("Não foi possível salvar: "+code);
-      }
-    }finally{
-      $("saveBtn").disabled=false;
-      $("saveBtn").textContent=editingId?"Salvar alterações":"Publicar anúncio";
+      const extra=vid?"":(midia==='video'?" — cole o link do YouTube":"");
+      p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}${extra}</div>`;
     }
   },
-  formError(msg){const el=$("formErr");el.textContent=msg;el.classList.add("show");el.scrollIntoView({behavior:"smooth",block:"center"});},
-
-  async removeBook(id){
-    const b=BOOKS.find(x=>x.id===id);if(!b)return;
-    if(!confirm(`Remover o anúncio "${b.titulo}"? Isso não pode ser desfeito.`))return;
-    try{await deleteDoc(doc(db,"livros",id));toast("Anúncio removido.","ok");this.closeDetail();}
-    catch(err){console.error(err);toast("Não foi possível remover.","bad");}
-  },
-
-  /* ---------- concluir / reabrir anúncio ---------- */
-  openFinish(id){finishingId=id;$("finishScrim").classList.add("open");document.body.style.overflow="hidden";},
-  closeFinish(){$("finishScrim").classList.remove("open");document.body.style.overflow="";finishingId=null;},
-  async confirmFinish(negocio){
-    if(!finishingId)return;
-    try{
-      await updateDoc(doc(db,"livros",finishingId),{status:"finalizado",negocioFechado:negocio,finalizadoEm:serverTimestamp()});
-      toast(negocio?"Anúncio concluído — que bom que rolou negócio! 🎉":"Anúncio concluído.","ok");
-    }catch(err){console.error(err);toast("Não foi possível concluir o anúncio.","bad");}
-    this.closeFinish();this.closeDetail();
-  },
-  async reabrir(id){
-    try{
-      await updateDoc(doc(db,"livros",id),{status:"ativo",negocioFechado:null,finalizadoEm:null});
-      toast("Anúncio reaberto.","ok");
-    }catch(err){console.error(err);toast("Não foi possível reabrir o anúncio.","bad");}
-  },
-
-  /* ---------- filters ---------- */
-  toggleMine(){showMine=!showMine;if(showMine)showFavs=false;setNav("mine",showMine);this.updateRegBtn();this.render();this.scrollToList();},
-  clearFilters(){["q","fCategoria","fDisc","fSerie","fGenero","fTipo","fEstado"].forEach(id=>$(id).value="");$("fSort").value="recent";this.render();},
-
-  populateFilters(){
-    const escolares=BOOKS.filter(b=>(b.categoria||"escolar")==="escolar");
-    const gerais=BOOKS.filter(b=>b.categoria==="geral");
-    const discs=[...new Set(escolares.map(b=>b.disciplina).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt"));
-    const series=[...new Set(escolares.map(b=>b.serie).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt",{numeric:true}));
-    const generos=[...new Set(gerais.map(b=>b.genero).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt"));
-    const keep=(sel,vals,first)=>{const cur=sel.value;sel.innerHTML=`<option value="">${first}</option>`+vals.map(v=>`<option ${v===cur?"selected":""}>${escapeHtml(v)}</option>`).join("");};
-    keep($("fDisc"),discs,"Todas as disciplinas");
-    keep($("fSerie"),series,"Todas as séries");
-    keep($("fGenero"),generos,"Todos os gêneros");
-    // mostra o filtro de gênero só quando há livros gerais
-    $("fGeneroWrap").classList.toggle("hide",generos.length===0);
-  },
-
-  filtered(){
-    const q=$("q").value.trim().toLowerCase();
-    const fC=$("fCategoria").value,fD=$("fDisc").value,fS=$("fSerie").value,fG=$("fGenero").value;
-    const fT=$("fTipo").value,fE=$("fEstado").value,sort=$("fSort").value;
-    let list=BOOKS.filter(b=>{
-      const cat=b.categoria||"escolar";
-      if(showFavs){
-        if(!FAVS.has(b.id))return false;   // mostra favoritos em qualquer status
-      }else if(showMine){
-        if(b.ownerId!==uid)return false;
-      }else{
-        if(b.ownerId!==uid&&b.status==="finalizado")return false;
-        if(b.ownerId!==uid&&isExpired(b))return false;
-      }
-      if(fC&&cat!==fC)return false;
-      if(fD&&b.disciplina!==fD)return false;
-      if(fS&&b.serie!==fS)return false;
-      if(fG&&b.genero!==fG)return false;
-      if(fT&&b.tipo!==fT)return false;
-      if(fE&&b.estado!==fE)return false;
-      if(q){const blob=`${b.titulo} ${b.autor} ${b.disciplina} ${b.editora} ${b.serie} ${b.genero||""}`.toLowerCase();if(!blob.includes(q))return false;}
-      return true;
-    });
-    if(sort==="priceA")list.sort((a,b)=>(a.tipo==="venda"?a.preco:1e12)-(b.tipo==="venda"?b.preco:1e12));
-    else if(sort==="priceD")list.sort((a,b)=>(b.tipo==="venda"?b.preco:-1)-(a.tipo==="venda"?a.preco:-1));
-    else list.sort((a,b)=>(b._t||0)-(a._t||0));
-    return list;
-  },
-
-  render(){
-    if(!isConfigured)return;
-    this.populateFilters();
-    this.updateFavCount();
-    const list=this.filtered();
-    const anyFilter=$("q").value||$("fCategoria").value||$("fDisc").value||$("fSerie").value||$("fGenero").value||$("fTipo").value||$("fEstado").value;
-    $("clearF").classList.toggle("show",!!anyFilter||$("fSort").value!=="recent");
-
-    // stats (sobre os livros disponíveis — sem contar finalizados/expirados)
-    const disponiveis=BOOKS.filter(b=>b.status!=="finalizado"&&!isExpired(b));
-    $("statBooks").textContent=disponiveis.length;
-    $("statTroca").textContent=disponiveis.filter(b=>b.tipo==="troca").length;
-    $("statDoa").textContent=disponiveis.filter(b=>b.tipo==="doacao").length;
-
-    const grid=$("grid");
-    if(!list.length){
-      grid.innerHTML="";
-      $("resultLine").textContent="";
-      const es=$("emptyState");es.classList.remove("hide");
-      if(showFavs){$("emptyTitle").textContent="Você ainda não favoritou livros";$("emptyText").textContent="Toque no coração de um livro para salvá-lo aqui e combinar o negócio depois.";}
-      else if(showMine){$("emptyTitle").textContent="Você ainda não tem anúncios";$("emptyText").textContent="Os livros que você publicar aparecem aqui para gerenciar.";}
-      else if(anyFilter){$("emptyTitle").textContent="Nenhum livro com esses filtros";$("emptyText").textContent="Tente ampliar a busca ou limpar os filtros.";}
-      else{$("emptyTitle").textContent="Ainda não há livros por aqui";$("emptyText").textContent="Seja a primeira família a anunciar. Cadastre um livro que você não usa mais e ajude alguém da escola.";}
-      return;
-    }
-    $("emptyState").classList.add("hide");
-    const limiteTxt=(showMine&&CONFIG.limiteAnuncios>0)?` — ${activeCount(uid)} de ${CONFIG.limiteAnuncios} anúncios ativos usados`:"";
-    const escopo=showFavs?" — seus favoritos":showMine?" — seus anúncios":"";
-    $("resultLine").innerHTML=`<b>${list.length}</b> ${list.length===1?"livro":"livros"}${escopo}${limiteTxt}`;
-    // intercala anúncios "grade" entre os cartões de livros
-    const gradeAds=BANNERS.filter(a=>a.posicao==="grade");
-    const cells=[];let ai=0;
-    list.forEach((b,i)=>{
-      cells.push(this.cardHTML(b));
-      if(gradeAds.length && (i+1)%6===0 && i<list.length-1){
-        cells.push(this.adCardHTML(gradeAds[ai%gradeAds.length]));ai++;
-      }
-    });
-    grid.innerHTML=cells.join("");
-  },
-
-  /* ----- publicidade ----- */
-  adClickAttrs(){return 'target="_blank" rel="noopener sponsored"';},
-  adHref(a){return a.link?`href="${escapeHtml(a.link)}"`:'href="#" onclick="return false"';},
-
-  /* Verifica prazo individual do banner (campo validoAte = timestamp Firestore ou ISO string) */
-  adValido(a){
-    if(!a.validoAte) return true; // sem prazo = sempre válido
-    let ts;
-    if(a.validoAte?.toMillis) ts=a.validoAte.toMillis();           // Firestore Timestamp
-    else if(a.validoAte?.seconds) ts=a.validoAte.seconds*1000;     // objeto {seconds}
-    else ts=new Date(a.validoAte).getTime();                        // string ISO ou Date
-    return Date.now() <= ts;
-  },
-
   overlayPosStyle(pos){
     const map={
-      "top-left":   "top:12px;left:14px;text-align:left;",
+      "top-left":   "top:12px;left:12px;text-align:left;",
       "top-center": "top:12px;left:50%;transform:translateX(-50%);text-align:center;",
-      "top-right":  "top:12px;right:14px;text-align:right;",
-      "mid-left":   "top:50%;left:14px;transform:translateY(-50%);text-align:left;",
+      "top-right":  "top:12px;right:12px;text-align:right;",
+      "mid-left":   "top:50%;left:12px;transform:translateY(-50%);text-align:left;",
       "mid-center": "top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;",
-      "mid-right":  "top:50%;right:14px;transform:translateY(-50%);text-align:right;",
-      "bot-left":   "bottom:14px;left:14px;text-align:left;",
-      "bot-center": "bottom:14px;left:50%;transform:translateX(-50%);text-align:center;",
-      "bot-right":  "bottom:14px;right:14px;text-align:right;",
+      "mid-right":  "top:50%;right:12px;transform:translateY(-50%);text-align:right;",
+      "bot-left":   "bottom:12px;left:12px;text-align:left;",
+      "bot-center": "bottom:12px;left:50%;transform:translateX(-50%);text-align:center;",
+      "bot-right":  "bottom:12px;right:12px;text-align:right;",
     };
     return map[pos]||map["mid-center"];
   },
-  /* imagem de fundo do slide: capa enviada ou, em vídeo sem capa, a miniatura do YouTube */
-  adMediaBg(a){
-    if(a.imagem) return a.imagem;
-    const vid=youtubeId(a.videoUrl);
-    return vid?`https://img.youtube.com/vi/${vid}/hqdefault.jpg`:"";
-  },
-  /* camada escura semitransparente sobre a imagem (legibilidade do texto) */
-  adScrimHTML(a){
-    const s=Math.min(85,Math.max(0,Number(a.overlayScrim)||0));
-    return s>0?`<div class="ad-scrim" style="background:rgba(0,0,0,${s/100})"></div>`:"";
-  },
-  adIsVideo(a){return a.tipoMidia==="video" && !!youtubeId(a.videoUrl);},
-  adOverlayHTML(a){
-    if(!this.adMediaBg(a)||(!a.overlayTitulo&&!a.overlaySub)) return "";
-    const size=Math.min(72,Math.max(12,a.overlaySize||28));
-    const subSize=Math.round(size*0.6);
-    const font=escapeHtml(a.overlayFont||"DM Sans");
-    const color=escapeHtml(a.overlayColor||"#ffffff");
-    const subColor=escapeHtml(a.overlaySubColor||"#f0f0f0");
-    const fw=a.overlayBold?700:400;
-    const fwSub=a.overlayBold?600:400;
-    const fs=a.overlayItalic?"italic":"normal";
-    const shadow=a.overlayShadow!==false?"text-shadow:1px 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.4)":"";
-    const posStyle=this.overlayPosStyle(a.overlayPos||"mid-center");
-    const titleHTML=a.overlayTitulo
-      ? `<div style="font-size:${size}px;color:${color};font-weight:${fw};font-style:${fs};line-height:1.2;${shadow}">${escapeHtml(a.overlayTitulo)}</div>` : "";
-    const subHTML=a.overlaySub
-      ? `<div style="font-size:${subSize}px;color:${subColor};font-weight:${fwSub};font-style:${fs};margin-top:4px;${shadow}">${escapeHtml(a.overlaySub)}</div>` : "";
-    return `<div style="position:absolute;z-index:2;max-width:75%;line-height:1.25;pointer-events:none;word-break:break-word;font-family:'${font}',sans-serif;${posStyle}">${titleHTML}${subHTML}</div>`;
-  },
-  adSlideHTML(a, idx, total){
-    const bg=this.adMediaBg(a);
-    const cls=`ad-slide${bg?'':' no-img'}${idx===0?' active':''}`;
-    if(this.adIsVideo(a)){
-      const vid=youtubeId(a.videoUrl);
-      const media=bg
-        ? `<img src="${bg}" alt="${escapeHtml(a.titulo||'Vídeo')}" loading="lazy">`
-        : `<div class="at">${escapeHtml(a.titulo||'Assista ao vídeo')}</div>`;
-      return `<a class="${cls}" data-idx="${idx}" href="#" role="button"
-                onclick="App.openVideo('${vid}','${jsAttr(a.titulo||'')}');return false;">
-                ${media}${this.adScrimHTML(a)}${this.adOverlayHTML(a)}
-                <span class="ad-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span></a>`;
-    }
-    const inner=a.imagem
-      ? `<img src="${a.imagem}" alt="${escapeHtml(a.titulo||'Publicidade')}" loading="lazy">${this.adScrimHTML(a)}${this.adOverlayHTML(a)}`
-      : `<div class="at">${escapeHtml(a.titulo||'Seu anúncio aqui')}</div>${a.descricao?`<div class="ad-cta">${escapeHtml(a.descricao)}</div>`:''}`;
-    return `<a class="${cls}" data-idx="${idx}" ${this.adHref(a)} ${this.adClickAttrs()}>${inner}</a>`;
-  },
-
-  adCardHTML(a){
-    const bg=this.adMediaBg(a);
-    const isVid=this.adIsVideo(a);
-    const cover=bg
-      ? `<div class="ad-cover"><span class="ad-tag">Publicidade</span><img src="${bg}" alt="${escapeHtml(a.titulo||'Publicidade')}" loading="lazy">${this.adScrimHTML(a)}${isVid?'<span class="ad-play sm"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>':''}</div>`
-      : `<div class="ad-cover no-img"><span class="ad-tag">Publicidade</span>${escapeHtml(a.titulo||'Publicidade')}</div>`;
-    const open=isVid
-      ? `href="#" role="button" onclick="App.openVideo('${youtubeId(a.videoUrl)}','${jsAttr(a.titulo||'')}');return false;"`
-      : `${this.adHref(a)} ${this.adClickAttrs()}`;
-    const cta=a.descricao||(isVid?'Assistir ao vídeo':'Saiba mais');
-    return `<a class="ad-card" ${open}>
-        ${cover}
-        <div class="ad-meta"><div class="at">${escapeHtml(a.titulo||'Publicidade')}</div>
-        <span class="ad-cta">${escapeHtml(cta)} <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div></a>`;
-  },
-
-  buildCarousel(slot, wrap, slotEl){
-    // filtra banners válidos (ativos + dentro do prazo individual)
-    const list = BANNERS.filter(a => a.posicao === slot && a.ativo !== false && this.adValido(a));
-    if(!list.length){ wrap.classList.add("hide"); return; }
-    wrap.classList.remove("hide");
-
-    const slides = list.map((a,i) => this.adSlideHTML(a, i, list.length)).join("");
-    const dots = list.length > 1
-      ? `<div class="ad-dots">${list.map((_,i)=>`<button class="${i===0?'on':''}" data-di="${i}" aria-label="Anúncio ${i+1}"></button>`).join("")}</div>`
-      : "";
-    slotEl.innerHTML = `<div class="ad-carousel">${slides}${dots}</div>`;
-
-    if(list.length <= 1) return; // sem carrossel necessário
-
-    const carousel = slotEl.querySelector(".ad-carousel");
-    let cur = 0;
-    const reduced = matchMedia("(prefers-reduced-motion:reduce)").matches;
-
-    function goTo(n){
-      const slides = carousel.querySelectorAll(".ad-slide");
-      const dots   = carousel.querySelectorAll(".ad-dots button");
-      slides[cur].classList.remove("active");
-      dots[cur]?.classList.remove("on");
-      cur = (n + list.length) % list.length;
-      slides[cur].classList.add("active");
-      dots[cur]?.classList.add("on");
-    }
-
-    // clique nas bolinhas
-    carousel.querySelectorAll(".ad-dots button").forEach(btn=>{
-      btn.addEventListener("click", e => { e.preventDefault(); goTo(+btn.dataset.di); });
+  toggleTog(id){$(id).classList.toggle("on");},
+  setOverlayPos(pos){
+    document.querySelectorAll("#posGrid .pos-cell").forEach(el=>{
+      el.classList.toggle("on",el.dataset.pos===pos);
     });
+    this.syncPreview();
+  },
+  async save(e){
+    e.preventDefault();
+    const data={
+      titulo:$("titulo").value.trim(),descricao:$("descricao").value.trim(),link:$("link").value.trim(),
+      posicao:document.querySelector('#posSeg input:checked').value,
+      ordem:parseInt($("ordem").value||"0",10),ativo:$("ativo").checked,
+      imagem:pendingImg||"",updatedAt:serverTimestamp(),
+      validoAte:$("validoAte").value||null,
+      tempoBanner:Math.max(3,parseInt($("tempoBanner").value||"6",10)),
+      // overlay de texto sobre a imagem
+      overlayTitulo:$("overlayTitulo").value.trim(),
+      overlaySub:$("overlaySub").value.trim(),
+      overlayFont:$("overlayFont").value||"DM Sans",
+      overlaySize:Math.min(72,Math.max(12,parseInt($("overlaySize").value||"28",10))),
+      overlayColor:$("overlayColor").value||"#ffffff",
+      overlaySubColor:$("overlaySubColor").value||"#f0f0f0",
+      overlayBold:$("togBold").classList.contains("on"),
+      overlayItalic:$("togItalic").classList.contains("on"),
+      overlayShadow:$("togShadow").classList.contains("on"),
+      overlayPos:document.querySelector("#posGrid .pos-cell.on")?.dataset.pos||"mid-center",
+      // escurecimento da imagem (legibilidade do texto)
+      overlayScrim:Math.min(85,Math.max(0,parseInt($("overlayScrim").value||"0",10))),
+      // tipo de mídia + vídeo do YouTube
+      tipoMidia:document.querySelector('#midiaSeg input:checked')?.value||"imagem",
+      videoUrl:$("videoUrl").value.trim(),
+    };
+    if(!data.titulo)return msg($("formMsg"),"Informe um título.","err");
+    if(data.tipoMidia==="video"&&!ytId(data.videoUrl))
+      return msg($("formMsg"),"Cole um link válido do YouTube (ex.: https://youtu.be/ID ou https://www.youtube.com/watch?v=ID).","err");
+    if(JSON.stringify(data).length>980000)return msg($("formMsg"),"A imagem ficou grande demais. Use uma menor.","err");
+    $("saveBtn").disabled=true;
+    try{
+      if(editing)await updateDoc(doc(db,"banners",editing),data);
+      else await addDoc(ref,{...data,createdAt:serverTimestamp()});
+      toast(editing?"Banner atualizado.":"Banner publicado.","ok");this.closeForm();
+    }catch(err){
+      console.error(err);
+      msg($("formMsg"),err.code==="permission-denied"?"Sem permissão. Confira se seu e-mail está nas regras do Firestore para 'banners'.":"Erro ao salvar: "+(err.code||err.message),"err");
+    }finally{$("saveBtn").disabled=false;}
+  },
+  async toggleActive(id,val){
+    try{await updateDoc(doc(db,"banners",id),{ativo:val,updatedAt:serverTimestamp()});}
+    catch(err){toast("Não foi possível alterar o status.","bad");this.render();}
+  },
+  async remove(id){
+    const a=ADS.find(x=>x.id===id);if(!a)return;
+    if(!confirm(`Excluir o banner "${a.titulo}"?`))return;
+    try{await deleteDoc(doc(db,"banners",id));toast("Banner excluído.","ok");}
+    catch(err){toast("Não foi possível excluir.","bad");}
+  },
 
-    // auto-avanço com intervalo baseado em bannerInterval (padrão 6 s)
-    if(!reduced){
-      // usa o prazo de cada banner para definir o tempo no slide (campo tempoBanner em segundos, padrão 6)
-      function scheduleNext(){
-        const a = list[cur];
-        const secs = (a.tempoBanner && a.tempoBanner > 0) ? Math.max(3, a.tempoBanner) : 6;
-        return setTimeout(()=>{ goTo(cur+1); scheduleNext._timer = scheduleNext(); }, secs * 1000);
+  /* ---- render ---- */
+  render(){
+    const posName={topo:"Topo da lista",grade:"Na grade",rodape:"Rodapé"};
+    $("stats").innerHTML=[
+      ["Total",ADS.length],["No ar",ADS.filter(a=>a.ativo!==false).length],
+      ["Topo",ADS.filter(a=>a.posicao==="topo").length],
+      ["Grade",ADS.filter(a=>a.posicao==="grade").length],
+      ["Rodapé",ADS.filter(a=>a.posicao==="rodape").length],
+    ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+
+    if(!ADS.length){$("list").innerHTML="";$("emptyState").classList.remove("hide");return;}
+    $("emptyState").classList.add("hide");
+    $("list").innerHTML=ADS.map(a=>{
+      const vid=a.tipoMidia==="video"?ytId(a.videoUrl):"";
+      const thumb=a.imagem?`<img src="${a.imagem}" alt="">`:(vid?`<img src="https://img.youtube.com/vi/${vid}/hqdefault.jpg" alt="">`:`<span>sem imagem</span>`);
+      const on=a.ativo!==false;
+      // prazo: verifica se expirou
+      let prazoBadge="";
+      if(a.validoAte){
+        const expired=new Date(a.validoAte)<new Date(new Date().toDateString());
+        const label=new Date(a.validoAte).toLocaleDateString("pt-BR");
+        prazoBadge=`<span class="badge ${expired?'off':'grade'}">${expired?"Expirado em":"Até"} ${label}</span>`;
       }
-      scheduleNext._timer = scheduleNext();
-      // guarda referência no elemento para limpar ao re-renderizar
-      slotEl._cleanupTimer = ()=>clearTimeout(scheduleNext._timer);
-    }
-  },
-
-  renderAds(){
-    // limpa timers anteriores
-    ["adTopSlot","adFootSlot"].forEach(id=>{ const el=$(id); if(el?._cleanupTimer){ el._cleanupTimer(); el._cleanupTimer=null; }});
-
-    this.buildCarousel("topo",  $("adTopWrap"),  $("adTopSlot"));
-    this.buildCarousel("rodape",$("adFootWrap"), $("adFootSlot"));
-  },
-
-  adGo(i){ /* mantido por compatibilidade — não usado no novo carrossel */ },
-
-  /* ----- player de vídeo (YouTube) dentro do portal ----- */
-  openVideo(id,title){
-    if(!id)return;
-    $("videoTitle").textContent=title||"Publicidade";
-    $("videoFrame").innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1&modestbranding=1" title="${escapeHtml(title||'Vídeo')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
-    $("videoModal").classList.add("open");
-    document.body.style.overflow="hidden";
-  },
-  closeVideo(){
-    if(document.fullscreenElement){try{document.exitFullscreen();}catch(e){}}
-    $("videoModal").classList.remove("open");
-    $("videoFrame").innerHTML="";          // interrompe a reprodução
-    document.body.style.overflow="";
-  },
-  videoFullscreen(){
-    const el=$("videoInner");
-    const req=el.requestFullscreen||el.webkitRequestFullscreen||el.msRequestFullscreen;
-    if(req){req.call(el);return;}
-    // iOS Safari: o iframe entra em tela cheia pelo player nativo
-    const ifr=$("videoFrame").querySelector("iframe");
-    if(ifr&&ifr.webkitEnterFullscreen)ifr.webkitEnterFullscreen();
-  },
-
-  cardHTML(b){
-    const [c1,c2]=coverFor(b);
-    const isGeral=b.categoria==="geral";
-    const subAssunto=isGeral?(b.genero||""):`${b.disciplina||""}${b.serie?" · "+b.serie:""}`;
-    const cover=b.fotos&&b.fotos.length
-      ? `<img src="${b.fotos[0]}" alt="${escapeHtml(b.titulo)}" loading="lazy">
-         ${b.fotos.length>1?`<span class="photocount"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>${b.fotos.length}</span>`:""}`
-      : `<div class="cover-gen" style="background:linear-gradient(150deg,${c1},${c2})">
-           <svg class="cg-ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M3 4.5C3 4.5 6 3.2 9 4.2C11 4.9 12 6 12 6V20C12 20 11 18.9 9 18.2C6 17.2 3 18.5 3 18.5V4.5Z"/><path d="M21 4.5C21 4.5 18 3.2 15 4.2C13 4.9 12 6 12 6V20C12 20 13 18.9 15 18.2C18 17.2 21 18.5 21 18.5V4.5Z"/></svg>
-           <div class="cg-t">${escapeHtml(b.titulo)}</div>
-           <div class="cg-a">${escapeHtml(subAssunto)}</div>
-         </div>`;
-    const priceHTML=b.tipo==="venda"
-      ? `<div class="price">R$ ${brl(b.preco)}</div>`
-      : b.tipo==="troca"
-        ? `<div class="price troca">Troca</div>`
-        : `<div class="price doacao">Doação</div>`;
-    const mine=b.ownerId===uid;
-    const finalizado=b.status==="finalizado";
-    const expirado=isExpired(b);
-    const encerrado=finalizado||expirado;
-    const statusBadge=finalizado
-      ? `<span class="badge status-fim" style="top:auto;bottom:11px;left:11px;right:auto">${b.negocioFechado?"Negócio fechado":"Concluído"}</span>`
-      : expirado?`<span class="badge status-exp" style="top:auto;bottom:11px;left:11px;right:auto">Expirado</span>`:"";
-    const favBtn=`<button class="fav-btn${this.isFav(b.id)?' on':''}" data-id="${b.id}" onclick="App.toggleFav('${b.id}',event)" aria-label="Favoritar" title="Favoritar">
-        <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-      </button>`;
-    const footHTML=encerrado
-      ? `<div class="mini" style="flex:1;justify-content:center;background:var(--surface-2);color:var(--ink-soft);cursor:default">Anúncio encerrado</div>`
-      : `<a class="wa-btn" href="${waLink(b)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
-          WhatsApp
-        </a>`;
-    const ownerActions=finalizado
-      ? `<button class="mini" onclick="App.reabrir('${b.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 16v-4h4"/></svg>Reabrir</button>
-         <button class="mini del" onclick="App.removeBook('${b.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>Excluir</button>`
-      : `<button class="mini edit" onclick="App.editFromCard('${b.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar</button>
-         <button class="mini fim" onclick="App.openFinish('${b.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Concluir</button>
-         <button class="mini del" onclick="App.removeBook('${b.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>Excluir</button>`;
-    return `
-      <article class="card" onclick="App.openDetail('${b.id}')">
-        <div class="cover">
-          <span class="badge ${b.tipo}">${tipoLabel(b.tipo)}</span>
-          ${statusBadge}
-          ${favBtn}
-          ${cover}
-        </div>
-        <div class="card-body">
-          <h3>${escapeHtml(b.titulo)}</h3>
-          ${b.autor?`<div class="card-author">${escapeHtml(b.autor)}</div>`:""}
-          <div class="meta">
-            ${isGeral
-              ? (b.genero?`<span class="chip">${escapeHtml(b.genero)}</span>`:"")
-              : `${b.disciplina?`<span class="chip">${escapeHtml(b.disciplina)}</span>`:""}
-                 ${b.serie?`<span class="chip">${escapeHtml(b.serie)}</span>`:""}`}
-            <span class="chip">${escapeHtml(b.estado)}</span>
+      return `<div class="row">
+        <div class="thumb">${thumb}</div>
+        <div class="info">
+          <h3>${esc(a.titulo)}</h3>
+          <div class="sub">${a.link?esc(a.link):"sem link"}${a.descricao?" • "+esc(a.descricao):""}</div>
+          <div class="pos">
+            <span class="badge ${a.posicao}">${posName[a.posicao]||a.posicao}</span>
+            ${vid?`<span class="badge grade">▶ Vídeo</span>`:""}
+            <span class="badge ${on?'on':'off'}">${on?"No ar":"Pausado"}</span>
+            <span class="badge off">ordem ${a.ordem??0}</span>
+            ${prazoBadge}
+            ${a.tempoBanner&&a.tempoBanner!==6?`<span class="badge off">${a.tempoBanner}s no slide</span>`:""}
           </div>
         </div>
-        ${mine?`<div class="owner-row" onclick="event.stopPropagation()"><div class="owner-actions">
-            ${ownerActions}
-          </div></div>`:""}
-        <div class="card-foot">
-          ${priceHTML}
-          ${footHTML}
+        <div class="acts">
+          <label class="switch" title="Ativar/pausar"><input type="checkbox" ${on?"checked":""} onchange="Panel.toggleActive('${a.id}',this.checked)"><span class="slider"></span></label>
+          <button class="iconbtn" title="Editar" onclick="Panel.editById('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
+          <button class="iconbtn del" title="Excluir" onclick="Panel.remove('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
         </div>
-      </article>`;
+      </div>`;
+    }).join("");
   },
-  editFromCard(id){const b=BOOKS.find(x=>x.id===id);if(b)this.openForm(b);},
-
-  /* ---------- detail ---------- */
-  openDetail(id){
-    const b=BOOKS.find(x=>x.id===id);if(!b)return;
-    detailBook=b;galIndex=0;
-    $("detailBody").innerHTML=this.detailHTML(b);
-    $("detailScrim").classList.add("open");document.body.style.overflow="hidden";
-  },
-  closeDetail(){$("detailScrim").classList.remove("open");document.body.style.overflow="";detailBook=null;},
-  gal(dir){
-    if(!detailBook?.fotos?.length)return;
-    const n=detailBook.fotos.length;galIndex=(galIndex+dir+n)%n;
-    $("detailBody").querySelector(".detail-gallery img").src=detailBook.fotos[galIndex];
-    $("detailBody").querySelectorAll(".gal-dots i").forEach((d,i)=>d.classList.toggle("on",i===galIndex));
-  },
-  /* ----- lightbox (tela cheia) ----- */
-  openLightbox(){
-    if(!detailBook?.fotos?.length)return;
-    this._renderLightbox();
-    $("lightbox").classList.add("open");
-    document.body.style.overflow="hidden";
-  },
-  closeLightbox(){$("lightbox").classList.remove("open");if($("detailScrim").classList.contains("open"))document.body.style.overflow="hidden";},
-  lightboxNav(dir){
-    if(!detailBook?.fotos?.length)return;
-    const n=detailBook.fotos.length;galIndex=(galIndex+dir+n)%n;
-    this._renderLightbox();
-    // mantém a galeria do detalhe sincronizada
-    const dimg=$("detailBody").querySelector(".detail-gallery img");if(dimg)dimg.src=detailBook.fotos[galIndex];
-    $("detailBody").querySelectorAll(".gal-dots i").forEach((d,i)=>d.classList.toggle("on",i===galIndex));
-  },
-  _renderLightbox(){
-    const fotos=detailBook.fotos,n=fotos.length;
-    $("lbImg").src=fotos[galIndex];
-    $("lbImg").alt=detailBook.titulo||"";
-    const multi=n>1;
-    $("lbPrev").style.display=multi?"":"none";
-    $("lbNext").style.display=multi?"":"none";
-    $("lbCount").style.display=multi?"":"none";
-    $("lbCount").textContent=multi?`${galIndex+1} / ${n}`:"";
-  },
-  detailHTML(b){
-    const [c1,c2]=coverFor(b);
-    const isGeral=b.categoria==="geral";
-    const subAssunto=isGeral?(b.genero||""):`${b.disciplina||""}${b.serie?" · "+b.serie:""}`;
-    const gallery=b.fotos&&b.fotos.length
-      ? `<div class="detail-gallery" onclick="App.openLightbox()">
-           <img src="${b.fotos[0]}" alt="${escapeHtml(b.titulo)}">
-           <span class="zoom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>Toque para ampliar</span>
-           ${b.fotos.length>1?`
-             <button class="gal-nav prev" onclick="event.stopPropagation();App.gal(-1)" aria-label="Anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
-             <button class="gal-nav next" onclick="event.stopPropagation();App.gal(1)" aria-label="Próxima"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
-             <div class="gal-dots">${b.fotos.map((_,i)=>`<i class="${i===0?'on':''}"></i>`).join("")}</div>`:""}
-         </div>`
-      : `<div class="detail-gallery" style="cursor:default"><div class="cover-gen" style="background:linear-gradient(150deg,${c1},${c2});min-height:100%">
-           <div class="cg-t" style="font-size:26px">${escapeHtml(b.titulo)}</div>
-           <div class="cg-a">${escapeHtml(subAssunto)}</div></div></div>`;
-    const priceBand=b.tipo==="venda"
-      ? `<div class="price-band"><div><div class="pb-label">Preço</div><div class="pb-price">R$ ${brl(b.preco)}</div></div></div>`
-      : b.tipo==="troca"
-        ? `<div class="price-band"><div><div class="pb-label">Disponível para</div><div class="pb-price troca">Troca${b.trocaPor?" por outro livro":""}</div></div></div>`
-        : `<div class="price-band"><div><div class="pb-label">Disponível para</div><div class="pb-price doacao">Doação — gratuito</div></div></div>`;
-    const subParts=[];
-    if(isGeral){if(b.genero)subParts.push(escapeHtml(b.genero));}
-    else{if(b.disciplina)subParts.push(escapeHtml(b.disciplina));if(b.serie)subParts.push(escapeHtml(b.serie));}
-    if(b.autor)subParts.push(escapeHtml(b.autor));
-    const subLine=subParts.length?`<div class="detail-sub">${subParts.join('<span class="sep">·</span>')}</div>`:"";
-    // itens organizados em grade
-    const items=[
-      isGeral?["Gênero / categoria",b.genero]:["Disciplina",b.disciplina],
-      isGeral?null:["Série / Ano",b.serie],
-      ["Autor",b.autor],["Editora",b.editora],["Edição",b.edicao],
-      ["Conservação",b.estado],
-      b.tipo==="troca"?["Aceita em troca",b.trocaPor]:null,
-      ["Anunciante",b.nome],["Local",b.cidade]
-    ].filter(r=>r&&r[1]);
-    const infoGrid=`<div class="info-grid">${items.map(([k,v],i)=>
-      `<div class="info-item${k==="Aceita em troca"||k==="Local"?" full":""}"><div class="k">${k}</div><div class="v">${escapeHtml(v)}</div></div>`
-    ).join("")}</div>`;
-    const mine=b.ownerId===uid;
-    const finalizado=b.status==="finalizado";
-    const expirado=isExpired(b);
-    const encerrado=finalizado||expirado;
-    const statusLine=finalizado
-      ? `<div class="help-txt" style="background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 14px;font-weight:600;color:var(--ink)">
-          ${b.negocioFechado?"✅ Negócio fechado através do PassaLivro":"Anúncio concluído — sem negócio fechado"}
-        </div>`
-      : expirado?`<div class="help-txt" style="background:var(--danger-soft);border:1px solid var(--danger-soft);border-radius:10px;padding:10px 12px;margin:0 0 14px;font-weight:600;color:var(--danger)">
-          Prazo de exibição deste anúncio expirou
-        </div>`:"";
-    const waBlock=encerrado
-      ? `<div class="btn detail-wa" style="width:100%;justify-content:center;background:var(--surface-2);color:var(--ink-soft);box-shadow:none;border:1px solid var(--line)">Anúncio encerrado — fora de exibição</div>`
-      : `<a class="btn wa-btn detail-wa" href="${waLink(b)}" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.3s1 2.7 1.1 2.9c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
-        Falar com ${escapeHtml((b.nome||"o anunciante").split(" ")[0])} no WhatsApp
-      </a>`;
-    const ownerBlock=mine?(finalizado
-      ? `<div style="display:flex;gap:10px;margin-top:12px">
-          <button class="btn btn-ghost" style="flex:1" onclick="App.reabrir('${b.id}');App.closeDetail();">Reabrir anúncio</button>
-          <button class="btn btn-ghost" style="flex:1;color:var(--danger);border-color:var(--danger-soft)" onclick="App.removeBook('${b.id}')">Excluir</button>
-        </div>`
-      : `<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-          <button class="btn btn-ghost" style="flex:1" onclick="App.openDetailEdit()">Editar anúncio</button>
-          <button class="btn btn-primary" style="flex:1" onclick="App.openFinish('${b.id}')">Concluir anúncio</button>
-          <button class="btn btn-ghost" style="flex:1;color:var(--danger);border-color:var(--danger-soft)" onclick="App.removeBook('${b.id}')">Excluir</button>
-        </div>`):"";
-    return `
-      ${gallery}
-      <div class="detail-head">
-        <div class="detail-badges">
-          <span class="badge ${b.tipo}" style="position:static">${tipoLabel(b.tipo)}</span>
-          ${finalizado?`<span class="badge status-fim" style="position:static">${b.negocioFechado?"Negócio fechado":"Concluído"}</span>`:""}
-          ${expirado?`<span class="badge status-exp" style="position:static">Expirado</span>`:""}
-        </div>
-        <h2>${escapeHtml(b.titulo)}</h2>
-        ${subLine}
-      </div>
-      ${priceBand}
-      ${statusLine}
-      <div class="detail-section-title">Informações do livro</div>
-      ${infoGrid}
-      ${b.descricao?`<div class="detail-section-title">Sobre o livro</div><div class="detail-desc">${escapeHtml(b.descricao)}</div>`:""}
-      <div style="margin-top:16px">
-        <button class="fav-btn detail${this.isFav(b.id)?' on':''}" data-id="${b.id}" onclick="App.toggleFav('${b.id}',event)">
-          <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-          <span>${this.isFav(b.id)?"Nos seus favoritos":"Adicionar aos favoritos"}</span>
-        </button>
-      </div>
-      ${waBlock}
-      ${ownerBlock}`;
-  },
-  openDetailEdit(){const b=detailBook;this.closeDetail();this.openForm(b);},
+  editById(id){const a=ADS.find(x=>x.id===id);if(a)this.openForm(a);},
 };
-window.App=App;
+window.Panel=Panel;
+$("ativo").addEventListener("change",e=>$("ativoLbl").textContent=e.target.checked?"Ativo (no ar)":"Pausado");
+["titulo","descricao"].forEach(id=>$(id).addEventListener("input",()=>Panel.syncPreview()));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")Panel.closeForm();});
+$("formScrim").addEventListener("click",e=>{if(e.target===$("formScrim"))Panel.closeForm();});
+$("email").addEventListener("keydown",e=>{if(e.key==="Enter")$("senha").focus();});
+$("senha").addEventListener("keydown",e=>{if(e.key==="Enter")Panel.auth();});
 
-/* fecha modais com ESC / clique no fundo */
-document.addEventListener("keydown",e=>{
-  if($("videoModal").classList.contains("open")){
-    if(e.key==="Escape")App.closeVideo();
-    return;
-  }
-  if($("lightbox").classList.contains("open")){
-    if(e.key==="Escape")App.closeLightbox();
-    else if(e.key==="ArrowLeft")App.lightboxNav(-1);
-    else if(e.key==="ArrowRight")App.lightboxNav(1);
-    return;
-  }
-  if(e.key==="Escape"){App.closeForm();App.closeDetail();App.closeFinish();App.closeRegister();}
-});
-$("lightbox").addEventListener("click",e=>{if(e.target===$("lightbox"))App.closeLightbox();});
-$("videoModal").addEventListener("click",e=>{if(e.target===$("videoModal"))App.closeVideo();});
-$("formScrim").addEventListener("click",e=>{if(e.target===$("formScrim"))App.closeForm();});
-$("detailScrim").addEventListener("click",e=>{if(e.target===$("detailScrim"))App.closeDetail();});
-$("finishScrim").addEventListener("click",e=>{if(e.target===$("finishScrim"))App.closeFinish();});
-$("regScrim").addEventListener("click",e=>{if(e.target===$("regScrim"))App.closeRegister();});
-
-/* ============================================================
-   Boot
-   ============================================================ */
-function showSetup(){
-  $("setupCard").classList.remove("hide");
-  $("heroSection").classList.add("hide");
-  $("listTop").classList.add("hide");
-  $("cloudDot").classList.add("hide");
-  $("loadingState").classList.add("hide");
+/* ---- boot ---- */
+function showLogin(){$("loginCard").classList.remove("hide");$("dash").classList.add("hide");$("whoami").classList.add("hide");$("logoutBtn").classList.add("hide");}
+function showDash(email){
+  $("loginCard").classList.add("hide");$("dash").classList.remove("hide");
+  $("whoami").textContent=email;$("whoami").classList.remove("hide");$("logoutBtn").classList.remove("hide");
+  Panel.switchTab("overview");
 }
 
-if(!isConfigured){
-  showSetup();
-}else{
-  $("loadingState").classList.remove("hide");
-  try{
-    const app=initializeApp(firebaseConfig);
-    auth=getAuth(app);db=getFirestore(app);colRef=collection(db,"livros");bannerRef=collection(db,"banners");
-    usuariosRef=collection(db,"usuarios");acessosRef=collection(db,"acessos");configRef=doc(db,"config","geral");
-
-    onSnapshot(configRef,snap=>{
-      const d=snap.exists()?snap.data():{};
-      CONFIG={prazoDias:Number(d.prazoDias)||0,limiteAnuncios:Number(d.limiteAnuncios)||0};
-      App.render();
-    },err=>console.warn("config:",err));
-
-    // assina os snapshots de livros/banners uma única vez (leitura é pública)
-    function startListeners(){
-      if(listenersReady)return;listenersReady=true;
-      const qy=query(colRef,orderBy("createdAt","desc"));
-      onSnapshot(qy,snap=>{
-        BOOKS=snap.docs.map(d=>{
-          const data=d.data();
-          const t=data.createdAt?.toMillis?data.createdAt.toMillis():Date.now();
-          return {id:d.id,...data,_t:t};
-        });
-        $("loadingState").classList.add("hide");
-        App.render();
+if(!isConfigured){$("setupCard").classList.remove("hide");}
+else{
+  // App NOMEADO: isola a sessão do painel da sessão (anônima) do portal,
+  // que vive no app padrão e estava trocando esta tela de login pelo dashboard.
+  const app=initializeApp(firebaseConfig,"passalivro-painel");
+  auth=getAuth(app);db=getFirestore(app);ref=collection(db,"banners");
+  usuariosRef=collection(db,"usuarios");acessosRef=collection(db,"acessos");configRef=doc(db,"config","geral");
+  let bannersSubReady=false;
+  onAuthStateChanged(auth,user=>{
+    // só consideramos administrador uma conta real (não anônima)
+    if(user&&!user.isAnonymous){
+      showDash(user.email);
+      if(bannersSubReady)return;bannersSubReady=true;
+      onSnapshot(query(ref,orderBy("ordem","asc")),snap=>{
+        ADS=snap.docs.map(d=>({id:d.id,...d.data()}));
+        ADS.sort((a,b)=>(a.ordem??0)-(b.ordem??0));
+        Panel.render();
       },err=>{
         console.error(err);
-        $("loadingState").classList.add("hide");
-        toast("Erro ao ler os dados. Confira as regras do Firestore.","bad");
+        const code=err.code||err.message||"desconhecido";
+        const dica=code.includes("permission-denied")
+          ? "As regras do Firestore não estão liberando a leitura de 'banners'. Publique o bloco de regras completo (livros + banners)."
+          : code.includes("failed-precondition")
+          ? "Falta um índice no Firestore. Abra o link que aparece no Console (F12) para criá-lo."
+          : "Erro de conexão com o Firestore. Recarregue a página.";
+        $("list").innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
+          <h3 style="color:var(--danger)">Não consegui ler os banners</h3>
+          <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
+          <p>${esc(dica)}</p></div>`;
+        $("emptyState").classList.add("hide");
+        toast("Erro ao ler banners: "+code,"bad");
       });
-      onSnapshot(query(bannerRef,orderBy("ordem","asc")),snap=>{
-        BANNERS=snap.docs.map(d=>({id:d.id,...d.data()})).filter(a=>a.ativo!==false);
-        App.renderAds();
-        App.render();
-      },err=>console.warn("banners:",err));
-    }
-
-    onAuthStateChanged(auth,async user=>{
-      if(user){
-        currentUser=user;uid=user.uid;isAnon=user.isAnonymous;
-        trackAccess(uid);
-        if(!isAnon){await loadProfile(uid);}
-        else{USER_PROFILE=null;FAVS=new Set();}
-        App.updateRegBtn();
-        startListeners();
-        App.render();
-      }else{
-        // sem sessão → entra anonimamente para navegar e contabilizar acessos
-        currentUser=null;USER_PROFILE=null;FAVS=new Set();
-        try{await signInAnonymously(auth);}
-        catch(err){
-          console.error(err);
-          $("loadingState").classList.add("hide");
-          toast("Ative o login Anônimo no Firebase (Authentication).","bad");
-        }
-      }
-    });
-    // Nada de signInAnonymously incondicional aqui: se houver um usuário
-    // logado salvo, ele é restaurado; só entramos anonimamente pelo "else" acima.
-  }catch(err){
-    console.error(err);
-    $("loadingState").classList.add("hide");
-    toast("Configuração do Firebase inválida. Revise o firebaseConfig.","bad");
-  }
+    }else{showLogin();}
+  });
 }
 </script>
 </body>
