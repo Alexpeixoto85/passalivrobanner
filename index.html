@@ -88,17 +88,17 @@
   /* configurações */
   .cfgcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;box-shadow:var(--shadow);max-width:520px}
 
-  .list{display:flex;flex-direction:column;gap:12px}
-  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;gap:16px;
-    align-items:center;box-shadow:var(--shadow);transition:box-shadow .15s}
-  .row:hover{box-shadow:var(--shadow-lg)}
-  .row .thumb{width:160px;height:72px;border-radius:10px;overflow:hidden;background:var(--surface-2);flex:none;
+  .list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.list{grid-template-columns:1fr}}
+  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:16px;
+    align-items:center;box-shadow:var(--shadow)}
+  .row .thumb{width:150px;height:64px;border-radius:10px;overflow:hidden;background:var(--surface-2);flex:none;
     border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-soft);font-size:12px;font-weight:600;text-align:center}
   .row .thumb img{width:100%;height:100%;object-fit:cover}
   .row .info{flex:1;min-width:0}
-  .row .info h3{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
-  .row .info .sub{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .row .info .pos{display:inline-flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .row .info h3{font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .sub{font-size:13px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .pos{display:inline-flex;gap:6px;margin-top:6px;flex-wrap:wrap}
   .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.2px}
   .badge.topo{background:var(--marigold-soft);color:#9a6512}
   .badge.grade{background:var(--trade-soft);color:var(--trade)}
@@ -170,18 +170,6 @@
   .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--line);margin-top:8px}
   .help-txt{font-size:12px;color:var(--ink-soft);margin-top:6px}
 
-  .user-list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-  .search-box{position:relative;flex:1;max-width:340px}
-  .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-soft);pointer-events:none}
-  .search-box input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line-strong);border-radius:11px;background:var(--surface);font-family:inherit;font-size:14px;color:var(--text)}
-  .search-box input:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px rgba(23,63,59,.1)}
-  .users-count{font-size:13px;color:var(--ink-soft);font-weight:500;white-space:nowrap}
-  .banner-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
-  .filter-btn{background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;padding:6px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;transition:.12s}
-  .filter-btn:hover{background:var(--surface-2)}
-  .filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .iconbtn.del2:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
-
   .toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:10px;width:calc(100% - 32px);max-width:420px}
   .toast{background:var(--ink);color:#fff;padding:14px 18px;border-radius:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:11px;font-size:14px;font-weight:500}
   .toast.ok{background:var(--trade)}.toast.bad{background:var(--danger)}
@@ -195,7 +183,6 @@
     .field.row2{grid-template-columns:1fr}
     .row{flex-wrap:wrap}.row .thumb{width:100%;height:120px}.row .acts{margin-left:auto}
     .head h1{font-size:24px}
-    .user-list-head{flex-wrap:wrap;gap:10px}
   }
 </style>
 </head>
@@ -273,13 +260,6 @@
         <p>Pessoas que se cadastraram para anunciar no portal.</p>
       </div>
     </div>
-    <div class="user-list-head">
-      <div class="search-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="search" id="usersSearch" placeholder="Buscar por nome, e-mail ou WhatsApp…" oninput="Panel.filterUsers()">
-      </div>
-      <span class="users-count" id="usersCount"></span>
-    </div>
     <div class="list" id="usersList"></div>
     <section class="empty hide" id="usersEmpty">
       <h3>Nenhum usuário cadastrado ainda</h3>
@@ -329,15 +309,6 @@
     </div>
 
     <div class="stats" id="stats"></div>
-    <div class="banner-filters" id="bannerFilters">
-      <span style="font-size:12.5px;font-weight:600;color:var(--ink-soft)">Filtrar:</span>
-      <button class="filter-btn active" data-filter="todos" onclick="Panel.filterBanners('todos')">Todos</button>
-      <button class="filter-btn" data-filter="topo" onclick="Panel.filterBanners('topo')">Topo</button>
-      <button class="filter-btn" data-filter="grade" onclick="Panel.filterBanners('grade')">Grade</button>
-      <button class="filter-btn" data-filter="rodape" onclick="Panel.filterBanners('rodape')">Rodapé</button>
-      <button class="filter-btn" data-filter="on" onclick="Panel.filterBanners('on')">No ar</button>
-      <button class="filter-btn" data-filter="off" onclick="Panel.filterBanners('off')">Pausados</button>
-    </div>
     <div class="list" id="list"></div>
 
     <section class="empty hide" id="emptyState">
@@ -406,6 +377,18 @@
           </div>
         </div>
         <div class="field">
+          <label class="lab">Tipo de mídia</label>
+          <div class="seg" id="midiaSeg">
+            <label><input type="radio" name="midia" value="imagem" checked onchange="Panel.syncMidia()"><span class="opt-b">Imagem<small>foto / arte</small></span></label>
+            <label><input type="radio" name="midia" value="video" onchange="Panel.syncMidia()"><span class="opt-b">Vídeo<small>YouTube</small></span></label>
+          </div>
+        </div>
+        <div class="field hide" id="videoField">
+          <label class="lab" for="videoUrl">Link do vídeo (YouTube)</label>
+          <input class="inp" id="videoUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." oninput="Panel.syncPreview()">
+          <div class="help-txt">O vídeo abre <b>dentro do portal</b> quando a pessoa toca no banner e pode ser visto em <b>tela cheia</b>. A imagem abaixo é opcional — sem ela, usamos a capa do próprio vídeo.</div>
+        </div>
+        <div class="field">
           <label class="lab">Imagem do banner</label>
           <div class="drop" onclick="document.getElementById('imgInput').click()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
@@ -420,6 +403,13 @@
         <div class="field" id="overlaySection">
           <label class="lab">Texto sobre a imagem <span style="font-weight:500;color:var(--ink-soft)">(opcional — só aparece quando há imagem)</span></label>
           <div class="txt-overlay-section">
+            <div class="sec-title">Imagem de fundo</div>
+            <div class="field" style="margin-bottom:16px">
+              <label class="lab" style="margin-bottom:6px">Escurecer a imagem para destacar o texto: <b id="scrimVal">40%</b></label>
+              <input type="range" id="overlayScrim" min="0" max="85" value="40" step="5" style="width:100%;accent-color:var(--ink)" oninput="Panel.syncPreview()">
+              <div class="help-txt">Aplica uma camada escura semitransparente sobre a imagem (ou sobre a capa do vídeo). Quanto maior, mais o texto claro se destaca.</div>
+            </div>
+
             <div class="sec-title">Conteúdo</div>
             <div class="field" style="margin-bottom:12px">
               <input class="inp" id="overlayTitulo" placeholder="Título em destaque (ex.: 20% OFF)" oninput="Panel.syncPreview()">
@@ -543,9 +533,17 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
 
 let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
 let usuariosRef=null, acessosRef=null, configRef=null;
-let ALL_USERS=[], BANNER_FILTER="todos";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function ytId(url){
+  if(!url)return "";
+  const s=String(url).trim();
+  if(/^[A-Za-z0-9_-]{11}$/.test(s))return s;
+  let m=s.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if(m)return m[1];
+  m=s.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+  return m?m[1]:"";
+}
 
 function toast(msg,kind=""){
   const t=document.createElement("div");t.className="toast "+kind;
@@ -620,16 +618,37 @@ const Panel={
     const wrap=$("usersList");
     wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
     $("usersEmpty").classList.add("hide");
-    $("usersCount").textContent="";
     try{
       const snap=await getDocs(query(usuariosRef,where("cadastrado","==",true)));
-      ALL_USERS=snap.docs.map(d=>({id:d.id,...d.data()}));
-      ALL_USERS.sort((a,b)=>{
+      let users=snap.docs.map(d=>({id:d.id,...d.data()}));
+      // ordena pelos mais recentes (client-side, evita índice composto)
+      users.sort((a,b)=>{
         const ta=a.cadastradoEm?.toMillis?a.cadastradoEm.toMillis():0;
         const tb=b.cadastradoEm?.toMillis?b.cadastradoEm.toMillis():0;
         return tb-ta;
       });
-      this.renderUsers(ALL_USERS);
+      if(!users.length){wrap.innerHTML="";$("usersEmpty").classList.remove("hide");return;}
+      wrap.innerHTML=users.map(u=>{
+        const nome=esc(u.nome||"(sem nome)");
+        const email=u.email?esc(u.email):"—";
+        const fone=esc(u.whatsapp||"");
+        const waDigits=String(u.whatsapp||"").replace(/\D/g,"");
+        const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
+        const data=u.cadastradoEm?.toMillis?new Date(u.cadastradoEm.toMillis()).toLocaleDateString("pt-BR"):"";
+        return `<div class="row">
+          <div class="thumb" style="width:46px;height:46px;border-radius:50%;background:var(--marigold-soft);color:#9a6512;font-size:17px">
+            ${esc((u.nome||"?").trim().charAt(0).toUpperCase()||"?")}
+          </div>
+          <div class="info">
+            <h3>${nome}</h3>
+            <div class="sub">${email}${fone?" • "+fone:""}</div>
+            <div class="pos">
+              ${waHref?`<a class="badge grade" style="text-decoration:none" href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+              ${data?`<span class="badge off">cadastrado em ${data}</span>`:""}
+            </div>
+          </div>
+        </div>`;
+      }).join("");
     }catch(err){
       console.error(err);
       const code=err.code||err.message||"desconhecido";
@@ -637,69 +656,6 @@ const Panel={
         <h3 style="color:var(--danger)">Não consegui carregar os usuários</h3>
         <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
         <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> para o seu e-mail de administrador.</p></div>`;
-    }
-  },
-
-  renderUsers(users){
-    const wrap=$("usersList");
-    if(!users.length){
-      wrap.innerHTML="";
-      const term=$("usersSearch")?.value.trim();
-      $("usersEmpty").classList.remove("hide");
-      $("usersEmpty").querySelector("h3").textContent=term?"Nenhum resultado para esta busca":"Nenhum usuário cadastrado ainda";
-      $("usersCount").textContent="";
-      return;
-    }
-    $("usersEmpty").classList.add("hide");
-    $("usersCount").textContent=`${users.length} usuário${users.length!==1?"s":""}`;
-    wrap.innerHTML=users.map(u=>{
-      const nome=esc(u.nome||"(sem nome)");
-      const email=u.email?esc(u.email):"—";
-      const fone=esc(u.whatsapp||"");
-      const waDigits=String(u.whatsapp||"").replace(/\D/g,"");
-      const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
-      const data=u.cadastradoEm?.toMillis?new Date(u.cadastradoEm.toMillis()).toLocaleDateString("pt-BR"):"";
-      return `<div class="row" id="urow-${u.id}">
-        <div class="thumb" style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--marigold-soft);color:#9a6512;font-size:17px;font-weight:700">
-          ${esc((u.nome||"?").trim().charAt(0).toUpperCase()||"?")}
-        </div>
-        <div class="info">
-          <h3>${nome}</h3>
-          <div class="sub">${email}${fone?" • "+fone:""}</div>
-          <div class="pos">
-            ${waHref?`<a class="badge grade" style="text-decoration:none" href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>`:""}
-            ${data?`<span class="badge off">desde ${data}</span>`:""}
-          </div>
-        </div>
-        <div class="acts">
-          ${waHref?`<a class="iconbtn" title="Enviar WhatsApp" href="${waHref}" target="_blank" rel="noopener" style="text-decoration:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.5 16.92Z"/></svg></a>`:""}
-          <button class="iconbtn del iconbtn del2" title="Excluir usuário" onclick="Panel.removeUser('${u.id}','${nome}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
-        </div>
-      </div>`;
-    }).join("");
-  },
-
-  filterUsers(){
-    const term=($("usersSearch")?.value||"").toLowerCase().trim();
-    if(!term){this.renderUsers(ALL_USERS);return;}
-    const filtered=ALL_USERS.filter(u=>
-      (u.nome||"").toLowerCase().includes(term)||
-      (u.email||"").toLowerCase().includes(term)||
-      (u.whatsapp||"").includes(term)
-    );
-    this.renderUsers(filtered);
-  },
-
-  async removeUser(id, nome){
-    if(!confirm(`Excluir o usuário "${nome}"?\n\nEsta ação remove o cadastro do Firestore e não pode ser desfeita.`))return;
-    try{
-      await deleteDoc(doc(db,"usuarios",id));
-      ALL_USERS=ALL_USERS.filter(u=>u.id!==id);
-      toast("Usuário excluído.","ok");
-      this.filterUsers();
-    }catch(err){
-      console.error(err);
-      toast("Não foi possível excluir: "+(err.code||err.message),"bad");
     }
   },
 
@@ -792,6 +748,13 @@ const Panel={
     // prazo individual do banner
     $("validoAte").value=ad?.validoAte||"";
     $("tempoBanner").value=ad?.tempoBanner??6;
+    // tipo de mídia (imagem / vídeo) + link do vídeo
+    (document.querySelector(`#midiaSeg input[value="${ad?.tipoMidia||'imagem'}"]`)||{}).checked=true;
+    $("videoUrl").value=ad?.videoUrl||"";
+    // escurecimento da imagem (scrim): novos banners começam em 35; existentes respeitam o valor salvo
+    const scrim=ad?(ad.overlayScrim!=null?ad.overlayScrim:0):35;
+    $("overlayScrim").value=scrim;
+    $("scrimVal").textContent=scrim+"%";
     // overlay de texto
     $("overlayTitulo").value=ad?.overlayTitulo||"";
     $("overlaySub").value=ad?.overlaySub||"";
@@ -806,10 +769,15 @@ const Panel={
     $("togShadow").classList.toggle("on",ad?.overlayShadow!==false);
     Panel.setOverlayPos(ad?.overlayPos||"mid-center");
     (document.querySelector(`#posSeg input[value="${ad?.posicao||'topo'}"]`)||{}).checked=true;
-    clearMsg($("formMsg"));this.syncPreview();
+    clearMsg($("formMsg"));this.syncMidia();this.syncPreview();
     $("formScrim").classList.add("open");document.body.style.overflow="hidden";
   },
   closeForm(){$("formScrim").classList.remove("open");document.body.style.overflow="";},
+  syncMidia(){
+    const v=document.querySelector('#midiaSeg input:checked')?.value||'imagem';
+    $("videoField").classList.toggle("hide",v!=='video');
+    this.syncPreview();
+  },
   async pickImage(e){
     const f=e.target.files[0];e.target.value="";if(!f)return;
     try{pendingImg=await compress(f);this.syncPreview();}catch{toast("Não consegui processar a imagem.","bad");}
@@ -817,12 +785,18 @@ const Panel={
   syncPreview(){
     const pos=document.querySelector('#posSeg input:checked').value;
     const p=$("preview");p.className="prev "+pos;
+    const midia=document.querySelector('#midiaSeg input:checked')?.value||'imagem';
     const lbl=$("dropLbl");if(lbl)lbl.textContent=pendingImg?"Imagem carregada — toque para trocar":"Toque para enviar a imagem";
     // atualiza hex labels
     const oc=$("overlayColor"),osc=$("overlaySubColor");
     if(oc){$("overlayColorHex").textContent=oc.value;}
     if(osc){$("overlaySubColorHex").textContent=osc.value;}
-    if(pendingImg){
+    // escurecimento
+    const scrim=Math.min(85,Math.max(0,parseInt($("overlayScrim")?.value||"0",10)));
+    if($("scrimVal"))$("scrimVal").textContent=scrim+"%";
+    const vid=midia==='video'?ytId($("videoUrl")?.value||""):"";
+    const bg=pendingImg||(vid?`https://img.youtube.com/vi/${vid}/hqdefault.jpg`:"");
+    if(bg){
       const otxt=$("overlayTitulo")?.value||"";
       const osub=$("overlaySub")?.value||"";
       const font=$("overlayFont")?.value||"DM Sans";
@@ -835,13 +809,16 @@ const Panel={
       const overlayPos=document.querySelector("#posGrid .pos-cell.on")?.dataset.pos||"mid-center";
       const posStyle=Panel.overlayPosStyle(overlayPos);
       const shadowStyle=shadow?"text-shadow:1px 2px 8px rgba(0,0,0,.7),0 0 20px rgba(0,0,0,.4)":"";
-      const overlayHTML=(otxt||osub)?`<div class="overlay-txt" style="${posStyle}font-family:'${font}',sans-serif;${shadowStyle}">
+      const overlayHTML=(otxt||osub)?`<div class="overlay-txt" style="z-index:2;${posStyle}font-family:'${font}',sans-serif;${shadowStyle}">
         ${otxt?`<div style="font-size:${size}px;color:${color};font-weight:${bold?700:400};font-style:${italic?'italic':'normal'};line-height:1.2">${esc(otxt)}</div>`:""}
         ${osub?`<div style="font-size:${Math.round(size*0.6)}px;color:${subColor};font-weight:${bold?600:400};font-style:${italic?'italic':'normal'};margin-top:4px">${esc(osub)}</div>`:""}
       </div>`:"";
-      p.innerHTML=`<span class="ad-sponsor">Anúncio</span><img src="${pendingImg}" alt="prévia">${overlayHTML}`;
+      const scrimHTML=scrim>0?`<div style="position:absolute;inset:0;background:rgba(0,0,0,${scrim/100});z-index:1"></div>`:"";
+      const playHTML=vid?`<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:54px;height:54px;border-radius:50%;background:rgba(20,40,37,.62);display:grid;place-items:center;color:#fff"><svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24" style="margin-left:3px"><path d="M8 5v14l11-7z"/></svg></div>`:"";
+      p.innerHTML=`<img src="${bg}" alt="prévia">${scrimHTML}${overlayHTML}${playHTML}`;
     }else{
-      p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}</div>`;
+      const extra=vid?"":(midia==='video'?" — cole o link do YouTube":"");
+      p.innerHTML=`<div class="ph">${$("titulo").value?esc($("titulo").value):"A pré-visualização aparece aqui"}${$("descricao").value?" — "+esc($("descricao").value):""}${extra}</div>`;
     }
   },
   overlayPosStyle(pos){
@@ -885,8 +862,15 @@ const Panel={
       overlayItalic:$("togItalic").classList.contains("on"),
       overlayShadow:$("togShadow").classList.contains("on"),
       overlayPos:document.querySelector("#posGrid .pos-cell.on")?.dataset.pos||"mid-center",
+      // escurecimento da imagem (legibilidade do texto)
+      overlayScrim:Math.min(85,Math.max(0,parseInt($("overlayScrim").value||"0",10))),
+      // tipo de mídia + vídeo do YouTube
+      tipoMidia:document.querySelector('#midiaSeg input:checked')?.value||"imagem",
+      videoUrl:$("videoUrl").value.trim(),
     };
     if(!data.titulo)return msg($("formMsg"),"Informe um título.","err");
+    if(data.tipoMidia==="video"&&!ytId(data.videoUrl))
+      return msg($("formMsg"),"Cole um link válido do YouTube (ex.: https://youtu.be/ID ou https://www.youtube.com/watch?v=ID).","err");
     if(JSON.stringify(data).length>980000)return msg($("formMsg"),"A imagem ficou grande demais. Use uma menor.","err");
     $("saveBtn").disabled=true;
     try{
@@ -909,12 +893,6 @@ const Panel={
     catch(err){toast("Não foi possível excluir.","bad");}
   },
 
-  filterBanners(f){
-    BANNER_FILTER=f;
-    document.querySelectorAll("#bannerFilters .filter-btn").forEach(b=>b.classList.toggle("active",b.dataset.filter===f));
-    this.render();
-  },
-
   /* ---- render ---- */
   render(){
     const posName={topo:"Topo da lista",grade:"Na grade",rodape:"Rodapé"};
@@ -927,17 +905,9 @@ const Panel={
 
     if(!ADS.length){$("list").innerHTML="";$("emptyState").classList.remove("hide");return;}
     $("emptyState").classList.add("hide");
-    let filtered=ADS;
-    if(BANNER_FILTER==="on") filtered=ADS.filter(a=>a.ativo!==false);
-    else if(BANNER_FILTER==="off") filtered=ADS.filter(a=>a.ativo===false);
-    else if(BANNER_FILTER==="topo"||BANNER_FILTER==="grade"||BANNER_FILTER==="rodape")
-      filtered=ADS.filter(a=>a.posicao===BANNER_FILTER);
-    if(!filtered.length){
-      $("list").innerHTML=`<div class="empty"><h3>Nenhum banner neste filtro</h3><p>Tente outro filtro ou crie um novo banner.</p></div>`;
-      return;
-    }
-    $("list").innerHTML=filtered.map(a=>{
-      const thumb=a.imagem?`<img src="${a.imagem}" alt="">`:`<span>sem imagem</span>`;
+    $("list").innerHTML=ADS.map(a=>{
+      const vid=a.tipoMidia==="video"?ytId(a.videoUrl):"";
+      const thumb=a.imagem?`<img src="${a.imagem}" alt="">`:(vid?`<img src="https://img.youtube.com/vi/${vid}/hqdefault.jpg" alt="">`:`<span>sem imagem</span>`);
       const on=a.ativo!==false;
       // prazo: verifica se expirou
       let prazoBadge="";
@@ -953,6 +923,7 @@ const Panel={
           <div class="sub">${a.link?esc(a.link):"sem link"}${a.descricao?" • "+esc(a.descricao):""}</div>
           <div class="pos">
             <span class="badge ${a.posicao}">${posName[a.posicao]||a.posicao}</span>
+            ${vid?`<span class="badge grade">▶ Vídeo</span>`:""}
             <span class="badge ${on?'on':'off'}">${on?"No ar":"Pausado"}</span>
             <span class="badge off">ordem ${a.ordem??0}</span>
             ${prazoBadge}
