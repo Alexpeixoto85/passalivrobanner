@@ -88,17 +88,17 @@
   /* configurações */
   .cfgcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px 26px;box-shadow:var(--shadow);max-width:520px}
 
-  .list{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  @media(max-width:680px){.list{grid-template-columns:1fr}}
-  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;gap:16px;
-    align-items:center;box-shadow:var(--shadow)}
-  .row .thumb{width:150px;height:64px;border-radius:10px;overflow:hidden;background:var(--surface-2);flex:none;
+  .list{display:flex;flex-direction:column;gap:12px}
+  .row{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;gap:16px;
+    align-items:center;box-shadow:var(--shadow);transition:box-shadow .15s}
+  .row:hover{box-shadow:var(--shadow-lg)}
+  .row .thumb{width:160px;height:72px;border-radius:10px;overflow:hidden;background:var(--surface-2);flex:none;
     border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-soft);font-size:12px;font-weight:600;text-align:center}
   .row .thumb img{width:100%;height:100%;object-fit:cover}
   .row .info{flex:1;min-width:0}
-  .row .info h3{font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .row .info .sub{font-size:13px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .row .info .pos{display:inline-flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .row .info h3{font-size:15.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+  .row .info .sub{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .info .pos{display:inline-flex;gap:6px;margin-top:8px;flex-wrap:wrap}
   .badge{font-size:11px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.2px}
   .badge.topo{background:var(--marigold-soft);color:#9a6512}
   .badge.grade{background:var(--trade-soft);color:var(--trade)}
@@ -170,6 +170,18 @@
   .form-foot{display:flex;gap:12px;justify-content:flex-end;padding-top:10px;border-top:1px solid var(--line);margin-top:8px}
   .help-txt{font-size:12px;color:var(--ink-soft);margin-top:6px}
 
+  .user-list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .search-box{position:relative;flex:1;max-width:340px}
+  .search-box svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ink-soft);pointer-events:none}
+  .search-box input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line-strong);border-radius:11px;background:var(--surface);font-family:inherit;font-size:14px;color:var(--text)}
+  .search-box input:focus{border-color:var(--ink);outline:none;box-shadow:0 0 0 3px rgba(23,63,59,.1)}
+  .users-count{font-size:13px;color:var(--ink-soft);font-weight:500;white-space:nowrap}
+  .banner-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+  .filter-btn{background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;padding:6px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;transition:.12s}
+  .filter-btn:hover{background:var(--surface-2)}
+  .filter-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .iconbtn.del2:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+
   .toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:10px;width:calc(100% - 32px);max-width:420px}
   .toast{background:var(--ink);color:#fff;padding:14px 18px;border-radius:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:11px;font-size:14px;font-weight:500}
   .toast.ok{background:var(--trade)}.toast.bad{background:var(--danger)}
@@ -183,6 +195,7 @@
     .field.row2{grid-template-columns:1fr}
     .row{flex-wrap:wrap}.row .thumb{width:100%;height:120px}.row .acts{margin-left:auto}
     .head h1{font-size:24px}
+    .user-list-head{flex-wrap:wrap;gap:10px}
   }
 </style>
 </head>
@@ -260,6 +273,13 @@
         <p>Pessoas que se cadastraram para anunciar no portal.</p>
       </div>
     </div>
+    <div class="user-list-head">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="search" id="usersSearch" placeholder="Buscar por nome, e-mail ou WhatsApp…" oninput="Panel.filterUsers()">
+      </div>
+      <span class="users-count" id="usersCount"></span>
+    </div>
     <div class="list" id="usersList"></div>
     <section class="empty hide" id="usersEmpty">
       <h3>Nenhum usuário cadastrado ainda</h3>
@@ -309,6 +329,15 @@
     </div>
 
     <div class="stats" id="stats"></div>
+    <div class="banner-filters" id="bannerFilters">
+      <span style="font-size:12.5px;font-weight:600;color:var(--ink-soft)">Filtrar:</span>
+      <button class="filter-btn active" data-filter="todos" onclick="Panel.filterBanners('todos')">Todos</button>
+      <button class="filter-btn" data-filter="topo" onclick="Panel.filterBanners('topo')">Topo</button>
+      <button class="filter-btn" data-filter="grade" onclick="Panel.filterBanners('grade')">Grade</button>
+      <button class="filter-btn" data-filter="rodape" onclick="Panel.filterBanners('rodape')">Rodapé</button>
+      <button class="filter-btn" data-filter="on" onclick="Panel.filterBanners('on')">No ar</button>
+      <button class="filter-btn" data-filter="off" onclick="Panel.filterBanners('off')">Pausados</button>
+    </div>
     <div class="list" id="list"></div>
 
     <section class="empty hide" id="emptyState">
@@ -514,6 +543,7 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
 
 let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
 let usuariosRef=null, acessosRef=null, configRef=null;
+let ALL_USERS=[], BANNER_FILTER="todos";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -590,37 +620,16 @@ const Panel={
     const wrap=$("usersList");
     wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
     $("usersEmpty").classList.add("hide");
+    $("usersCount").textContent="";
     try{
       const snap=await getDocs(query(usuariosRef,where("cadastrado","==",true)));
-      let users=snap.docs.map(d=>({id:d.id,...d.data()}));
-      // ordena pelos mais recentes (client-side, evita índice composto)
-      users.sort((a,b)=>{
+      ALL_USERS=snap.docs.map(d=>({id:d.id,...d.data()}));
+      ALL_USERS.sort((a,b)=>{
         const ta=a.cadastradoEm?.toMillis?a.cadastradoEm.toMillis():0;
         const tb=b.cadastradoEm?.toMillis?b.cadastradoEm.toMillis():0;
         return tb-ta;
       });
-      if(!users.length){wrap.innerHTML="";$("usersEmpty").classList.remove("hide");return;}
-      wrap.innerHTML=users.map(u=>{
-        const nome=esc(u.nome||"(sem nome)");
-        const email=u.email?esc(u.email):"—";
-        const fone=esc(u.whatsapp||"");
-        const waDigits=String(u.whatsapp||"").replace(/\D/g,"");
-        const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
-        const data=u.cadastradoEm?.toMillis?new Date(u.cadastradoEm.toMillis()).toLocaleDateString("pt-BR"):"";
-        return `<div class="row">
-          <div class="thumb" style="width:46px;height:46px;border-radius:50%;background:var(--marigold-soft);color:#9a6512;font-size:17px">
-            ${esc((u.nome||"?").trim().charAt(0).toUpperCase()||"?")}
-          </div>
-          <div class="info">
-            <h3>${nome}</h3>
-            <div class="sub">${email}${fone?" • "+fone:""}</div>
-            <div class="pos">
-              ${waHref?`<a class="badge grade" style="text-decoration:none" href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>`:""}
-              ${data?`<span class="badge off">cadastrado em ${data}</span>`:""}
-            </div>
-          </div>
-        </div>`;
-      }).join("");
+      this.renderUsers(ALL_USERS);
     }catch(err){
       console.error(err);
       const code=err.code||err.message||"desconhecido";
@@ -628,6 +637,69 @@ const Panel={
         <h3 style="color:var(--danger)">Não consegui carregar os usuários</h3>
         <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
         <p>Confira se as regras do Firestore liberam a leitura de <code>usuarios</code> para o seu e-mail de administrador.</p></div>`;
+    }
+  },
+
+  renderUsers(users){
+    const wrap=$("usersList");
+    if(!users.length){
+      wrap.innerHTML="";
+      const term=$("usersSearch")?.value.trim();
+      $("usersEmpty").classList.remove("hide");
+      $("usersEmpty").querySelector("h3").textContent=term?"Nenhum resultado para esta busca":"Nenhum usuário cadastrado ainda";
+      $("usersCount").textContent="";
+      return;
+    }
+    $("usersEmpty").classList.add("hide");
+    $("usersCount").textContent=`${users.length} usuário${users.length!==1?"s":""}`;
+    wrap.innerHTML=users.map(u=>{
+      const nome=esc(u.nome||"(sem nome)");
+      const email=u.email?esc(u.email):"—";
+      const fone=esc(u.whatsapp||"");
+      const waDigits=String(u.whatsapp||"").replace(/\D/g,"");
+      const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
+      const data=u.cadastradoEm?.toMillis?new Date(u.cadastradoEm.toMillis()).toLocaleDateString("pt-BR"):"";
+      return `<div class="row" id="urow-${u.id}">
+        <div class="thumb" style="width:46px;height:46px;min-width:46px;border-radius:50%;background:var(--marigold-soft);color:#9a6512;font-size:17px;font-weight:700">
+          ${esc((u.nome||"?").trim().charAt(0).toUpperCase()||"?")}
+        </div>
+        <div class="info">
+          <h3>${nome}</h3>
+          <div class="sub">${email}${fone?" • "+fone:""}</div>
+          <div class="pos">
+            ${waHref?`<a class="badge grade" style="text-decoration:none" href="${waHref}" target="_blank" rel="noopener">WhatsApp</a>`:""}
+            ${data?`<span class="badge off">desde ${data}</span>`:""}
+          </div>
+        </div>
+        <div class="acts">
+          ${waHref?`<a class="iconbtn" title="Enviar WhatsApp" href="${waHref}" target="_blank" rel="noopener" style="text-decoration:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.25h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.5 16.92Z"/></svg></a>`:""}
+          <button class="iconbtn del iconbtn del2" title="Excluir usuário" onclick="Panel.removeUser('${u.id}','${nome}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+        </div>
+      </div>`;
+    }).join("");
+  },
+
+  filterUsers(){
+    const term=($("usersSearch")?.value||"").toLowerCase().trim();
+    if(!term){this.renderUsers(ALL_USERS);return;}
+    const filtered=ALL_USERS.filter(u=>
+      (u.nome||"").toLowerCase().includes(term)||
+      (u.email||"").toLowerCase().includes(term)||
+      (u.whatsapp||"").includes(term)
+    );
+    this.renderUsers(filtered);
+  },
+
+  async removeUser(id, nome){
+    if(!confirm(`Excluir o usuário "${nome}"?\n\nEsta ação remove o cadastro do Firestore e não pode ser desfeita.`))return;
+    try{
+      await deleteDoc(doc(db,"usuarios",id));
+      ALL_USERS=ALL_USERS.filter(u=>u.id!==id);
+      toast("Usuário excluído.","ok");
+      this.filterUsers();
+    }catch(err){
+      console.error(err);
+      toast("Não foi possível excluir: "+(err.code||err.message),"bad");
     }
   },
 
@@ -837,6 +909,12 @@ const Panel={
     catch(err){toast("Não foi possível excluir.","bad");}
   },
 
+  filterBanners(f){
+    BANNER_FILTER=f;
+    document.querySelectorAll("#bannerFilters .filter-btn").forEach(b=>b.classList.toggle("active",b.dataset.filter===f));
+    this.render();
+  },
+
   /* ---- render ---- */
   render(){
     const posName={topo:"Topo da lista",grade:"Na grade",rodape:"Rodapé"};
@@ -849,7 +927,16 @@ const Panel={
 
     if(!ADS.length){$("list").innerHTML="";$("emptyState").classList.remove("hide");return;}
     $("emptyState").classList.add("hide");
-    $("list").innerHTML=ADS.map(a=>{
+    let filtered=ADS;
+    if(BANNER_FILTER==="on") filtered=ADS.filter(a=>a.ativo!==false);
+    else if(BANNER_FILTER==="off") filtered=ADS.filter(a=>a.ativo===false);
+    else if(BANNER_FILTER==="topo"||BANNER_FILTER==="grade"||BANNER_FILTER==="rodape")
+      filtered=ADS.filter(a=>a.posicao===BANNER_FILTER);
+    if(!filtered.length){
+      $("list").innerHTML=`<div class="empty"><h3>Nenhum banner neste filtro</h3><p>Tente outro filtro ou crie um novo banner.</p></div>`;
+      return;
+    }
+    $("list").innerHTML=filtered.map(a=>{
       const thumb=a.imagem?`<img src="${a.imagem}" alt="">`:`<span>sem imagem</span>`;
       const on=a.ativo!==false;
       // prazo: verifica se expirou
