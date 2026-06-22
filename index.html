@@ -405,6 +405,11 @@
           <div class="help-txt">Para onde a pessoa vai ao tocar no anúncio. Digite um site (com <code>https://</code>) ou apenas um número de WhatsApp no formato <code>82900000000</code> — viramos o link <code>wa.me</code> automaticamente. Dica: adicione <code>?utm_source=passalivro</code> para medir no seu site.</div>
         </div>
         <div class="field">
+          <label class="lab" for="mensagem">Mensagem do WhatsApp <span style="font-weight:500;color:var(--ink-soft)">(opcional — só para links de WhatsApp)</span></label>
+          <textarea class="inp" id="mensagem" rows="3" placeholder="Ex.: Olá! Vi o anúncio da Papelaria do Bairro no PassaLivro e quero saber mais sobre as ofertas."></textarea>
+          <div class="help-txt">É a mensagem que já vem escrita quando a pessoa clica no banner e abre o WhatsApp. Se deixar vazio, geramos uma mensagem automática com o título do anúncio.</div>
+        </div>
+        <div class="field">
           <label class="lab">Posição no portal</label>
           <div class="seg" id="posSeg">
             <label><input type="radio" name="pos" value="cabecalho" onchange="Panel.syncPreview()"><span class="opt-b">Abaixo do cabeçalho<small>faixa 1100×300</small></span></label>
@@ -1039,6 +1044,7 @@ const Panel={
     $("saveBtn").textContent=ad?"Salvar alterações":"Publicar banner";
     $("editId").value=ad?ad.id:"";
     $("titulo").value=ad?.titulo||"";$("descricao").value=ad?.descricao||"";$("link").value=ad?.link||"";
+    $("mensagem").value=ad?.mensagem||"";
     $("ordem").value=ad?.ordem??0;$("ativo").checked=ad?ad.ativo!==false:true;
     // prazo individual do banner
     $("validoAte").value=ad?.validoAte||"";
@@ -1141,6 +1147,7 @@ const Panel={
     e.preventDefault();
     const data={
       titulo:$("titulo").value.trim(),descricao:$("descricao").value.trim(),link:this.normalizeLink($("link").value),
+      mensagem:$("mensagem").value.trim(),
       posicao:document.querySelector('#posSeg input:checked').value,
       ordem:parseInt($("ordem").value||"0",10),ativo:$("ativo").checked,
       imagem:pendingImg||"",updatedAt:serverTimestamp(),
