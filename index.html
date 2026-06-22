@@ -401,8 +401,8 @@
         </div>
         <div class="field">
           <label class="lab" for="link">Link de destino</label>
-          <input class="inp" id="link" type="url" placeholder="https://...">
-          <div class="help-txt">Para onde a pessoa vai ao tocar no anúncio. Dica: adicione <code>?utm_source=passalivro</code> para medir no seu site.</div>
+          <input class="inp" id="link" type="text" placeholder="https://...  ou um WhatsApp: 82900000000" onblur="Panel.onBlurLink()">
+          <div class="help-txt">Para onde a pessoa vai ao tocar no anúncio. Digite um site (com <code>https://</code>) ou apenas um número de WhatsApp no formato <code>82900000000</code> — viramos o link <code>wa.me</code> automaticamente. Dica: adicione <code>?utm_source=passalivro</code> para medir no seu site.</div>
         </div>
         <div class="field">
           <label class="lab">Posição no portal</label>
@@ -651,6 +651,35 @@ function dateStr(d=new Date()){
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 
 const Panel={
+  // Converte o que foi digitado no campo "Link de destino".
+  // Se for um número de WhatsApp (ex.: 82900000000), gera https://wa.me/55...
+  normalizeLink(raw){
+    let v=(raw||"").trim();
+    if(!v) return "";
+    // já é uma URL completa
+    if(/^https?:\/\//i.test(v)) return v;
+    // link de whatsapp digitado sem o https://
+    if(/^(wa\.me|api\.whatsapp\.com)/i.test(v)) return "https://"+v;
+    // mantém só os dígitos (aceita (82) 90000-0000, +55 82 ..., etc.)
+    const dig=v.replace(/[^\d]/g,"");
+    // telefone brasileiro: 10 ou 11 dígitos (DDD + número), ou já com 55
+    if(/^\d{10,13}$/.test(dig)){
+      let num=dig;
+      const temCodigoPais=/^55/.test(num)&&(num.length===12||num.length===13);
+      if(!temCodigoPais&&(num.length===10||num.length===11)) num="55"+num;
+      return "https://wa.me/"+num;
+    }
+    // parece um domínio (site.com/promo) -> completa com https://
+    if(/^[\w.-]+\.[a-z]{2,}([\/?#].*)?$/i.test(v)) return "https://"+v;
+    // não reconhecido: devolve como veio
+    return v;
+  },
+  // Ao sair do campo, mostra o link já convertido (confirmação visual)
+  onBlurLink(){
+    const el=$("link"); if(!el) return;
+    const norm=this.normalizeLink(el.value);
+    if(norm && norm!==el.value.trim()) el.value=norm;
+  },
   toggleMode(){
     signupMode=!signupMode;
     $("loginTitle").textContent=signupMode?"Criar conta de administrador":"Acesso do administrador";
@@ -1116,7 +1145,7 @@ const Panel={
   async save(e){
     e.preventDefault();
     const data={
-      titulo:$("titulo").value.trim(),descricao:$("descricao").value.trim(),link:$("link").value.trim(),
+      titulo:$("titulo").value.trim(),descricao:$("descricao").value.trim(),link:this.normalizeLink($("link").value),
       posicao:document.querySelector('#posSeg input:checked').value,
       ordem:parseInt($("ordem").value||"0",10),ativo:$("ativo").checked,
       imagem:pendingImg||"",updatedAt:serverTimestamp(),
