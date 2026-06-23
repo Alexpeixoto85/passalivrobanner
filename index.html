@@ -88,8 +88,6 @@
     display:grid;place-items:center;color:var(--ink-soft);font-size:10px;font-weight:600;text-align:center}
   .iconbtn.ok-act:hover{border-color:var(--trade);color:var(--trade);background:var(--trade-soft)}
   .btn-approve{background:var(--trade);color:#fff;border:1px solid transparent}
-.btn-reprove{background:var(--danger-soft);color:var(--danger);border:1px solid #ecc6ba}
-.badge.rep{background:var(--danger);color:#fff}
   .btn-approve:hover{background:#26795a}
 
   /* visualização do anúncio de terceiro */
@@ -267,8 +265,7 @@
   <div class="tabs" id="panelTabs">
     <button class="tabbtn active" data-tab="overview" onclick="Panel.switchTab('overview')">Visão geral</button>
     <button class="tabbtn" data-tab="users" onclick="Panel.switchTab('users')">Usuários</button>
-    <button class="tabbtn" data-tab="moderacao" onclick="Panel.switchTab('moderacao')">Anúncios (livros)</button>
-    <button class="tabbtn" data-tab="marketplace" onclick="Panel.switchTab('marketplace')">Anúncios (marketplace)</button>
+    <button class="tabbtn" data-tab="moderacao" onclick="Panel.switchTab('moderacao')">Anúncios de terceiros</button>
     <button class="tabbtn" data-tab="settings" onclick="Panel.switchTab('settings')">Configurações</button>
     <button class="tabbtn" data-tab="banners" onclick="Panel.switchTab('banners')">Banners</button>
   </div>
@@ -360,7 +357,7 @@
     <div class="head">
       <div>
         <h1>Anúncios de terceiros</h1>
-        <p>Anúncios de livros cadastrados pelas famílias. <b>Aprove</b> os que seguem as diretrizes (vão ao ar na hora) ou <b>reprove</b> com um motivo — o anunciante recebe o aviso no portal e pode corrigir e reenviar. Use <b>excluir</b> apenas para spam.</p>
+        <p>Anúncios de livros cadastrados pelas famílias. Aprove os que seguem as diretrizes e exclua os que estiverem <b>fora do nicho</b> ou violando as regras do portal.</p>
       </div>
       <button class="btn btn-ghost" onclick="Panel.loadModeracao()" title="Recarregar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 16v-4h4"/></svg>
@@ -371,7 +368,6 @@
     <div class="modtabs" id="modFilters">
       <button class="modbtn active" data-mf="pendente" onclick="Panel.setModFilter('pendente')">Em avaliação</button>
       <button class="modbtn" data-mf="ativo" onclick="Panel.setModFilter('ativo')">No ar</button>
-      <button class="modbtn" data-mf="reprovado" onclick="Panel.setModFilter('reprovado')">Reprovados</button>
       <button class="modbtn" data-mf="todos" onclick="Panel.setModFilter('todos')">Todos</button>
     </div>
 
@@ -381,35 +377,6 @@
     <section class="empty hide" id="modEmpty">
       <h3>Nada por aqui</h3>
       <p>Nenhum anúncio de terceiro neste filtro.</p>
-    </section>
-  </section>
-
-  <!-- ABA: MARKETPLACE (MODERAÇÃO DE PRODUTOS E SERVIÇOS) -->
-  <section id="tabMarketplace" class="tabpanel hide">
-    <div class="head">
-      <div>
-        <h1>Anúncios do Marketplace</h1>
-        <p>Produtos e serviços cadastrados pelas pessoas no portal paralelo. Mesma lógica: <b>aprove</b> (vai ao ar na hora), <b>reprove</b> com motivo (o anunciante é avisado e pode corrigir) ou <b>exclua</b> spam.</p>
-      </div>
-      <button class="btn btn-ghost" onclick="Panel.loadMarketplace()" title="Recarregar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 16v-4h4"/></svg>
-        Atualizar
-      </button>
-    </div>
-
-    <div class="modtabs" id="mktFilters">
-      <button class="modbtn active" data-mf="pendente" onclick="Panel.setMktFilter('pendente')">Em avaliação</button>
-      <button class="modbtn" data-mf="ativo" onclick="Panel.setMktFilter('ativo')">No ar</button>
-      <button class="modbtn" data-mf="reprovado" onclick="Panel.setMktFilter('reprovado')">Reprovados</button>
-      <button class="modbtn" data-mf="todos" onclick="Panel.setMktFilter('todos')">Todos</button>
-    </div>
-
-    <div class="stats" id="mktStats"></div>
-    <div class="list" id="mktList"></div>
-
-    <section class="empty hide" id="mktEmpty">
-      <h3>Nada por aqui</h3>
-      <p>Nenhum anúncio do marketplace neste filtro.</p>
     </section>
   </section>
 </main>
@@ -620,13 +587,13 @@
    CONFIGURAÇÃO DO FIREBASE — use a MESMA do portal
    ============================================================ */
 const firebaseConfig = {
-  apiKey: "AIzaSyB-vYs_Pld4DccL2TdiaIdRzFaF3aUxSSI",
-  authDomain: "passalivros.firebaseapp.com",
-  projectId: "passalivros",
-  storageBucket: "passalivros.firebasestorage.app",
-  messagingSenderId: "1070393055617",
-  appId: "1:1070393055617:web:504874c5cfef1582a07080",
-  measurementId: "G-BVG34858XJ"
+  apiKey: "AIzaSyBgQ6xDCv2_2rRK85Upy8zqCy3jiE06Jio",
+  authDomain: "mercado-livre-mcz.firebaseapp.com",
+  projectId: "mercado-livre-mcz",
+  storageBucket: "mercado-livre-mcz.firebasestorage.app",
+  messagingSenderId: "942064381996",
+  appId: "1:942064381996:web:1ee8e1fcfca1857b85a189",
+  measurementId: "G-FHMJZ0TE1Z"
 };
 /* (Opcional) restringe o painel a um e-mail. Deixe "" para não restringir no cliente
    — a segurança real fica nas regras do Firestore de qualquer forma. */
@@ -643,9 +610,8 @@ import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot
   from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 let auth=null, db=null, ref=null, ADS=[], signupMode=false, pendingImg=null, editing=null;
-let usuariosRef=null, acessosRef=null, configRef=null, livrosRef=null, marketplaceRef=null;
+let usuariosRef=null, acessosRef=null, configRef=null, livrosRef=null;
 let MOD_ADS=[], modFilter="pendente", USERS_CACHE=[];
-let MKT_ADS=[], mktFilter="pendente";
 let viewPhotos=[], viewIdx=0;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -743,13 +709,12 @@ const Panel={
 
   /* ---------- abas ---------- */
   switchTab(name){
-    const map={overview:"tabOverview",users:"tabUsers",moderacao:"tabModeracao",marketplace:"tabMarketplace",settings:"tabSettings",banners:"tabBanners"};
+    const map={overview:"tabOverview",users:"tabUsers",moderacao:"tabModeracao",settings:"tabSettings",banners:"tabBanners"};
     Object.entries(map).forEach(([k,id])=>$(id).classList.toggle("hide",k!==name));
     document.querySelectorAll("#panelTabs .tabbtn").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
     if(name==="overview")this.loadOverview();
     if(name==="users")this.loadUsers();
     if(name==="moderacao")this.loadModeracao();
-    if(name==="marketplace")this.loadMarketplace();
     if(name==="settings")this.loadConfigForm();
   },
 
@@ -850,12 +815,11 @@ const Panel={
     const all=MOD_ADS;
     const pend=all.filter(a=>(a.status||"ativo")==="pendente");
     const ativos=all.filter(a=>(a.status||"ativo")==="ativo");
-    const reprov=all.filter(a=>(a.status||"ativo")==="reprovado");
     $("modStats").innerHTML=[
-      ["Em avaliação",pend.length],["No ar",ativos.length],["Reprovados",reprov.length],["Total",all.length],
+      ["Em avaliação",pend.length],["No ar",ativos.length],["Total",all.length],
     ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
 
-    const list = modFilter==="pendente"?pend : modFilter==="ativo"?ativos : modFilter==="reprovado"?reprov : all;
+    const list = modFilter==="pendente"?pend : modFilter==="ativo"?ativos : all;
     const wrap=$("modList");
     if(!list.length){wrap.innerHTML="";$("modEmpty").classList.remove("hide");return;}
     $("modEmpty").classList.add("hide");
@@ -867,14 +831,10 @@ const Panel={
       const thumb=foto?`<img class="mod-photo" src="${foto}" alt="">`:`<div class="mod-noimg">sem foto</div>`;
       const catLine=a.categoria==="geral"?(a.genero||"Geral"):[a.disciplina,a.serie].filter(Boolean).join(" • ");
       const stBadge=st==="pendente"?`<span class="badge topo">Em avaliação</span>`
-        :st==="reprovado"?`<span class="badge rep">Reprovado</span>`
         :st==="finalizado"?`<span class="badge off">Concluído</span>`
         :`<span class="badge on">No ar</span>`;
       const approveBtn=st!=="ativo"?`<button class="btn btn-approve" style="padding:9px 14px;font-size:13px" onclick="Panel.approveAd('${a.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M20 6 9 17l-5-5"/></svg> Aprovar
-        </button>`:"";
-      const reproveBtn=(st==="pendente"||st==="ativo")?`<button class="btn btn-reprove" style="padding:9px 14px;font-size:13px" title="Reprovar com aviso ao anunciante" onclick="Panel.reproveAd('${a.id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M18 6 6 18M6 6l12 12"/></svg> Reprovar
         </button>`:"";
       return `<div class="row">
         <div style="display:flex;gap:12px;align-items:center;flex:none;cursor:pointer" onclick="Panel.openView('${a.id}')">${thumb}</div>
@@ -887,13 +847,11 @@ const Panel={
             ${a.nome?`<span class="badge off">por ${esc(a.nome)}</span>`:""}
             ${stBadge}
           </div>
-          ${st==="reprovado"&&a.motivoReprovacao?`<div class="sub" style="color:var(--danger);margin-top:4px">Motivo: ${esc(a.motivoReprovacao)}</div>`:""}
         </div>
         <div class="acts">
           <button class="iconbtn" title="Ver anúncio" onclick="Panel.openView('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           ${approveBtn}
-          ${reproveBtn}
-          <button class="iconbtn del" title="Excluir definitivamente" onclick="Panel.deleteAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+          <button class="iconbtn del" title="Excluir anúncio" onclick="Panel.rejectAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
         </div>
       </div>`;
     }).join("");
@@ -901,8 +859,8 @@ const Panel={
   async approveAd(id){
     const a=MOD_ADS.find(x=>x.id===id);if(!a)return;
     try{
-      await updateDoc(doc(db,"livros",id),{status:"ativo",aprovadoEm:serverTimestamp(),motivoReprovacao:null,reprovadoEm:null});
-      a.status="ativo";a.motivoReprovacao=null;
+      await updateDoc(doc(db,"livros",id),{status:"ativo",aprovadoEm:serverTimestamp()});
+      a.status="ativo";
       toast("Anúncio aprovado — já está no ar.","ok");
       this.closeView();
       this.renderModeracao();
@@ -911,26 +869,9 @@ const Panel={
       toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'livros' (admin pode aprovar).":"Não foi possível aprovar.","bad");
     }
   },
-  async reproveAd(id){
+  async rejectAd(id){
     const a=MOD_ADS.find(x=>x.id===id);if(!a)return;
-    const motivo=prompt(`Reprovar o anúncio "${a.titulo||"(sem título)"}".\n\nDescreva o motivo (o anunciante verá este aviso e poderá corrigir e reenviar):`,a.motivoReprovacao||"");
-    if(motivo===null)return; // cancelou
-    const reason=String(motivo).trim();
-    if(!reason){toast("Informe um motivo para o anunciante.","bad");return;}
-    try{
-      await updateDoc(doc(db,"livros",id),{status:"reprovado",motivoReprovacao:reason,reprovadoEm:serverTimestamp()});
-      a.status="reprovado";a.motivoReprovacao=reason;
-      toast("Anúncio reprovado. O anunciante foi avisado no portal.","ok");
-      this.closeView();
-      this.renderModeracao();
-    }catch(err){
-      console.error(err);
-      toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'livros' (admin pode reprovar).":"Não foi possível reprovar.","bad");
-    }
-  },
-  async deleteAd(id){
-    const a=MOD_ADS.find(x=>x.id===id);if(!a)return;
-    if(!confirm(`Excluir definitivamente o anúncio "${a.titulo||"(sem título)"}"?\n\nUse a exclusão apenas para spam ou conteúdo que não deve sequer ficar no histórico. Para recusar um anúncio comum, prefira "Reprovar" (o anunciante é avisado). Esta ação não pode ser desfeita.`))return;
+    if(!confirm(`Excluir o anúncio "${a.titulo||"(sem título)"}"?\n\nUse isto para remover anúncios fora do nicho ou que violem as diretrizes do portal. Esta ação não pode ser desfeita.`))return;
     try{
       await deleteDoc(doc(db,"livros",id));
       MOD_ADS=MOD_ADS.filter(x=>x.id!==id);
@@ -953,7 +894,6 @@ const Panel={
     viewIdx=0;
 
     const stBadge=st==="pendente"?`<span class="badge topo">Em avaliação</span>`
-      :st==="reprovado"?`<span class="badge rep">Reprovado</span>`
       :st==="finalizado"?`<span class="badge off">Concluído</span>`
       :`<span class="badge on">No ar</span>`;
     const tipoBadge=`<span class="badge ${a.tipo==='troca'?'grade':a.tipo==='doacao'?'rodape':'off'}">${esc(tipoLabel[a.tipo]||a.tipo||"—")}</span>`;
@@ -995,19 +935,11 @@ const Panel={
       ? `<button class="btn btn-approve" onclick="Panel.approveAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Aprovar anúncio</button>`
       : "";
 
-    const reproveBtn=(st==="pendente"||st==="ativo")
-      ? `<button class="btn btn-reprove" onclick="Panel.reproveAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg> Reprovar</button>`
-      : "";
-    const motivoBox=st==="reprovado"&&a.motivoReprovacao
-      ? `<div class="vw-sec">Motivo da reprovação</div><div class="vw-desc" style="color:var(--danger)">${esc(a.motivoReprovacao)}</div>`
-      : "";
-
     $("viewTitle").textContent=a.titulo||"Anúncio";
     $("viewBody").innerHTML=`
       <div class="vw-badges">${tipoBadge}${stBadge}</div>
       <div class="vw-main">${mainImg}</div>
       ${thumbs}
-      ${motivoBox}
       <div class="vw-sec">Informações do livro</div>
       <div class="vw-info">${rows.map(([k,v])=>`<div class="vw-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
       ${a.descricao?`<div class="vw-sec">Descrição</div><div class="vw-desc">${esc(a.descricao)}</div>`:""}
@@ -1015,8 +947,7 @@ const Panel={
       <div class="vw-info">${contato.map(([k,v])=>`<div class="vw-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
       <div class="form-foot" style="margin-top:18px">
         ${approveBtn}
-        ${reproveBtn}
-        <button class="btn btn-ghost" style="color:var(--ink-soft)" onclick="Panel.deleteAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg> Excluir</button>
+        <button class="btn btn-ghost" style="color:var(--danger);border-color:var(--danger-soft)" onclick="Panel.rejectAd('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg> Excluir</button>
       </div>`;
     $("viewScrim").classList.add("open");document.body.style.overflow="hidden";
   },
@@ -1027,200 +958,6 @@ const Panel={
     document.querySelectorAll("#viewBody .vw-thumb").forEach(b=>b.classList.toggle("on",Number(b.dataset.i)===i));
   },
   closeView(){$("viewScrim").classList.remove("open");document.body.style.overflow="";},
-
-  /* ---------- moderação do MARKETPLACE (coleção marketplace) ---------- */
-  async loadMarketplace(){
-    const wrap=$("mktList");
-    wrap.innerHTML=`<p style="color:var(--ink-soft);font-size:13px">Carregando…</p>`;
-    $("mktEmpty").classList.add("hide");
-    try{
-      const snap=await getDocs(marketplaceRef);
-      MKT_ADS=snap.docs.map(d=>({id:d.id,...d.data()}));
-      MKT_ADS.sort((a,b)=>{
-        const ta=a.createdAt?.toMillis?a.createdAt.toMillis():0;
-        const tb=b.createdAt?.toMillis?b.createdAt.toMillis():0;
-        return tb-ta;
-      });
-      this.renderMarketplace();
-    }catch(err){
-      console.error(err);
-      const code=err.code||err.message||"desconhecido";
-      wrap.innerHTML=`<div class="empty" style="border-color:var(--danger);background:var(--danger-soft)">
-        <h3 style="color:var(--danger)">Não consegui carregar os anúncios</h3>
-        <p style="color:var(--danger)"><b>Código:</b> <code>${esc(code)}</code></p>
-        <p>Confira se as regras do Firestore liberam a leitura de <code>marketplace</code>.</p></div>`;
-    }
-  },
-  setMktFilter(f){
-    mktFilter=f;
-    document.querySelectorAll("#mktFilters .modbtn").forEach(b=>b.classList.toggle("active",b.dataset.mf===f));
-    this.renderMarketplace();
-  },
-  renderMarketplace(){
-    const all=MKT_ADS;
-    const pend=all.filter(a=>(a.status||"ativo")==="pendente");
-    const ativos=all.filter(a=>(a.status||"ativo")==="ativo");
-    const reprov=all.filter(a=>(a.status||"ativo")==="reprovado");
-    $("mktStats").innerHTML=[
-      ["Em avaliação",pend.length],["No ar",ativos.length],["Reprovados",reprov.length],["Total",all.length],
-    ].map(([l,n])=>`<div class="stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
-
-    const list = mktFilter==="pendente"?pend : mktFilter==="ativo"?ativos : mktFilter==="reprovado"?reprov : all;
-    const wrap=$("mktList");
-    if(!list.length){wrap.innerHTML="";$("mktEmpty").classList.remove("hide");return;}
-    $("mktEmpty").classList.add("hide");
-
-    const tipoLabel={venda:"Venda",troca:"Troca",doacao:"Doação",orcamento:"Serviço"};
-    wrap.innerHTML=list.map(a=>{
-      const st=a.status||"ativo";
-      const isServ=a.categoria==="servico";
-      const foto=Array.isArray(a.fotos)&&a.fotos[0]?a.fotos[0]:"";
-      const thumb=foto?`<img class="mod-photo" src="${foto}" alt="">`:`<div class="mod-noimg">sem foto</div>`;
-      const stBadge=st==="pendente"?`<span class="badge topo">Em avaliação</span>`
-        :st==="reprovado"?`<span class="badge rep">Reprovado</span>`
-        :st==="finalizado"?`<span class="badge off">Concluído</span>`
-        :`<span class="badge on">No ar</span>`;
-      const approveBtn=st!=="ativo"?`<button class="btn btn-approve" style="padding:9px 14px;font-size:13px" onclick="Panel.approveMkt('${a.id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M20 6 9 17l-5-5"/></svg> Aprovar
-        </button>`:"";
-      const reproveBtn=(st==="pendente"||st==="ativo")?`<button class="btn btn-reprove" style="padding:9px 14px;font-size:13px" title="Reprovar com aviso ao anunciante" onclick="Panel.reproveMkt('${a.id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:15px;height:15px"><path d="M18 6 6 18M6 6l12 12"/></svg> Reprovar
-        </button>`:"";
-      return `<div class="row">
-        <div style="display:flex;gap:12px;align-items:center;flex:none;cursor:pointer" onclick="Panel.openMktView('${a.id}')">${thumb}</div>
-        <div class="info" style="cursor:pointer" onclick="Panel.openMktView('${a.id}')">
-          <h3>${esc(a.titulo||"(sem título)")}</h3>
-          <div class="sub">${esc([a.autor,a.editora].filter(Boolean).join(" • ")||a.genero||"—")}</div>
-          <div class="pos">
-            <span class="badge ${isServ?'rodape':a.tipo==='troca'?'grade':'off'}">${esc(isServ?'Serviço':(tipoLabel[a.tipo]||a.tipo||"—"))}</span>
-            ${a.genero?`<span class="badge off">${esc(a.genero)}</span>`:""}
-            ${a.nome?`<span class="badge off">por ${esc(a.nome)}</span>`:""}
-            ${stBadge}
-          </div>
-          ${st==="reprovado"&&a.motivoReprovacao?`<div class="sub" style="color:var(--danger);margin-top:4px">Motivo: ${esc(a.motivoReprovacao)}</div>`:""}
-        </div>
-        <div class="acts">
-          <button class="iconbtn" title="Ver anúncio" onclick="Panel.openMktView('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-          ${approveBtn}
-          ${reproveBtn}
-          <button class="iconbtn del" title="Excluir definitivamente" onclick="Panel.deleteMkt('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
-        </div>
-      </div>`;
-    }).join("");
-  },
-  async approveMkt(id){
-    const a=MKT_ADS.find(x=>x.id===id);if(!a)return;
-    try{
-      await updateDoc(doc(db,"marketplace",id),{status:"ativo",aprovadoEm:serverTimestamp(),motivoReprovacao:null,reprovadoEm:null});
-      a.status="ativo";a.motivoReprovacao=null;
-      toast("Anúncio aprovado — já está no ar.","ok");
-      this.closeView();this.renderMarketplace();
-    }catch(err){
-      console.error(err);
-      toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'marketplace'.":"Não foi possível aprovar.","bad");
-    }
-  },
-  async reproveMkt(id){
-    const a=MKT_ADS.find(x=>x.id===id);if(!a)return;
-    const motivo=prompt(`Reprovar o anúncio "${a.titulo||"(sem título)"}".\n\nDescreva o motivo (o anunciante verá este aviso e poderá corrigir e reenviar):`,a.motivoReprovacao||"");
-    if(motivo===null)return;
-    const reason=String(motivo).trim();
-    if(!reason){toast("Informe um motivo para o anunciante.","bad");return;}
-    try{
-      await updateDoc(doc(db,"marketplace",id),{status:"reprovado",motivoReprovacao:reason,reprovadoEm:serverTimestamp()});
-      a.status="reprovado";a.motivoReprovacao=reason;
-      toast("Anúncio reprovado. O anunciante foi avisado no portal.","ok");
-      this.closeView();this.renderMarketplace();
-    }catch(err){
-      console.error(err);
-      toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'marketplace'.":"Não foi possível reprovar.","bad");
-    }
-  },
-  async deleteMkt(id){
-    const a=MKT_ADS.find(x=>x.id===id);if(!a)return;
-    if(!confirm(`Excluir definitivamente o anúncio "${a.titulo||"(sem título)"}"?\n\nUse a exclusão apenas para spam. Para recusar um anúncio comum, prefira "Reprovar" (o anunciante é avisado). Esta ação não pode ser desfeita.`))return;
-    try{
-      await deleteDoc(doc(db,"marketplace",id));
-      MKT_ADS=MKT_ADS.filter(x=>x.id!==id);
-      toast("Anúncio excluído.","ok");
-      this.closeView();this.renderMarketplace();
-    }catch(err){
-      console.error(err);
-      toast(err.code==="permission-denied"?"Sem permissão. Atualize as regras do Firestore para 'marketplace'.":"Não foi possível excluir.","bad");
-    }
-  },
-  openMktView(id){
-    const a=MKT_ADS.find(x=>x.id===id);if(!a)return;
-    const st=a.status||"ativo";
-    const isServ=a.categoria==="servico";
-    const tipoLabel={venda:"Venda",troca:"Troca",doacao:"Doação",orcamento:"Serviço / orçamento"};
-    viewPhotos=Array.isArray(a.fotos)?a.fotos.filter(Boolean):[];
-    viewIdx=0;
-
-    const stBadge=st==="pendente"?`<span class="badge topo">Em avaliação</span>`
-      :st==="reprovado"?`<span class="badge rep">Reprovado</span>`
-      :st==="finalizado"?`<span class="badge off">Concluído</span>`
-      :`<span class="badge on">No ar</span>`;
-    const tipoBadge=`<span class="badge ${isServ?'rodape':a.tipo==='troca'?'grade':'off'}">${esc(isServ?'Serviço':(tipoLabel[a.tipo]||a.tipo||"—"))}</span>`;
-
-    const waDigits=String(a.whatsapp||"").replace(/\D/g,"");
-    const waHref=waDigits?`https://wa.me/${waDigits.length<=11?'55'+waDigits:waDigits}`:"";
-    const dataPub=a.createdAt?.toMillis?new Date(a.createdAt.toMillis()).toLocaleString("pt-BR"):"";
-    const valorTxt=a.tipo==="venda"?("R$ "+Number(a.preco||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2}))
-      :a.tipo==="troca"?("Troca por: "+(a.trocaPor||"—"))
-      :a.tipo==="orcamento"?"Serviço — sob orçamento":"Doação";
-
-    const rows=(isServ?[
-      ["Tipo","Serviço"],["Categoria",esc(a.genero||"—")],
-      ["Como atende",esc(a.serie||"—")],["Valor",esc(valorTxt)],
-    ]:[
-      ["Tipo","Produto"],["Categoria",esc(a.genero||"—")],
-      ["Marca",esc(a.autor||"—")],["Modelo",esc(a.editora||"—")],
-      ["Condição",esc(a.estado||"—")],["Valor",esc(valorTxt)],
-    ]).filter(Boolean);
-
-    const contato=[
-      [isServ?"Profissional":"Anunciante",esc(a.nome||"—")],
-      ["WhatsApp",waHref?`<a href="${waHref}" target="_blank" rel="noopener">${esc(a.whatsapp)}</a>`:esc(a.whatsapp||"—")],
-      ["Cidade",esc(a.cidade||"—")],
-      dataPub?["Cadastrado em",esc(dataPub)]:null,
-    ].filter(Boolean);
-
-    const mainImg=viewPhotos.length
-      ? `<img id="vwMainImg" src="${viewPhotos[0]}" alt="foto do anúncio">`
-      : `<span class="noimg">Este anúncio não tem fotos</span>`;
-    const thumbs=viewPhotos.length>1
-      ? `<div class="vw-thumbs">${viewPhotos.map((src,i)=>`<button class="vw-thumb ${i===0?'on':''}" data-i="${i}" onclick="Panel.viewPhoto(${i})"><img src="${src}" alt="foto ${i+1}"></button>`).join("")}</div>`
-      : "";
-
-    const approveBtn=st!=="ativo"
-      ? `<button class="btn btn-approve" onclick="Panel.approveMkt('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg> Aprovar anúncio</button>`
-      : "";
-    const reproveBtn=(st==="pendente"||st==="ativo")
-      ? `<button class="btn btn-reprove" onclick="Panel.reproveMkt('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg> Reprovar</button>`
-      : "";
-    const motivoBox=st==="reprovado"&&a.motivoReprovacao
-      ? `<div class="vw-sec">Motivo da reprovação</div><div class="vw-desc" style="color:var(--danger)">${esc(a.motivoReprovacao)}</div>`
-      : "";
-
-    $("viewTitle").textContent=a.titulo||"Anúncio";
-    $("viewBody").innerHTML=`
-      <div class="vw-badges">${tipoBadge}${stBadge}</div>
-      <div class="vw-main">${mainImg}</div>
-      ${thumbs}
-      ${motivoBox}
-      <div class="vw-sec">Informações</div>
-      <div class="vw-info">${rows.map(([k,v])=>`<div class="vw-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
-      ${a.descricao?`<div class="vw-sec">Descrição</div><div class="vw-desc">${esc(a.descricao)}</div>`:""}
-      <div class="vw-sec">Contato do anunciante</div>
-      <div class="vw-info">${contato.map(([k,v])=>`<div class="vw-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}</div>
-      <div class="form-foot" style="margin-top:18px">
-        ${approveBtn}
-        ${reproveBtn}
-        <button class="btn btn-ghost" style="color:var(--ink-soft)" onclick="Panel.deleteMkt('${a.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg> Excluir</button>
-      </div>`;
-    $("viewScrim").classList.add("open");document.body.style.overflow="hidden";
-  },
 
   /* ---------- visão geral: usuários e acessos ---------- */
   async loadOverview(){
@@ -1530,7 +1267,6 @@ else{
   auth=getAuth(app);db=getFirestore(app);ref=collection(db,"banners");
   usuariosRef=collection(db,"usuarios");acessosRef=collection(db,"acessos");configRef=doc(db,"config","geral");
   livrosRef=collection(db,"livros");
-  marketplaceRef=collection(db,"marketplace");
   let bannersSubReady=false;
   onAuthStateChanged(auth,user=>{
     // só consideramos administrador uma conta real (não anônima)
